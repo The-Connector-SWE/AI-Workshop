@@ -8,6 +8,7 @@
   var RANKS = ["Production Assistant", "Screenwriter", "Storyboard Artist", "Art Director", "Motion Director", "The Director"];
 
   var LINKS = [
+    { id: "agenda", label: "Agenda", href: "agenda.html" },
     { id: "instructors", label: "Instructors", href: "instructors.html" },
     { id: "realorai", label: "AI Fun", href: "real-or-ai.html" },
     { id: "levels", label: "Missions", href: "index.html" },

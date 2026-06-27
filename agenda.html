@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Agenda · The Director's Game</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="theme.css" />
+<style>
+  .days-grid { display: flex; flex-direction: column; gap: 32px; margin-top: clamp(24px,4vw,40px); }
+
+  .day-card { border-radius: 24px; overflow: hidden; }
+  .day-header { display: flex; align-items: center; gap: 16px; padding: clamp(18px,3vw,26px) clamp(20px,3.5vw,32px); border-bottom: 1px solid var(--line); }
+  .day-badge { width: 48px; height: 48px; border-radius: 14px; display: grid; place-items: center; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #fff; background: var(--iri); flex: none; box-shadow: 0 8px 24px rgba(255,46,63,.35); }
+  .day-meta h2 { font-size: clamp(18px,2.8vw,22px); font-weight: 800; letter-spacing: -.01em; }
+  .day-meta .time-range { font-size: 13px; color: var(--cyan); margin-top: 3px; font-weight: 500; }
+
+  .sessions { padding: clamp(16px,2.5vw,24px) clamp(20px,3.5vw,32px); display: flex; flex-direction: column; gap: 10px; }
+
+  .session { display: flex; align-items: center; gap: 16px; padding: 14px 18px; border-radius: 14px; border: 1px solid var(--line); background: rgba(0,0,0,.2); transition: background .2s; }
+  .session:hover { background: rgba(255,255,255,.04); }
+
+  .session.break { opacity: .65; }
+  .session.recap { border-color: rgba(255,46,63,.2); background: rgba(255,46,63,.05); }
+  .session.finale { border-color: rgba(255,138,61,.3); background: rgba(255,138,61,.07); }
+
+  .s-time { font-size: 12.5px; font-weight: 600; color: var(--muted); white-space: nowrap; min-width: 90px; font-variant-numeric: tabular-nums; }
+  .s-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--line2); flex: none; }
+  .session.break .s-dot  { background: var(--muted); }
+  .session.recap .s-dot  { background: linear-gradient(135deg, #ff2e3f, #ff5a4d); box-shadow: 0 0 8px rgba(255,46,63,.6); }
+  .session.finale .s-dot { background: linear-gradient(135deg, #ff8a3d, #ffd36e); box-shadow: 0 0 8px rgba(255,138,61,.6); }
+  .session.mission .s-dot { background: linear-gradient(135deg, #ff2e3f, #ff8a3d); }
+
+  .s-label { flex: 1; font-size: 14.5px; font-weight: 600; }
+  .session.break .s-label  { font-weight: 500; color: var(--muted); }
+  .session.recap .s-label  { color: var(--muted2); }
+  .session.finale .s-label { color: var(--gold); }
+
+  .s-dur { font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 8px; background: var(--glass2); border: 1px solid var(--line2); color: var(--muted2); white-space: nowrap; }
+  .session.break .s-dur  { color: var(--muted); }
+  .session.finale .s-dur { color: var(--gold); border-color: rgba(255,211,110,.25); background: rgba(255,211,110,.08); }
+</style>
+</head>
+<body data-page="agenda">
+
+<main class="page">
+  <header class="page-head">
+    <div class="pill anim a1"><span class="dot"></span> 3-Day Workshop</div>
+    <h1 class="page-title anim a2">The <span class="iri">Agenda</span></h1>
+    <p class="page-sub anim a3">Every session runs 7:00 PM – 10:00 PM.</p>
+  </header>
+
+  <div class="days-grid">
+
+    <!-- DAY 1 -->
+    <article class="day-card glass anim a4">
+      <div class="day-header">
+        <div class="day-badge">Day<br>01</div>
+        <div class="day-meta">
+          <h2>Foundations</h2>
+          <div class="time-range">7:00 PM – 10:00 PM</div>
+        </div>
+      </div>
+      <div class="sessions">
+        <div class="session">
+          <span class="s-time">7:00 – 7:30</span>
+          <span class="s-dot"></span>
+          <span class="s-label">Welcome</span>
+          <span class="s-dur">30 min</span>
+        </div>
+        <div class="session mission">
+          <span class="s-time">7:30 – 8:30</span>
+          <span class="s-dot"></span>
+          <span class="s-label">Mission 01</span>
+          <span class="s-dur">60 min</span>
+        </div>
+        <div class="session break">
+          <span class="s-time">8:30 – 8:40</span>
+          <span class="s-dot"></span>
+          <span class="s-label">Break</span>
+          <span class="s-dur">10 min</span>
+        </div>
+        <div class="session mission">
+          <span class="s-time">8:40 – 9:40</span>
+          <span class="s-dot"></span>
+          <span class="s-label">Mission 02</span>
+          <span class="s-dur">60 min</span>
+        </div>
+        <div class="session recap">
+          <span class="s-time">9:40 – 10:00</span>
+          <span class="s-dot"></span>
+          <span class="s-label">Recap</span>
+          <span class="s-dur">20 min</span>
+        </div>
+      </div>
+    </article>
+
+    <!-- DAY 2 -->
+    <article class="day-card glass anim a5">
+      <div class="day-header">
+        <div class="day-badge">Day<br>02</div>
+        <div class="day-meta">
+          <h2>Deep Dive</h2>
+          <div class="time-range">7:00 PM – 10:00 PM</div>
+        </div>
+      </div>
+      <div class="sessions">
+        <div class="session mission">
+          <span class="s-time">7:00 – 8:30</span>
+          <span class="s-dot"></span>
+          <span class="s-label">Mission 03</span>
+          <span class="s-dur">90 min</span>
+        </div>
+        <div class="session break">
+          <span class="s-time">8:30 – 8:40</span>
+          <span class="s-dot"></span>
+          <span class="s-label">Break</span>
+          <span class="s-dur">10 min</span>
+        </div>
+        <div class="session mission">
+          <span class="s-time">8:40 – 9:40</span>
+          <span class="s-dot"></span>
+          <span class="s-label">Mission 04</span>
+          <span class="s-dur">60 min</span>
+        </div>
+        <div class="session mission">
+          <span class="s-time">9:40 – 10:10</span>
+          <span class="s-dot"></span>
+          <span class="s-label">Mission 05</span>
+          <span class="s-dur">30 min</span>
+        </div>
+        <div class="session recap">
+          <span class="s-time">10:10 – 10:20</span>
+          <span class="s-dot"></span>
+          <span class="s-label">Recap &amp; Prep for Day 3</span>
+          <span class="s-dur">10 min</span>
+        </div>
+      </div>
+    </article>
+
+    <!-- DAY 3 -->
+    <article class="day-card glass anim a6">
+      <div class="day-header">
+        <div class="day-badge">Day<br>03</div>
+        <div class="day-meta">
+          <h2>Final Sprint</h2>
+          <div class="time-range">7:00 PM – 10:00 PM</div>
+        </div>
+      </div>
+      <div class="sessions">
+        <div class="session finale">
+          <span class="s-time">7:00 – 10:00</span>
+          <span class="s-dot"></span>
+          <span class="s-label">Final Project Sprint</span>
+          <span class="s-dur">3 hrs</span>
+        </div>
+      </div>
+    </article>
+
+  </div>
+</main>
+
+<footer class="site-foot">
+  <span>The Director's Game — workshop companion</span>
+  <span><a href="index.html">Levels</a></span>
+</footer>
+
+<script src="site.js"></script>
+</body>
+</html>
