@@ -52,13 +52,15 @@ function BootScreen({ onStart }) {
 }
 
 /* ---------------- HUD ---------------- */
-function HUDBar({ levels, cleared, currentId, xp, xpMax, rank, onHome, muted, onToggleMute }) {
+function HUDBar({ levels, cleared, currentId, xp, xpMax, rank, onHome, muted, onToggleMute, appView, onSwitchView }) {
   return (
     <header className="hud">
       <button className="hud-brand" onClick={onHome}>
         <span style={{ fontFamily:"'Space Grotesk',sans-serif", fontSize:"13px", fontWeight:700, color:"#fff", letterSpacing:".01em", whiteSpace:"nowrap" }}>pod <span style={{ color:"#e30016" }}>ai</span> studio</span>
       </button>
       <nav className="hud-links">
+        <button className={"hud-link hud-tab" + (appView === "utilities" ? " hud-tab-active" : "")} onClick={() => onSwitchView("utilities")}>Utilities</button>
+        <button className={"hud-link hud-tab" + (appView === "missions" ? " hud-tab-active" : "")} onClick={() => onSwitchView("missions")}>Missions</button>
         <a className="hud-link" href="instructors.html">Instructors</a>
         <a className="hud-link" href="real-or-ai.html">AI Fun</a>
       </nav>

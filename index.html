@@ -34,11 +34,10 @@
 <script type="text/babel">
 const { useState, useEffect } = React;
 const { RANKS } = window.GAME;
-const { PLATFORMS } = window.WORKSHOP;
+const { PLATFORMS, MODULES } = window.WORKSHOP;
 const LABS = window.LABS;
-const GAME_KEY = "aivid_directors_game_v1"; // shared save with v1
+const GAME_KEY = "aivid_directors_game_v1";
 
-// Game-y copy: levels become missions
 const LEVELS = window.GAME.LEVELS.map((lv) => ({
   ...lv,
   code: lv.code.replace("Level", "Mission"),
@@ -49,7 +48,6 @@ function loadGame() {
 }
 function saveGame(s) { try { localStorage.setItem(GAME_KEY, JSON.stringify(s)); } catch (e) {} }
 
-// soft UI blips on any button/link press
 document.addEventListener("click", (e) => {
   if (e.target.closest("button, a") && window.SFX) window.SFX.click();
 });
@@ -59,27 +57,34 @@ function GameAppV2() {
     try { return sessionStorage.getItem("dg_booted") === "1"; } catch (e) { return false; }
   });
   const [muted, setMuted] = useState(window.SFX ? window.SFX.muted : false);
+  const [appView, setAppView] = useState("missions");
+
+  // Missions state
   const [best, setBest] = useState(() => loadGame().best || {});
   const [labChecks, setLabChecks] = useState(() => loadGame().labs || {});
-  const [view, setView] = useState({ type: "map" });
+  const [missionView, setMissionView] = useState({ type: "map" });
 
-  useEffect(() => { saveGame({ best, labs: labChecks }); }, [best, labChecks]);
-  useEffect(() => { window.scrollTo({ top: 0, behavior: "smooth" }); }, [view]);
+  // Utilities state
+  const [utilCompleted, setUtilCompleted] = useState(() => loadGame().utilCompleted || []);
+  const [utilScores, setUtilScores] = useState(() => loadGame().utilScores || {});
+  const [utilView, setUtilView] = useState({ type: "home" });
 
+  useEffect(() => { saveGame({ best, labs: labChecks, utilCompleted, utilScores }); }, [best, labChecks, utilCompleted, utilScores]);
+  useEffect(() => { window.scrollTo({ top: 0, behavior: "smooth" }); }, [missionView, utilView, appView]);
+
+  // Missions derived
   const cleared = LEVELS.filter((lv) => best[lv.id]).map((lv) => lv.id);
   const rank = RANKS[cleared.length];
   const xp = Object.values(best).reduce((n, b) => n + b.score * 10, 0);
   const xpMax = LEVELS.reduce((n, lv) => n + window.GAME.levelItemCount(lv) * 10, 0);
 
-  function goMap() { setView({ type: "map" }); }
-  function enter(id) { setView({ type: "level", id }); }
-  function enterLab(id) { setView({ type: "lab", id }); }
+  function goMap() { setMissionView({ type: "map" }); }
+  function enter(id) { setMissionView({ type: "level", id }); }
+  function enterLab(id) { setMissionView({ type: "lab", id }); }
   function toggleMute() {
-    const m = !muted;
-    setMuted(m);
+    const m = !muted; setMuted(m);
     if (window.SFX) window.SFX.setMuted(m);
   }
-
   function toggleLabStep(labId, stepIdx, total) {
     setLabChecks((prev) => {
       const cur = (prev[labId] || Array(total).fill(false)).slice();
@@ -87,7 +92,6 @@ function GameAppV2() {
       return { ...prev, [labId]: cur };
     });
   }
-
   function finishChallenge(levelId, score, total) {
     const wasCleared = !!best[levelId];
     setBest((prev) => {
@@ -95,15 +99,34 @@ function GameAppV2() {
       if (ex && ex.score >= score) return prev;
       return { ...prev, [levelId]: { score, total } };
     });
-    setView({ type: "result", id: levelId, result: { score, total }, rankedUp: !wasCleared });
+    setMissionView({ type: "result", id: levelId, result: { score, total }, rankedUp: !wasCleared });
+  }
+  function resetMissions() {
+    if (confirm("Reset all mission progress, XP and rank?")) { setBest({}); setLabChecks({}); goMap(); }
   }
 
-  function reset() {
-    if (confirm("Reset all progress, XP and rank?")) { setBest({}); setLabChecks({}); goMap(); }
+  // Utilities handlers
+  function utilEnterModule(id) { setUtilView({ type: "module", id }); }
+  function utilStartQuiz(id) { setUtilView({ type: "quiz", id }); }
+  function utilFinishQuiz(modId, score) {
+    setUtilCompleted((prev) => prev.includes(modId) ? prev : [...prev, modId]);
+    setUtilScores((prev) => ({ ...prev, [modId]: { score, total: MODULES.find(m => m.id === modId).quiz.length } }));
+    setUtilView({ type: "module", id: modId });
+  }
+  function utilGoHome() { setUtilView({ type: "home" }); }
+  function resetUtilities() {
+    if (confirm("Reset all utilities progress?")) { setUtilCompleted([]); setUtilScores({}); utilGoHome(); }
   }
 
-  const curLevel = view.type === "level" || view.type === "result" ? LEVELS.find((lv) => lv.id === view.id) : null;
-  const curLab = view.type === "lab" ? LABS.find((l) => l.id === view.id) : null;
+  function switchView(v) {
+    setAppView(v);
+    if (v === "missions") goMap();
+    if (v === "utilities") utilGoHome();
+  }
+
+  const curLevel = missionView.type === "level" || missionView.type === "result" ? LEVELS.find((lv) => lv.id === missionView.id) : null;
+  const curLab = missionView.type === "lab" ? LABS.find((l) => l.id === missionView.id) : null;
+  const utilMod = (utilView.type === "module" || utilView.type === "quiz") ? MODULES.find(m => m.id === utilView.id) : null;
 
   if (!booted) {
     return (
@@ -122,45 +145,72 @@ function GameAppV2() {
       <AuroraBg />
       <FrameCorners />
       <HUDBar levels={LEVELS} cleared={cleared}
-        currentId={view.type !== "map" && curLevel ? curLevel.id : null}
-        xp={xp} xpMax={xpMax} rank={rank} onHome={goMap}
-        muted={muted} onToggleMute={toggleMute} />
+        currentId={missionView.type !== "map" && curLevel ? curLevel.id : null}
+        xp={xp} xpMax={xpMax} rank={rank} onHome={() => switchView(appView === "missions" ? "missions" : "missions")}
+        muted={muted} onToggleMute={toggleMute}
+        appView={appView} onSwitchView={switchView} />
 
-      {view.type === "map" && (
+      {appView === "utilities" && (
         <>
-          <div className="ms-head anim a1">
-            <div className="ms-eyebrow">// Select mission</div>
-            <h1 className="ms-title">Mission <span className="iri">Select</span></h1>
-            <p className="ms-sub">Five missions, two side ops. Clear each one to climb the ranks from production assistant to director.</p>
-          </div>
-          <MapView levels={LEVELS} platforms={PLATFORMS} labs={LABS} labChecks={labChecks}
-            best={best} rank={rank} onEnter={enter} onEnterLab={enterLab} onReset={reset} />
+          {utilView.type === "home" && (
+            <HomeView modules={MODULES} platforms={PLATFORMS}
+              completed={utilCompleted} scores={utilScores}
+              onEnter={utilEnterModule}
+              allDone={utilCompleted.length === MODULES.length}
+              onReset={resetUtilities} />
+          )}
+          {utilView.type === "module" && utilMod && (
+            <ModuleView module={utilMod} platforms={PLATFORMS}
+              done={utilCompleted.includes(utilMod.id)} score={utilScores[utilMod.id]}
+              onStartQuiz={() => utilStartQuiz(utilMod.id)}
+              onBack={utilGoHome} />
+          )}
+          {utilView.type === "quiz" && utilMod && (
+            <QuizView module={utilMod}
+              onComplete={(score) => utilFinishQuiz(utilMod.id, score)}
+              onExit={() => setUtilView({ type: "module", id: utilMod.id })} />
+          )}
         </>
       )}
-      {view.type === "level" && curLevel && (
-        <LevelView key={curLevel.id} level={curLevel} platforms={PLATFORMS} best={best[curLevel.id]}
-          onFinish={(score, total) => finishChallenge(curLevel.id, score, total)}
-          onBack={goMap} />
-      )}
-      {view.type === "lab" && curLab && (
-        <LabView lab={curLab}
-          checks={labChecks[curLab.id] || Array(curLab.steps.length).fill(false)}
-          onToggle={(i) => toggleLabStep(curLab.id, i, curLab.steps.length)}
-          onBack={goMap} />
-      )}
-      {view.type === "result" && curLevel && (
-        <DebriefView level={curLevel} result={view.result} rankedUp={view.rankedUp}
-          hasNext={curLevel.id < LEVELS.length}
-          onReplay={() => enter(curLevel.id)}
-          onMap={goMap}
-          onNext={() => enter(curLevel.id + 1)} />
-      )}
 
-      <div className="statline">
-        <span>PodMedia Network · Director's Game</span>
-        <span>Rank: {rank}</span>
-        <span><a href="game-v1.html" style={{ borderBottom: "1px solid currentColor" }}>Classic UI</a></span>
-      </div>
+      {appView === "missions" && (
+        <>
+          {missionView.type === "map" && (
+            <>
+              <div className="ms-head anim a1">
+                <div className="ms-eyebrow">// Select mission</div>
+                <h1 className="ms-title">Mission <span className="iri">Select</span></h1>
+                <p className="ms-sub">Five missions, two side ops. Clear each one to climb the ranks from production assistant to director.</p>
+              </div>
+              <MapView levels={LEVELS} platforms={PLATFORMS} labs={LABS} labChecks={labChecks}
+                best={best} rank={rank} onEnter={enter} onEnterLab={enterLab} onReset={resetMissions} />
+            </>
+          )}
+          {missionView.type === "level" && curLevel && (
+            <LevelView key={curLevel.id} level={curLevel} platforms={PLATFORMS} best={best[curLevel.id]}
+              onFinish={(score, total) => finishChallenge(curLevel.id, score, total)}
+              onBack={goMap} />
+          )}
+          {missionView.type === "lab" && curLab && (
+            <LabView lab={curLab}
+              checks={labChecks[curLab.id] || Array(curLab.steps.length).fill(false)}
+              onToggle={(i) => toggleLabStep(curLab.id, i, curLab.steps.length)}
+              onBack={goMap} />
+          )}
+          {missionView.type === "result" && curLevel && (
+            <DebriefView level={curLevel} result={missionView.result} rankedUp={missionView.rankedUp}
+              hasNext={curLevel.id < LEVELS.length}
+              onReplay={() => enter(curLevel.id)}
+              onMap={goMap}
+              onNext={() => enter(curLevel.id + 1)} />
+          )}
+          <div className="statline">
+            <span>PodMedia Network · Director's Game</span>
+            <span>Rank: {rank}</span>
+            <span><a href="game-v1.html" style={{ borderBottom: "1px solid currentColor" }}>Classic UI</a></span>
+          </div>
+        </>
+      )}
     </>
   );
 }
