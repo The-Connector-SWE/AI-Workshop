@@ -3,113 +3,16 @@
 
 const RANKS = [
   "Production Assistant", // 0 levels cleared
-  "Screenwriter",         // 1
-  "Storyboard Artist",    // 2
-  "Art Director",         // 3
-  "Motion Director",      // 4
-  "The Director",         // 5
+  "Storyboard Artist",    // 1
+  "Art Director",         // 2
+  "Motion Director",      // 3
+  "The Director",         // 4
 ];
 
 const LEVELS = [
   {
     id: 1,
     code: "Level 01",
-    name: "Intelligent Script",
-    tag: "Script + VO",
-    rank: "Screenwriter",
-    mission:
-      "Every film begins as language. Build your executive-producer Gem, break the story into scenes, and write a script and voiceover the rest of the pipeline can build on.",
-    tools: ["gemini", "elevenlabs"],
-    learning: [],
-    scriptIntelligence: {
-      title: "Script Intelligence",
-      sections: [
-        {
-          n: "01",
-          title: "From Problem to Script",
-          summary: "Five moves every script is built from. AI writes the words — you make the decisions.",
-          type: "scriptSteps",
-          example: "Waste Management Authority",
-          steps: [
-            { key: "Problem", q: "What challenge are we solving?", d: "The reason the video exists. No problem, no need for a script — so name it in one plain sentence.", ex: "People throw their waste in the wrong bins." },
-            { key: "Insight", q: "Why is this happening?", d: "A human truth — the behaviour underneath the problem. It explains why people act the way they do.", ex: "People choose the easiest option; they simply don't know which bin to use." },
-            { key: "Idea", q: "What's the creative angle?", d: "How you turn the insight into something memorable. This is the leap AI can't make for you.", ex: "What if every plastic bottle could tell its own story?" },
-            { key: "Story", q: "How will the idea unfold?", d: "Structure for the idea — a beginning, a middle and an end the audience can follow.", ex: "A bottle is thrown away → travels through landfills and oceans → reaches the right recycling bin." },
-            { key: "Script", q: "What exactly do we see and hear?", d: "The final execution — visual description and voiceover, locked scene by scene with timing.", ex: "Scene 01 · 0:01–0:04 — VO: “But my journey lasts for hundreds of years.”" },
-          ],
-        },
-        {
-          n: "02",
-          title: "Six Ways to Find the Idea",
-          summary: "The problem never changes. What changes is how you think about it.",
-          type: "ideaGrid",
-          items: [
-            { n: "01", name: "Pain-Point Hunting", ask: "What’s annoying people? What mistake do they keep making?", idea: "People are confused by bins.", concept: "A person faces a wall of bins and every piece of waste shouts different instructions.", hook: "“Ever stood in front of a bin with no idea where to throw something?”" },
-            { n: "02", name: "The “What If” Method", ask: "Ask “What if…?” and follow it somewhere strange.", idea: "What if bottles could talk?", concept: "A plastic bottle narrates its own journey after being thrown in the wrong bin.", hook: "“Please… not that bin again.”" },
-            { n: "03", name: "Opposite Thinking", ask: "Take the obvious — then flip it.", idea: "What if the bins rejected the waste?", concept: "Smart bins refuse anything thrown in incorrectly.", hook: "“Access denied.”" },
-            { n: "04", name: "Character First", ask: "Create a character, then build the story around them.", idea: "Follow one lazy person.", concept: "Their single discarded bottle keeps causing problems everywhere they go.", hook: "“It was only one bottle…”" },
-            { n: "05", name: "Trend Mining", ask: "Trend + brand message = idea. Mine Reels, Shorts and TikTok.", idea: "POV: you’re a plastic bottle.", concept: "A first-person view shot entirely from the bottle’s perspective.", hook: "“POV: you just got thrown into the wrong bin.”" },
-            { n: "06", name: "Emotion First", ask: "What should the audience feel? Curiosity, pride, guilt, humour?", idea: "Make them feel proud — or a little guilty.", concept: "A child carefully recycles while the adults around them ignore the bins.", hook: "“If a child can do it… why can’t we?”" },
-          ],
-        },
-        {
-          n: "03",
-          title: "Create Script with AI",
-          summary: "The prompt that turns a brief into a professional 30-second script.",
-          type: "promptFormula",
-          formula: ["Brief Analysis", "Missing Data", "Creative Concept", "Script Table"],
-          exampleTitle: "The AI Prompt",
-          exampleText: "Act as a senior creative director, copywriter, and film director. Create a professional 30-second TikTok / Instagram Reels script from this brief. First, briefly analyze the objective, audience, key message, product benefit, tone, emotional journey, and missing data. Then write the script using this format: Frame | Duration | VO / Text | Visual Description | Camera | Mood. Style: cinematic, colorful, playful street style, Gen Z-focused, built around the transformation: “One sip changes the whole mood.”",
-          negative: "",
-        },
-      ],
-    },
-    challenges: [
-      {
-        kind: "open",
-        title: "Script Thinking",
-        intro: "Use these 5 moves to develop a script concept for this brief.",
-        prompt: "A coffee brand wants to launch a new iced coffee for university students and young creatives.",
-        items: [
-          { label: "Problem" },
-          { label: "Insight" },
-          { label: "Idea" },
-          { label: "Hook" },
-          { label: "Script Concept" },
-        ],
-      },
-      {
-        kind: "open",
-        title: "Write the Script",
-        intro: "Write a 30-second TikTok / Instagram Reels script from this brief.",
-        brief: {
-          client: "Mazaj — Iced Coffee",
-          audience: "Gen Z, university students, young creatives",
-          platform: "TikTok / Instagram Reels",
-          goal: "Launch new iced coffee · CTA: Until your mood finds you",
-          deliverable: "30 sec · Can packaging · Street café / urban street",
-        },
-        task: "Jamila wakes up tired before work. She opens the fridge and finds MAZAJ Iced Coffee. After one sip, her mood changes. She gets ready, opens her laptop, and starts working feeling confident. The product appears with the tagline: MAZAJ Iced Coffee — Until your mood finds you.",
-        columns: ["Duration", "VO / Text", "Visual Description", "Camera", "Mood"],
-        items: [
-          { label: "Frame 1" },
-          { label: "Frame 2" },
-          { label: "Frame 3" },
-          { label: "Frame 4" },
-          { label: "Frame 5" },
-          { label: "Frame 6" },
-          { label: "Frame 7" },
-          { label: "Frame 8" },
-          { label: "Frame 9" },
-          { label: "Frame 10" },
-        ],
-      },
-    ],
-  },
-
-  {
-    id: 2,
-    code: "Level 02",
     name: "Strategic Visualization",
     tag: "Storyboard",
     rank: "Storyboard Artist",
@@ -194,8 +97,8 @@ const LEVELS = [
   },
 
   {
-    id: 3,
-    code: "Level 03",
+    id: 2,
+    code: "Level 02",
     name: "Visual Crafting",
     tag: "Visual Creation",
     rank: "Art Director",
@@ -387,8 +290,8 @@ const LEVELS = [
   },
 
   {
-    id: 4,
-    code: "Level 04",
+    id: 3,
+    code: "Level 03",
     name: "Motion Orchestration",
     tag: "Image to Video",
     rank: "Motion Director",
@@ -497,8 +400,8 @@ const LEVELS = [
   },
 
   {
-    id: 5,
-    code: "Level 05",
+    id: 4,
+    code: "Level 04",
     name: "Launch Control",
     tag: "Finishing & Delivery",
     rank: "The Director",
