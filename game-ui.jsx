@@ -51,7 +51,7 @@ function GameTopBar({ levels, cleared, xp, xpMax, rank, onHome }) {
 function MapView({ levels, platforms, labs, labChecks, best, rank, onEnter, onEnterLab, onReset }) {
   const clearedCount = levels.filter((l) => best[l.id]).length;
   const allDone = clearedCount === levels.length;
-  const labAfter = { 5: labs.find((l) => l.id === "sprint") };
+  const labAfter = {};
   const labDone = (lab) => {
     const c = labChecks[lab.id] || [];
     return lab.steps.length > 0 && lab.steps.every((_, i) => c[i]);

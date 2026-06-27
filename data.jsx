@@ -111,7 +111,7 @@ const PLATFORMS = {
     ],
   },
   artlist: {
-    id: "artlist", name: "Artlist", vendor: "Toolkit & Studio", hue: "#7affb0",
+    id: "artlist", name: "Artlist", vendor: "Toolkit & Studio", hue: "#7affb0", url: "https://artlist.io",
     tagline: "Licensed assets + creative toolkit",
     about: "Royalty-free music, SFX and footage alongside Artlist's creative Toolkit & Studio — the audio and asset layer that finishes your production and ties the cut together.",
     usage: [
@@ -122,7 +122,7 @@ const PLATFORMS = {
     ],
   },
   magnifica: {
-    id: "magnifica", name: "Magnifica", vendor: "Enhancement", hue: "#6ec8ff",
+    id: "magnifica", name: "Magnifica", vendor: "Enhancement", hue: "#6ec8ff", url: "https://magnifica.ai",
     tagline: "Upscale & enhance",
     about: "Brings generated frames up to delivery resolution — upscaling and detail enhancement so your AI footage and stills hold up on the big screen.",
     usage: [
