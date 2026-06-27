@@ -2,6 +2,7 @@
 // Set <body data-page="agenda|instructors|realorai|resources"> to mark the active link.
 // Reads the Director's Game save to show XP and rank.
 (function () {
+  if (window !== window.top) return; // skip HUD injection when embedded in an iframe
   var PAGE = document.body.dataset.page || "";
   var TOTAL_XP = 290; // 29 challenge items across the 5 missions × 10 XP
   var RANKS = ["Production Assistant", "Screenwriter", "Storyboard Artist", "Art Director", "Motion Director", "The Director"];

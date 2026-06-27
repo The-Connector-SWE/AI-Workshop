@@ -34,7 +34,7 @@
 <script type="text/babel">
 const { useState, useEffect } = React;
 const { RANKS } = window.GAME;
-const { PLATFORMS, MODULES } = window.WORKSHOP;
+const { PLATFORMS } = window.WORKSHOP;
 const LABS = window.LABS;
 const GAME_KEY = "aivid_directors_game_v1";
 
@@ -52,27 +52,27 @@ document.addEventListener("click", (e) => {
   if (e.target.closest("button, a") && window.SFX) window.SFX.click();
 });
 
+const UTIL_TABS = [
+  { id: "instructors", label: "Instructors", src: "instructors.html" },
+  { id: "aifun",       label: "AI Fun",      src: "real-or-ai.html" },
+  { id: "agenda",      label: "Agenda",      src: null },
+];
+
 function GameAppV2() {
   const [booted, setBooted] = useState(() => {
     try { return sessionStorage.getItem("dg_booted") === "1"; } catch (e) { return false; }
   });
   const [muted, setMuted] = useState(window.SFX ? window.SFX.muted : false);
   const [appView, setAppView] = useState("missions");
+  const [utilTab, setUtilTab] = useState("instructors");
 
-  // Missions state
   const [best, setBest] = useState(() => loadGame().best || {});
   const [labChecks, setLabChecks] = useState(() => loadGame().labs || {});
   const [missionView, setMissionView] = useState({ type: "map" });
 
-  // Utilities state
-  const [utilCompleted, setUtilCompleted] = useState(() => loadGame().utilCompleted || []);
-  const [utilScores, setUtilScores] = useState(() => loadGame().utilScores || {});
-  const [utilView, setUtilView] = useState({ type: "home" });
+  useEffect(() => { saveGame({ best, labs: labChecks }); }, [best, labChecks]);
+  useEffect(() => { window.scrollTo({ top: 0, behavior: "smooth" }); }, [missionView, appView]);
 
-  useEffect(() => { saveGame({ best, labs: labChecks, utilCompleted, utilScores }); }, [best, labChecks, utilCompleted, utilScores]);
-  useEffect(() => { window.scrollTo({ top: 0, behavior: "smooth" }); }, [missionView, utilView, appView]);
-
-  // Missions derived
   const cleared = LEVELS.filter((lv) => best[lv.id]).map((lv) => lv.id);
   const rank = RANKS[cleared.length];
   const xp = Object.values(best).reduce((n, b) => n + b.score * 10, 0);
@@ -105,76 +105,75 @@ function GameAppV2() {
     if (confirm("Reset all mission progress, XP and rank?")) { setBest({}); setLabChecks({}); goMap(); }
   }
 
-  // Utilities handlers
-  function utilEnterModule(id) { setUtilView({ type: "module", id }); }
-  function utilStartQuiz(id) { setUtilView({ type: "quiz", id }); }
-  function utilFinishQuiz(modId, score) {
-    setUtilCompleted((prev) => prev.includes(modId) ? prev : [...prev, modId]);
-    setUtilScores((prev) => ({ ...prev, [modId]: { score, total: MODULES.find(m => m.id === modId).quiz.length } }));
-    setUtilView({ type: "module", id: modId });
-  }
-  function utilGoHome() { setUtilView({ type: "home" }); }
-  function resetUtilities() {
-    if (confirm("Reset all utilities progress?")) { setUtilCompleted([]); setUtilScores({}); utilGoHome(); }
-  }
-
-  function switchView(v) {
-    setAppView(v);
-    if (v === "missions") goMap();
-    if (v === "utilities") utilGoHome();
-  }
-
   const curLevel = missionView.type === "level" || missionView.type === "result" ? LEVELS.find((lv) => lv.id === missionView.id) : null;
-  const curLab = missionView.type === "lab" ? LABS.find((l) => l.id === missionView.id) : null;
-  const utilMod = (utilView.type === "module" || utilView.type === "quiz") ? MODULES.find(m => m.id === utilView.id) : null;
-
-  if (!booted) {
-    return (
-      <>
-        <AuroraBg />
-        <BootScreen onStart={() => {
-          setBooted(true);
-          try { sessionStorage.setItem("dg_booted", "1"); } catch (e) {}
-        }} />
-      </>
-    );
-  }
+  const curLab   = missionView.type === "lab"    ? LABS.find((l) => l.id === missionView.id) : null;
+  const activeUtil = UTIL_TABS.find((t) => t.id === utilTab);
 
   return (
     <>
       <AuroraBg />
-      <FrameCorners />
-      <HUDBar levels={LEVELS} cleared={cleared}
-        currentId={missionView.type !== "map" && curLevel ? curLevel.id : null}
-        xp={xp} xpMax={xpMax} rank={rank} onHome={() => switchView(appView === "missions" ? "missions" : "missions")}
-        muted={muted} onToggleMute={toggleMute}
-        appView={appView} onSwitchView={switchView} />
 
+      {/* ── Root tab bar ── */}
+      <div className="root-tabs">
+        <button
+          className={"root-tab" + (appView === "utilities" ? " rt-active" : "")}
+          onClick={() => setAppView("utilities")}>
+          Utilities
+        </button>
+        <button
+          className={"root-tab" + (appView === "missions" ? " rt-active" : "")}
+          onClick={() => { setAppView("missions"); goMap(); }}>
+          Missions
+        </button>
+      </div>
+
+      {/* ── Utilities ── */}
       {appView === "utilities" && (
+        <div className="util-shell">
+          <nav className="util-subnav">
+            {UTIL_TABS.map((t) => (
+              <button key={t.id}
+                className={"util-subtab" + (utilTab === t.id ? " ust-active" : "")}
+                onClick={() => setUtilTab(t.id)}>
+                {t.label}
+              </button>
+            ))}
+          </nav>
+
+          {activeUtil && activeUtil.src ? (
+            <iframe key={activeUtil.id} className="util-iframe" src={activeUtil.src} title={activeUtil.label} />
+          ) : (
+            <div className="util-placeholder">
+              <svg viewBox="0 0 48 48" width="48" height="48" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: .35 }}>
+                <rect x="6" y="8" width="36" height="32" rx="4" />
+                <path d="M6 16h36M16 8v8M32 8v8M14 26h8M14 32h16" />
+              </svg>
+              <h2>Agenda</h2>
+              <p>Coming soon — the workshop schedule will appear here.</p>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ── Missions ── */}
+      {appView === "missions" && !booted && (
         <>
-          {utilView.type === "home" && (
-            <HomeView modules={MODULES} platforms={PLATFORMS}
-              completed={utilCompleted} scores={utilScores}
-              onEnter={utilEnterModule}
-              allDone={utilCompleted.length === MODULES.length}
-              onReset={resetUtilities} />
-          )}
-          {utilView.type === "module" && utilMod && (
-            <ModuleView module={utilMod} platforms={PLATFORMS}
-              done={utilCompleted.includes(utilMod.id)} score={utilScores[utilMod.id]}
-              onStartQuiz={() => utilStartQuiz(utilMod.id)}
-              onBack={utilGoHome} />
-          )}
-          {utilView.type === "quiz" && utilMod && (
-            <QuizView module={utilMod}
-              onComplete={(score) => utilFinishQuiz(utilMod.id, score)}
-              onExit={() => setUtilView({ type: "module", id: utilMod.id })} />
-          )}
+          <FrameCorners />
+          <BootScreen onStart={() => {
+            setBooted(true);
+            try { sessionStorage.setItem("dg_booted", "1"); } catch (e) {}
+          }} />
         </>
       )}
 
-      {appView === "missions" && (
+      {appView === "missions" && booted && (
         <>
+          <FrameCorners />
+          <HUDBar levels={LEVELS} cleared={cleared}
+            currentId={missionView.type !== "map" && curLevel ? curLevel.id : null}
+            xp={xp} xpMax={xpMax} rank={rank} onHome={goMap}
+            muted={muted} onToggleMute={toggleMute} />
+
           {missionView.type === "map" && (
             <>
               <div className="ms-head anim a1">
@@ -204,6 +203,7 @@ function GameAppV2() {
               onMap={goMap}
               onNext={() => enter(curLevel.id + 1)} />
           )}
+
           <div className="statline">
             <span>PodMedia Network · Director's Game</span>
             <span>Rank: {rank}</span>

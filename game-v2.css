@@ -67,8 +67,6 @@ body.v2::after { content: ""; position: fixed; inset: 0; z-index: 0; pointer-eve
   color: var(--muted); border-bottom: 1.5px solid transparent; transition: .2s; }
 .hud-link:hover { color: var(--ink); }
 .hud-link.active { color: var(--ink); border-color: var(--violet); }
-.hud-tab { background: none; border: none; cursor: pointer; }
-.hud-tab-active { color: var(--ink) !important; border-bottom-color: var(--red) !important; }
 .hud-right { margin-left: auto; display: flex; align-items: center; gap: 18px; flex: none; }
 .hud-missions { display: flex; gap: 7px; }
 .hud-node { width: 12px; height: 12px; transform: rotate(45deg); border: 1.5px solid var(--line2); background: transparent; transition: .25s; }
@@ -181,3 +179,57 @@ body.v2 .fw-n, body.v2 .im-n, body.v2 .csl-n { border-radius: 3px; }
 body.v2 .ch-stage, body.v2 .psl-badge { border-radius: 3px; }
 body.v2 .l1-sec-kicker, body.v2 .fw-q, body.v2 .fw-ex-label, body.v2 .im-row > span,
 body.v2 .pb-row span, body.v2 .pb-title, body.v2 .pbd-label, body.v2 .pitch-board-h { font-family: 'Space Grotesk', sans-serif; }
+
+/* ── Root tab bar ────────────────────────────────────────────────── */
+.root-tabs {
+  position: sticky; top: 0; z-index: 200;
+  display: flex; gap: 12px;
+  padding: 18px clamp(16px, 4vw, 48px);
+  background: rgba(8,8,12,.96); backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255,255,255,.07);
+}
+.root-tab {
+  flex: 1; max-width: 280px;
+  padding: 16px 32px; border-radius: 16px;
+  font-family: 'Space Grotesk', sans-serif; font-size: 17px; font-weight: 700; letter-spacing: -.01em;
+  color: var(--muted); background: rgba(255,255,255,.04);
+  border: 1.5px solid rgba(255,255,255,.08); cursor: pointer; transition: all .25s;
+}
+.root-tab:hover { color: var(--ink); background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.14); }
+.root-tab.rt-active {
+  color: #fff; background: rgba(255,46,63,.12);
+  border-color: rgba(255,46,63,.45);
+  box-shadow: 0 0 28px rgba(255,46,63,.1), inset 0 1px 0 rgba(255,255,255,.07);
+}
+
+/* ── Utilities shell ─────────────────────────────────────────────── */
+.util-shell { display: flex; flex-direction: column; min-height: calc(100vh - 90px); }
+
+.util-subnav {
+  display: flex; gap: 4px;
+  padding: 20px clamp(16px, 4vw, 48px) 0;
+  border-bottom: 1px solid rgba(255,255,255,.07);
+}
+.util-subtab {
+  padding: 11px 22px; border-radius: 10px 10px 0 0;
+  font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: .04em;
+  color: var(--muted); background: none;
+  border: 1px solid transparent; border-bottom: none; cursor: pointer; transition: .2s;
+}
+.util-subtab:hover { color: var(--ink); background: rgba(255,255,255,.05); }
+.util-subtab.ust-active {
+  color: var(--ink); background: rgba(255,255,255,.05);
+  border-color: rgba(255,255,255,.09); margin-bottom: -1px; padding-bottom: 12px;
+}
+
+.util-iframe { display: block; width: 100%; border: none; height: calc(100vh - 152px); }
+
+.util-placeholder {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 18px; padding: 80px 24px; text-align: center; flex: 1;
+}
+.util-placeholder h2 {
+  font-family: 'Space Grotesk', sans-serif; font-size: 28px; font-weight: 700;
+  color: var(--muted2); letter-spacing: -.02em;
+}
+.util-placeholder p { color: var(--muted); font-size: 15px; max-width: 360px; line-height: 1.6; }
