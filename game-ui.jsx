@@ -235,14 +235,15 @@ function LevelView({ level, platforms, best, onFinish, onBack }) {
   const { useState } = React;
   const [stage, setStage] = useState("learn"); // learn | tools | challenge
   const [running, setRunning] = useState(false);
-  const challenges = level.challenges || [level.challenge];
-  const totalItems = challenges.reduce((n, c) => n + c.items.length, 0);
+  const hasChallenges = !!(level.challenges || level.challenge);
+  const challenges = hasChallenges ? (level.challenges || [level.challenge]) : [];
+  const totalItems = challenges.reduce((n, c) => n + (c.items ? c.items.length : 0), 0);
   const multi = challenges.length > 1;
 
   const stages = [
     { id: "learn", n: 1, label: "Learning" },
     { id: "tools", n: 2, label: "Tools" },
-    { id: "challenge", n: 3, label: "Challenge" },
+    ...(hasChallenges ? [{ id: "challenge", n: 3, label: "Challenge" }] : []),
   ];
 
   return (
@@ -292,13 +293,15 @@ function LevelView({ level, platforms, best, onFinish, onBack }) {
               <PlatformCard key={pid} p={platforms[pid]} index={i} />
             ))}
           </div>
-          <div className="stage-next">
-            <button className="btn-primary" onClick={() => setStage("challenge")}>Take the challenge <i>→</i></button>
-          </div>
+          {hasChallenges && (
+            <div className="stage-next">
+              <button className="btn-primary" onClick={() => setStage("challenge")}>Take the challenge <i>→</i></button>
+            </div>
+          )}
         </div>
       )}
 
-      {stage === "challenge" && !running && (
+      {hasChallenges && stage === "challenge" && !running && (
         <div className="ch-intro anim a4" key="chi">
           <span className="quiz-kicker">{level.code} · Challenge</span>
           <h2>{multi ? "Two-stage challenge" : challenges[0].title}</h2>
@@ -327,7 +330,7 @@ function LevelView({ level, platforms, best, onFinish, onBack }) {
         </div>
       )}
 
-      {stage === "challenge" && running && (
+      {hasChallenges && stage === "challenge" && running && (
         <div className="anim a2" key="chr">
           <ChallengeRunner challenges={challenges} platforms={platforms} onDone={onFinish} />
         </div>

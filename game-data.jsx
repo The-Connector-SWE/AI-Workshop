@@ -500,42 +500,25 @@ const LEVELS = [
     id: 5,
     code: "Level 05",
     name: "Launch Control",
-    tag: "Finishing & Delivery",
+    tag: "Platform Walkthrough",
     rank: "The Director",
     mission:
-      "The last 10% is the difference between a render and a release. Assemble, score, upscale — and ship.",
-    tools: ["artlist", "magnifica", "arcana"],
+      "Meet the three finishing tools that take your project from rendered clips to a polished, delivered production — music, upscaling, and voice.",
+    tools: ["artlist", "magnifica", "elevenlabs"],
     learning: [
       {
-        t: "Picture lock first",
-        d: "Assemble every rendered clip in story order, trim, and repair weak shots with Firefly Video inside the edit. Then lock the picture — nothing moves after lock.",
+        t: "Artlist — Music & SFX Licensing",
+        d: "A royalty-free library built for content creators. License high-quality music tracks and sound effects that clear across all platforms — no copyright strikes, no per-use fees.",
       },
       {
-        t: "Sound sells the cut",
-        d: "Score the locked picture with licensed music and SFX from Artlist. Audio against a moving cut is wasted work — that's why lock comes first.",
+        t: "Magnifica — AI Upscaling",
+        d: "Upscale and enhance AI-generated footage and stills to full delivery resolution. Recovers fine detail, sharpens faces, and makes AI output hold up on large screens.",
       },
       {
-        t: "Deliver at full resolution",
-        d: "Run frames and stills through Magnifica for upscaling and detail enhancement, so AI footage holds up on the big screen.",
-      },
-      {
-        t: "Know your credits",
-        d: "Arcana, Artlist and Magnifica each bill differently. Knowing when each tool earns its place — and what it costs — is a director's job too.",
+        t: "ElevenLabs — AI Voice & Audio",
+        d: "Generate natural-sounding voiceovers in any language and tone. Clone a voice, pick from a library of professional voices, or build a branded audio identity for your project.",
       },
     ],
-    challenge: {
-      kind: "order",
-      title: "Launch Sequence",
-      intro: "Six finishing steps, shuffled. Tap them into launch order.",
-      items: [
-        { t: "Assemble the cut", d: "Drop every rendered clip on the timeline in story order and trim." },
-        { t: "Fix the weak shots", d: "Repair or extend broken takes with Firefly Video — inside the edit." },
-        { t: "Lock the picture", d: "Freeze the cut. Nothing moves after lock." },
-        { t: "Score it", d: "License music and SFX from Artlist against the locked picture." },
-        { t: "Upscale to delivery", d: "Run frames and stills through Magnifica to final resolution." },
-        { t: "Final review & ship", d: "Watch it top to tail, export, deliver." },
-      ],
-    },
   },
 ];
 
