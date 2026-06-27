@@ -278,8 +278,8 @@ function LevelView({ level, platforms, best, onFinish, onBack }) {
               </article>
             ))}
           </div>
-          {level.framework && <ScriptFramework data={level.framework} />}
-          {level.ideaMethods && <IdeaMethods data={level.ideaMethods} />}
+          {level.scriptIntelligence && <VisualCraftingSection data={level.scriptIntelligence} />}
+          {level.strategicViz && <VisualCraftingSection data={level.strategicViz} />}
           {level.visualCrafting && <VisualCraftingSection data={level.visualCrafting} />}
           {level.motionOrchestration && <VisualCraftingSection data={level.motionOrchestration} />}
           <div className="stage-next">
@@ -565,8 +565,77 @@ function VcPanelContent({ sec }) {
           <div className="vc-pipe-step" key={s.n}>
             <div className="vc-sg-n">{s.n}</div>
             <h4>{s.title}</h4>
+            {s.desc && <p className="vc-pipe-desc">{s.desc}</p>}
           </div>
         ))}
+      </div>
+    );
+  }
+  if (sec.type === "scriptSteps") {
+    return (
+      <>
+        <div className="vc-script-steps">
+          {sec.steps.map((s, i) => (
+            <div className="vc-script-step" key={i}>
+              <div className="vc-sg-n">{i + 1}</div>
+              <h4>{s.key}</h4>
+              <p className="vc-script-step-q">{s.q}</p>
+              <p>{s.d}</p>
+            </div>
+          ))}
+        </div>
+        <div className="vc-example" style={{ marginTop: 20 }}>
+          <span className="vc-example-label">Worked example · {sec.example}</span>
+          <div className="vc-step-ex-grid">
+            {sec.steps.map((s, i) => (
+              <div className="vc-step-ex" key={i}>
+                <b>{s.key}</b>
+                <p>{s.ex}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </>
+    );
+  }
+  if (sec.type === "ideaGrid") {
+    return (
+      <div className="im-grid">
+        {sec.items.map((m, i) => (
+          <article className="im-card" key={i}>
+            <div className="im-top"><span className="im-n">{m.n}</span><h4>{m.name}</h4></div>
+            <span className="im-ask">{m.ask}</span>
+            <div className="im-rows">
+              <div className="im-row"><span>Idea</span><p>{m.idea}</p></div>
+              <div className="im-row"><span>Concept</span><p>{m.concept}</p></div>
+              <div className="im-row hook"><span>Hook</span><p>{m.hook}</p></div>
+            </div>
+          </article>
+        ))}
+      </div>
+    );
+  }
+  if (sec.type === "shotGuide") {
+    return (
+      <div className="vc-shot-guide">
+        <div className="vc-shot-col">
+          <div className="vc-shot-head">Shot Types</div>
+          {sec.shotTypes.map((r, i) => (
+            <div className="vc-shot-row" key={i}>
+              <span className="vc-cam-use">{r.purpose}</span>
+              <span className="vc-cam-move">{r.shot}</span>
+            </div>
+          ))}
+        </div>
+        <div className="vc-shot-col">
+          <div className="vc-shot-head">Camera Movement</div>
+          {sec.cameraMovements.map((r, i) => (
+            <div className="vc-shot-row" key={i}>
+              <span className="vc-cam-use">{r.goal}</span>
+              <span className="vc-cam-move">{r.move}</span>
+            </div>
+          ))}
+        </div>
       </div>
     );
   }
