@@ -56,7 +56,7 @@ function HUDBar({ levels, cleared, currentId, xp, xpMax, rank, onHome, muted, on
   return (
     <header className="hud">
       <button className="hud-brand" onClick={onHome}>
-        <img src="KAMELIZER FLOW LOGO (white 2.png" alt="pod ai studio" />
+        <img src="https://podmedia.network/img/ai-lab/ai%20logo.png" alt="pod ai studio" />
       </button>
       <div className="hud-right">
         <div className="hud-missions" aria-label="Mission progress">
