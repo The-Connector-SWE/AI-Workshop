@@ -280,6 +280,7 @@ function LevelView({ level, platforms, best, onFinish, onBack }) {
           {level.strategicViz && <VisualCraftingSection data={level.strategicViz} />}
           {level.visualCrafting && <VisualCraftingSection data={level.visualCrafting} />}
           {level.motionOrchestration && <VisualCraftingSection data={level.motionOrchestration} />}
+          {level.launchControl && <VisualCraftingSection data={level.launchControl} />}
           <div className="stage-next">
             <button className="btn-primary" onClick={() => setStage("tools")}>Meet the tools <i>→</i></button>
           </div>

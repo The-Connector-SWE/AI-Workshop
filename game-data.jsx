@@ -408,32 +408,54 @@ const LEVELS = [
     mission:
       "Three platforms that transform raw AI output into polished, delivered productions — master the all-in-one video suite, the enterprise design canvas, and the king of voice synthesis.",
     tools: ["artlist", "magnifica", "elevenlabs"],
-    learning: [
-      {
-        t: "Artlist — The AI Video Platform",
-        d: "Originally a premium music library, Artlist has grown into a full AI video production suite. Artlist Studio lets you cast consistent AI characters, lock in locations, and layer video projects — while aggregating top-tier generators like Google Veo, OpenAI Sora, and Kling instead of locking you into one model. The Stock Legacy adds 30,000+ music tracks, 70,000+ SFX, 8K footage, custom LUTs, and native plugins for Premiere Pro, Final Cut, and DaVinci Resolve.",
-      },
-      {
-        t: "Artlist — Production Workflows",
-        d: "Use Artboards to let AI pull matching stock clips, AI video generations, music, and SFX into a unified mood board, then edit them into a final cut — ideal for commercial ads and short films. The Studio feature lets you generate a character once and place them into multiple AI-generated scenes without losing facial identity.",
-      },
-      {
-        t: "Magnific — Enterprise Design & Workflow Canvas",
-        d: "Far beyond an image upscaler, Magnific is now a comprehensive collaborative design platform. Upscale images up to 10K or 16× with hallucinated photographic detail. Its node-based infinite canvas lets teams map entire asset pipelines, connect AI agents, and wire different models together — with direct access to 250 million licensed assets and deep MCP integration for tools like Claude and ChatGPT.",
-      },
-      {
-        t: "Magnific — Workflow Automation",
-        d: "Polish any blurry mid-journey render or compressed stock photo into crisp, print-ready 4K or 8K. Set up a Space where you feed your brand book into an AI agent — the agent then automatically generates on-brand social banners, product mockups, and variations across 30+ built-in tools, running effectively as an automated content agency engine.",
-      },
-      {
-        t: "ElevenLabs — Voice & Audio Synthesis",
-        d: "The undisputed leader in voice AI, ElevenLabs' v3 Alpha delivers hyper-realistic, emotionally aware voiceovers that grasp context, pacing, and subtext. Its Dubbing tool translates video into 30+ languages while preserving the original speaker's voice and emotional inflection. Eleven Music & SFX generates full tracks with customizable stems, and dedicated lip-sync integrations keep audio perfectly matched to talking-head video.",
-      },
-      {
-        t: "ElevenLabs — Global & Creative Use Cases",
-        d: "Take any English YouTube video, podcast, or training module, run it through the Dubbing tool, and instantly export it in Spanish, Japanese, or German in your exact voice. Use Voice Design to engineer custom accents, ages, and tones for fictional characters, then narrate long-form scripts for audiobooks or branded series — without hiring voice actors.",
-      },
-    ],
+    learning: [],
+    launchControl: {
+      title: "Launch Control",
+      sections: [
+        {
+          n: "01",
+          title: "Artlist — The AI Video Platform",
+          summary: "Multi-model video suite with 30,000+ music tracks, 8K stock, and production plugins",
+          type: "points",
+          points: [
+            "Artlist Studio — cast consistent AI characters, lock locations, and layer video projects across scenes",
+            "Multi-model aggregation — runs Google Veo, OpenAI Sora, and Kling so you choose the best generator per shot",
+            "Stock library — 30,000+ music tracks, 70,000+ SFX, 8K footage, and custom LUTs",
+            "Native plugins — integrates directly into Premiere Pro, Final Cut, and DaVinci Resolve",
+            "Artboards — AI pulls matching clips, music, and SFX into a unified mood board for ads and short films",
+            "Character consistency — generate a character once and reuse them across multiple AI-generated scenes",
+          ],
+        },
+        {
+          n: "02",
+          title: "Magnific — Pocket AI Design Studio",
+          summary: "Multi-model image and video generation, AI editing, and a 250M+ licensed asset library",
+          type: "points",
+          points: [
+            "Image engines — Flux, Ideogram, GPT Image, Nano Banana, Imagen, Mystic, and Seedream in one workspace",
+            "Video engines — Seedance, Veo, Kling, Runway Gen, MiniMax Hailuo, and PixVerse for text-to-video and photo-to-video",
+            "Camera integration — snap a photo on your phone and instantly feed it as a style, structure, or pose reference",
+            "AI photo editor — modify image details with text commands, composition-aware resizing, and background removal",
+            "AI upscaler — transform compressed or low-res assets into campaign-ready, high-fidelity files",
+            "250M+ licensed assets — photos, vectors, icons, videos, templates, and PSD files connected natively to the workspace",
+          ],
+        },
+        {
+          n: "03",
+          title: "ElevenLabs — Voice & Audio Synthesis",
+          summary: "Emotional voiceovers, 30-language dubbing, music stems, and lip-sync",
+          type: "points",
+          points: [
+            "v3 Alpha speech — hyper-realistic, emotionally aware voiceovers that grasp context, pacing, and subtext",
+            "AI Dubbing — translates video into 30+ languages while preserving the speaker's voice and emotional inflection",
+            "Eleven Music & SFX — generates full tracks with customizable stems and sound effects from text prompts",
+            "Advanced lip-sync — dedicated model integrations match generated audio to existing talking-head videos",
+            "Voice Design — engineer custom accents, ages, and tones for characters or narration without hiring voice actors",
+            "Go global — export any English video or podcast in Spanish, Japanese, German, and more in your exact voice",
+          ],
+        },
+      ],
+    },
   },
 ];
 
