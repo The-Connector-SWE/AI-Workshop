@@ -57,17 +57,7 @@ const PLATFORMS = {
       "Access via ChatGPT, the API, or Firefly",
     ],
   },
-  marey: {
-    id: "marey", name: "Marey", vendor: "Runway Gen-3", hue: "#ff8de0",
-    tagline: "Creative fidelity & precision control",
-    about: "Best for fine art, stylized cinematic shorts and complex spatial consistency. Advanced Motion Brush and Camera Controls plus granular prompt interpretation give you highly specific output.",
-    usage: [
-      "When you want to draw camera / object movement yourself",
-      "When you require legal safety",
-      "Stylized, art-directed shorts",
-      "Motion Brush + Camera Controls",
-    ],
-  },
+
   kling: {
     id: "kling", name: "Kling 3.0", vendor: "Kuaishou", hue: "#7c8cff",
     tagline: "Temporal consistency & logic",
@@ -185,7 +175,7 @@ const MODULES = [
   {
     id: 2, kicker: "Module 02", title: "Advanced Video Orchestration",
     summary: "Image-to-video multimodal prompting. Meet the image models that build your frames and the video models that bring them to life \u2014 and learn when to use which.",
-    platforms: ["firefly", "nano-banana", "gpt-image", "marey", "kling", "veo", "seedance", "firefly-video"],
+    platforms: ["firefly", "nano-banana", "gpt-image", "kling", "veo", "seedance", "firefly-video"],
     quiz: [
       {
         q: "Which image model is best for 99% text-rendering accuracy and structured layouts?",
@@ -201,22 +191,17 @@ const MODULES = [
       },
       {
         q: "Your video relies on beautiful physics, complex textures and perfect loops. Pick the model.",
-        options: ["Seedance 2.0", "Marey", "Veo 3.1", "Firefly Video"],
+        options: ["Seedance 2.0", "Kling 3.0", "Veo 3.1", "Firefly Video"],
         answer: 2,
         why: "Veo 3.1 is the choice when physics, textures and seamless loops matter most.",
       },
       {
         q: "Building an AI movie trailer with dialogue and character continuity \u2014 which video model?",
-        options: ["Kling 3.0", "Seedance 2.0", "Marey", "Magnifica"],
+        options: ["Kling 3.0", "Seedance 2.0", "Veo 3.1", "Magnifica"],
         answer: 0,
         why: "Kling 3.0 excels at temporal consistency, dialogue and character continuity over longer durations.",
       },
-      {
-        q: "You want to draw the camera/object movement yourself and require legal safety.",
-        options: ["Veo 3.1", "Marey", "Seedance 2.0", "Nano Banana 2"],
-        answer: 1,
-        why: "Marey gives you Motion Brush + Camera Controls and legal safety for art-directed shots.",
-      },
+
       {
         q: "You're editing in Premiere Pro and need to fix or extend a real-life clip.",
         options: ["Kling 3.0", "Firefly Video", "Seedance 2.0", "GPT Image 2"],

@@ -297,7 +297,7 @@ const LEVELS = [
     rank: "Motion Director",
     mission:
       "Frames become film. Follow the six-step production pipeline — from locking motion for each frame to merging clips into a finished video.",
-    tools: ["marey", "kling", "veo", "seedance", "firefly-video"],
+    tools: ["kling", "veo", "seedance", "firefly-video"],
     learning: [],
     motionOrchestration: {
       title: "Motion Orchestration",
