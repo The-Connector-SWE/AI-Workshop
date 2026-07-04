@@ -13,9 +13,17 @@
 
   .round-card { padding: clamp(20px,3vw,30px); border-radius: 26px; }
   .stage { position: relative; border-radius: 18px; overflow: hidden; aspect-ratio: 16/9; background: #0d0a22; border: 1px solid var(--line2); }
+  .stage iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; }
 
   .round-q { text-align: center; font-size: clamp(19px,3vw,26px); font-weight: 700; letter-spacing: -.01em; margin: 22px 0 18px; }
   .round-foot { margin-top: 22px; display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+
+  .game-top { display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 18px; }
+  .game-count { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .game-dots { display: flex; gap: 7px; flex-wrap: wrap; justify-content: center; }
+  .gdot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,.15); }
+  .gdot.cur { background: var(--iri); box-shadow: 0 0 8px rgba(124,77,255,.7); }
+  .gdot.past { background: rgba(255,255,255,.4); }
 
   /* question reveal section */
   .fun-q-section { max-width: 760px; margin: 0 auto 32px; }
@@ -48,19 +56,7 @@
     </div>
   </section>
 
-  <div class="game-wrap anim a4">
-    <div class="round-card glass">
-      <div class="stage">
-        <iframe src="https://www.youtube.com/embed/IkwWEEZXjPw" title="Real or AI" style="position:absolute;inset:0;width:100%;height:100%;border:0;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-      </div>
-      <div class="round-q">Watch together, and decide as a group: real footage, or AI-generated?</div>
-      <div class="round-foot" style="justify-content:center">
-        <a class="fun-q-btn" href="https://www.youtube.com/watch?v=IkwWEEZXjPw" target="_blank" rel="noopener noreferrer">
-          Open on YouTube <i>→</i>
-        </a>
-      </div>
-    </div>
-  </div>
+  <div class="game-wrap anim a4" id="gameRoot"></div>
 </main>
 
 <footer class="site-foot">
@@ -69,5 +65,58 @@
 </footer>
 
 <script src="site.js"></script>
+<script>
+var CLIPS = [
+  { id: "t6nTF9yIJ0Q", url: "https://www.youtube.com/watch?v=t6nTF9yIJ0Q" },
+  { id: "RBCK6gsZLxg", url: "https://www.youtube.com/watch?v=RBCK6gsZLxg" },
+  { id: "jOzJloXnW-Q", url: "https://youtube.com/shorts/jOzJloXnW-Q" },
+  { id: "-6MNKZeqGZY", url: "https://youtube.com/shorts/-6MNKZeqGZY" },
+  { id: "qvAyubiMcZ8", url: "https://youtube.com/shorts/qvAyubiMcZ8" },
+  { id: "VjyjaHI2qRQ", url: "https://www.youtube.com/watch?v=VjyjaHI2qRQ" },
+  { id: "YSe1omWpKdk", url: "https://youtube.com/shorts/YSe1omWpKdk" },
+  { id: "9yZ8gDrNb4A", url: "https://youtube.com/shorts/9yZ8gDrNb4A" },
+  { id: "GawPm4fgBjo", url: "https://youtube.com/shorts/GawPm4fgBjo" },
+];
+
+(function () {
+  var idx = 0;
+
+  function render() {
+    var root = document.getElementById("gameRoot");
+    var c = CLIPS[idx], total = CLIPS.length;
+
+    var dots = CLIPS.map(function (_, i) {
+      var cls = "gdot";
+      if (i < idx) cls += " past";
+      if (i === idx) cls += " cur";
+      return '<span class="' + cls + '"></span>';
+    }).join("");
+
+    root.innerHTML =
+      '<div class="round-card glass">' +
+        '<div class="game-top"><span class="game-count">Clip ' + (idx + 1) + " / " + total + "</span></div>" +
+        '<div class="game-dots" style="margin-bottom:18px">' + dots + "</div>" +
+        '<div class="stage"><iframe src="https://www.youtube.com/embed/' + c.id + '" title="Clip ' + (idx + 1) + '" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>' +
+        '<div class="round-q">Watch together, and decide as a group: real footage, or AI-generated?</div>' +
+        '<div class="round-foot">' +
+          '<button class="btn-ghost" id="prevBtn"' + (idx === 0 ? " disabled" : "") + '><i>←</i> Previous</button>' +
+          '<a class="fun-q-btn" href="' + c.url + '" target="_blank" rel="noopener noreferrer">Open on YouTube <i>→</i></a>' +
+          '<button class="btn-primary" id="nextBtn">' + (idx + 1 < total ? "Next clip" : "Start over") + " <i>→</i></button>" +
+        "</div>" +
+      "</div>";
+
+    document.getElementById("prevBtn").onclick = function () {
+      if (idx > 0) { idx -= 1; render(); window.scrollTo({ top: 0, behavior: "smooth" }); }
+    };
+    document.getElementById("nextBtn").onclick = function () {
+      idx = (idx + 1 < total) ? idx + 1 : 0;
+      render();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+  }
+
+  render();
+})();
+</script>
 </body>
 </html>
