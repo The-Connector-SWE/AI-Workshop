@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Accounts · The Director's Game</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="theme.css" />
+<style>
+  .acc-section { margin-top: clamp(26px,4vw,40px); }
+  .acc-card { padding: clamp(22px,3.5vw,32px); border-radius: 24px; }
+  .acc-card + .acc-card { margin-top: 26px; }
+  .acc-top { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+  .acc-avatar { width: 64px; height: 64px; border-radius: 18px; display: grid; place-items: center; font-size: 23px; font-weight: 700; color: #fff; background: var(--iri); flex: none; box-shadow: 0 10px 28px rgba(255,46,63,.35); }
+  .acc-id h2 { font-size: clamp(21px,3.4vw,27px); font-weight: 800; letter-spacing: -.01em; }
+  .acc-id .role { font-size: 13.5px; color: var(--cyan); margin-top: 3px; }
+  .acc-creds { margin-top: 18px; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+  .acc-cred { padding: 14px 16px; border-radius: 14px; background: rgba(255,255,255,.05); border: 1px solid var(--line); }
+  .acc-cred-label { display: block; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+  .acc-cred-value { font-size: 15px; font-weight: 600; color: #fff; font-family: 'Space Grotesk', monospace; word-break: break-all; }
+</style>
+</head>
+<body data-page="accounts">
+
+<main class="page">
+  <header class="page-head">
+    <div class="pill anim a1"><span class="dot"></span> Shared logins</div>
+    <h1 class="page-title anim a2">Workshop <span class="iri">Accounts</span></h1>
+  </header>
+
+  <section class="acc-section">
+
+    <article class="acc-card glass anim a4">
+      <div class="acc-top">
+        <div class="acc-avatar">AF</div>
+        <div class="acc-id">
+          <h2>Adobe Firefly</h2>
+          <div class="role">Shared workshop account</div>
+        </div>
+      </div>
+      <div class="acc-creds">
+        <div class="acc-cred">
+          <span class="acc-cred-label">Email</span>
+          <span class="acc-cred-value">aiworkshop@podmedia.network</span>
+        </div>
+        <div class="acc-cred">
+          <span class="acc-cred-label">Password</span>
+          <span class="acc-cred-value">HayyMakers@2026</span>
+        </div>
+      </div>
+    </article>
+
+  </section>
+</main>
+
+<footer class="site-foot">
+  <span>The Director's Game — workshop companion</span>
+  <span><a href="index.html">Levels</a></span>
+</footer>
+
+<script src="site.js"></script>
+</body>
+</html>
