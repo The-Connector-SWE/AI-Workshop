@@ -217,7 +217,7 @@ const LEVELS = [
               n: 3,
               title: "Make a Character Reference Sheet",
               includes: ["Front view", "Side view", "Back view", "Face close-up", "Expression sheet", "Important accessories", "Color palette"],
-              example: "Character reference sheet of Jamila, a 21 year old, with dark brown wavy shoulder length hair, warm brown eyes, olive tan skin, soft round face, average slim body, wearing cozy light blue long pajama pants and a matching button up pajama shirt, barefoot, slightly messy morning hair, natural sleepy face. Show front view, side view, back view, face close-up, and 5 expressions: very tired, sleepy, surprised, refreshed, focused and happy. Clean white background, cozy realistic character design, consistent proportions, clear outfit details, soft morning lifestyle mood, high quality concept art.",
+              example: "Character reference sheet of Jamila, a 21 year old, with dark brown wavy shoulder length hair, warm brown eyes, olive tan skin, soft round face, average slim body, wearing cozy light blue long pajama pants and a matching button up pajama shirt, barefoot, slightly messy morning hair, natural sleepy face. Show front view, side view, back view, face close-up, and 5 expressions: very tired, sleepy, surprised, refreshed, focused and happy. Clean white background, cozy realistic character design, consistent proportions, clear outfit details, soft morning lifestyle mood, cinematic mood.",
             },
             {
               n: 4,
