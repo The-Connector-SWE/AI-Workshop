@@ -137,7 +137,7 @@ const LEVELS = [
       {
         kind: "open",
         title: "Prompt Every Frame",
-        intro: "Using the MAZAJ storyboard from Level 1, write a full AI image-generation prompt for each of its 9 frames — keep Jamila's locked character description consistent across all of them.",
+        intro: "create prompt for each frame in the storyboard",
         columns: ["AI Image Prompt"],
         items: [
           { label: "Frame 1" },
