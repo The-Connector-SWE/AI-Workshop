@@ -11,43 +11,11 @@
 <style>
   .game-wrap { max-width: 760px; margin: 0 auto; }
 
-  .game-top { display: flex; align-items: center; gap: 16px; margin-bottom: 22px; }
-  .game-dots { display: flex; gap: 7px; margin: 0 auto; }
-  .gdot { width: 26px; height: 5px; border-radius: 5px; background: rgba(255,255,255,.12); transition: .3s; }
-  .gdot.past { background: rgba(255,255,255,.35); }
-  .gdot.cur { background: var(--iri); box-shadow: 0 0 10px rgba(124,77,255,.7); }
-  .game-count { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
-
   .round-card { padding: clamp(20px,3vw,30px); border-radius: 26px; }
   .stage { position: relative; border-radius: 18px; overflow: hidden; aspect-ratio: 16/9; background: #0d0a22; border: 1px solid var(--line2); }
-  .stage image-slot { width: 100%; height: 100%; display: block; }
-  .stage .badge-corner { position: absolute; top: 14px; left: 14px; z-index: 3; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; padding: 6px 12px; border-radius: 999px; background: rgba(11,8,32,.7); backdrop-filter: blur(6px); border: 1px solid var(--line2); color: var(--muted2); }
-  .reveal-overlay { position: absolute; inset: 0; z-index: 4; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; opacity: 0; pointer-events: none; transition: .4s; backdrop-filter: blur(3px); }
-  .reveal-overlay.show { opacity: 1; }
-  .reveal-overlay.real { background: rgba(20,60,40,.55); } .reveal-overlay.ai { background: rgba(60,20,50,.55); }
-  .reveal-verdict { font-size: clamp(30px,6vw,52px); font-weight: 800; letter-spacing: -.02em; }
-  .reveal-overlay.real .reveal-verdict { color: var(--good); } .reveal-overlay.ai .reveal-verdict { color: var(--pink); }
 
   .round-q { text-align: center; font-size: clamp(19px,3vw,26px); font-weight: 700; letter-spacing: -.01em; margin: 22px 0 18px; }
-  .choices { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-  .choice { padding: 20px; border-radius: 18px; border: 1px solid var(--line2); background: var(--glass); font-size: 18px; font-weight: 700; transition: .22s; display: flex; flex-direction: column; align-items: center; gap: 8px; }
-  .choice .sub { font-size: 12px; font-weight: 500; color: var(--muted); letter-spacing: .02em; }
-  .choice:not(:disabled):hover { transform: translateY(-3px); border-color: var(--line2); background: var(--glass2); }
-  .choice.real:not(:disabled):hover { box-shadow: 0 10px 30px rgba(110,255,176,.2); }
-  .choice.ai:not(:disabled):hover { box-shadow: 0 10px 30px rgba(255,141,224,.2); }
-  .choice:disabled { cursor: default; opacity: .55; }
-  .choice.picked { opacity: 1 !important; }
-
   .round-foot { margin-top: 22px; display: flex; align-items: center; justify-content: space-between; gap: 14px; }
-  .round-hint { font-size: 12.5px; color: var(--muted); max-width: 60%; line-height: 1.5; }
-
-
-  /* facilitator note */
-  .fac-note { margin-top: 26px; padding: 16px 20px; border-radius: 16px; display: flex; gap: 12px; align-items: flex-start; font-size: 13px; color: var(--muted); line-height: 1.55; background: var(--glass); border: 1px dashed var(--line2); }
-  .fac-note svg { color: var(--cyan); flex: none; margin-top: 1px; }
-  .fac-note b { color: var(--muted2); }
-
-  @media (max-width: 460px) { .choices { grid-template-columns: 1fr; } .round-hint { max-width: 100%; } }
 
   /* question reveal section */
   .fun-q-section { max-width: 760px; margin: 0 auto 32px; }
@@ -80,11 +48,18 @@
     </div>
   </section>
 
-  <div class="game-wrap anim a4" id="gameRoot"></div>
-
-  <div class="fac-note anim a4" style="max-width:760px;margin-left:auto;margin-right:auto">
-    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></svg>
-    <div><b>Facilitator setup:</b> each round has an empty media slot — drag a clip thumbnail or screenshot onto it (or click to browse) and it stays put for the session. Set whether each one is <b>Real</b> or <b>AI</b> by editing the <code>ROUNDS</code> list at the bottom of this file.</div>
+  <div class="game-wrap anim a4">
+    <div class="round-card glass">
+      <div class="stage">
+        <iframe src="https://www.youtube.com/embed/IkwWEEZXjPw" title="Real or AI" style="position:absolute;inset:0;width:100%;height:100%;border:0;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      <div class="round-q">Watch together, and decide as a group: real footage, or AI-generated?</div>
+      <div class="round-foot" style="justify-content:center">
+        <a class="fun-q-btn" href="https://www.youtube.com/watch?v=IkwWEEZXjPw" target="_blank" rel="noopener noreferrer">
+          Open on YouTube <i>→</i>
+        </a>
+      </div>
+    </div>
   </div>
 </main>
 
@@ -93,86 +68,6 @@
   <span><a href="index.html">Platforms</a></span>
 </footer>
 
-<script src="image-slot.js"></script>
 <script src="site.js"></script>
-<script>
-/* ── EDIT ME ──────────────────────────────────────────────────────────
-   One entry per round. `answer` is the truth: "real" or "ai".
-   `hint` shows after the reveal. Drag media onto each slot in the page;
-   it persists automatically. Add or remove rounds freely.            */
-var ROUNDS = [
-  { id: "r1", answer: "ai",   hint: "Look for too-perfect symmetry and melting fine detail in motion." },
-  { id: "r2", answer: "real", hint: "Natural motion blur and imperfect lighting are tells of real capture." },
-  { id: "r3", answer: "ai",   hint: "Watch hands, text and reflections — they often betray generation." },
-  { id: "r4", answer: "real", hint: "Consistent physics and unbroken continuity point to real footage." },
-  { id: "r5", answer: "ai",   hint: "Backgrounds that subtly warp between frames are a classic AI sign." },
-  { id: "r6", answer: "real", hint: "Authentic depth of field and lens grain are hard to fake." },
-  { id: "r7", answer: "ai",   hint: "Over-smooth skin and uncanny eye contact often mean generated." },
-  { id: "r8", answer: "real", hint: "Real ads still have tiny continuity quirks AI tends to clean away." },
-];
-/* ─────────────────────────────────────────────────────────────────── */
-
-(function () {
-  var idx = 0, picked = null;
-
-  function render() {
-    var root = document.getElementById("gameRoot");
-    var r = ROUNDS[idx], total = ROUNDS.length;
-
-    var dots = ROUNDS.map(function (_, i) {
-      var c = "gdot";
-      if (i < idx) c += " past";
-      if (i === idx) c += " cur";
-      return '<span class="' + c + '"></span>';
-    }).join("");
-
-    var choices =
-      '<button class="choice real" data-pick="real"><span>Real</span><span class="sub">Captured in camera</span></button>' +
-      '<button class="choice ai" data-pick="ai"><span>AI</span><span class="sub">Machine-generated</span></button>';
-
-    root.innerHTML =
-      '<div class="round-card glass">' +
-        '<div class="game-top"><span class="game-count">Clip ' + (idx + 1) + " / " + total + "</span>" +
-          '<div class="game-dots">' + dots + "</div></div>" +
-        '<div class="stage"><span class="badge-corner">Clip ' + (idx + 1) + "</span>" +
-          '<image-slot id="roai_' + r.id + '" shape="rect" placeholder="Drop a clip thumbnail or screenshot"></image-slot>' +
-          '<div class="reveal-overlay" id="rev"></div></div>' +
-        '<div class="round-q">Real footage, or AI-generated?</div>' +
-        '<div class="choices">' + choices + "</div>" +
-        '<div class="round-foot"><span class="round-hint" id="hint"></span>' +
-          '<button class="btn-primary disabled" id="nextBtn">' + (idx + 1 < total ? "Next clip" : "Start over") + " <i>→</i></button></div>" +
-      "</div>";
-
-    root.querySelectorAll(".choice").forEach(function (btn) {
-      btn.onclick = function () { pick(btn.dataset.pick, r); };
-    });
-    document.getElementById("nextBtn").onclick = function () {
-      idx = (idx + 1 < total) ? idx + 1 : 0;
-      picked = null; render();
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    };
-  }
-
-  function pick(choice, r) {
-    if (picked !== null) return;
-    picked = choice;
-
-    document.querySelectorAll(".choice").forEach(function (btn) {
-      btn.classList.toggle("picked", btn.dataset.pick === choice);
-      btn.disabled = true;
-    });
-
-    var rev = document.getElementById("rev");
-    rev.className = "reveal-overlay show " + r.answer;
-    rev.innerHTML = '<div class="reveal-verdict">' + (r.answer === "ai" ? "AI" : "Real") + "</div>";
-
-    document.getElementById("hint").textContent = r.hint;
-    document.getElementById("nextBtn").classList.remove("disabled");
-    document.querySelectorAll(".gdot")[idx].classList.add("past");
-  }
-
-  render();
-})();
-</script>
 </body>
 </html>
