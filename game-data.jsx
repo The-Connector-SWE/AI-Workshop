@@ -18,7 +18,7 @@ const LEVELS = [
     rank: "Storyboard Artist",
     mission:
       "Convert your script into a storyboard — highlight the moments, build one visual box per script line, and choose your shot type before anything is rendered.",
-    tools: ["gemini", "gpt-image"],
+    tools: ["gemini"],
     learning: [],
     strategicViz: {
       title: "Strategic Visualization",
@@ -77,6 +77,20 @@ const LEVELS = [
           exampleTitle: "The AI Prompt",
           exampleText: "Act as a professional film director, art director, and AI visual storyboard creator. I will upload a PDF script with a storyboard table: Frame No. | Time | VO | Visual Description | Shot Type | Mood | Camera Movement. Convert this script into a clear, detailed, cinematic visual storyboard. Do not rewrite the script or change the voice-over meaning. Use the existing script as the foundation, then upgrade the visual direction professionally.",
           negative: "",
+          exampleScript: {
+            title: "MAZAJ Iced Coffee — Sample Storyboard",
+            rows: [
+              { frame: "1", duration: "0–3 sec", vo: "Text: “POV: عندك شغل... بس المود لسه نايم.”", visual: "Jamila wakes up tired before work. Messy hair, sleepy face, phone alarm flashing. The room feels dull and slightly desaturated.", camera: "Top shot over bed, then quick push-in to her tired face.", mood: "Relatable, sleepy, funny" },
+              { frame: "2", duration: "3–6 sec", vo: "VO: “Jamila today? Zero energy.”", visual: "She walks slowly to the kitchen in pajamas, dragging her feet. Everything around her feels slow-motion and boring.", camera: "Handheld tracking shot from behind, slightly shaky to show low energy.", mood: "Lazy, low battery" },
+              { frame: "3", duration: "6–9 sec", vo: "Text: “Then… she found the mood.”", visual: "Jamila opens the fridge. Cold vapor comes out. A MAZAJ Iced Coffee can sits in the middle, standing out with colorful light around it.", camera: "Fridge POV looking at Jamila, then slow dolly-in on the can.", mood: "Discovery, curious" },
+              { frame: "4", duration: "9–12 sec", vo: "VO: “MAZAJ Iced Coffee… strong caffeine, cold vibe, ولطيف وسعره.”", visual: "Hero close-up of the can in her hand. Condensation drops on the can. The fridge light reflects in a cinematic way.", camera: "Macro shot with slow push-in, can rotating slightly in hand.", mood: "Fresh, tempting" },
+              { frame: "5", duration: "12–15 sec", vo: "Text: “One sip…”", visual: "She opens the can. Crisp sound. She takes the first sip. The moment pauses for half a second.", camera: "Extreme close-up on can opening, then close-up on her sip.", mood: "Suspenseful, satisfying" },
+              { frame: "6", duration: "15–18 sec", vo: "VO / Text: “قلب والمود.”", visual: "Instant mood transformation. The dull room explodes into color. Light leaks, stickers, street-style graphics, and playful energy fill the scene. Jamila smiles.", camera: "Whip pan transition with a fast zoom burst effect.", mood: "Energetic, playful" },
+              { frame: "7", duration: "18–22 sec", vo: "Text: “From low battery to main character.”", visual: "Fast montage: Jamila gets ready, fixes her hair, changes into a colorful street-style outfit, grabs laptop and MAZAJ can.", camera: "Jump cuts, mirror shot, quick snap zooms on outfit details.", mood: "Stylish, confident" },
+              { frame: "8", duration: "22–26 sec", vo: "VO: “Now she’s ready to create.”", visual: "Jamila arrives at an urban street café. She opens her laptop, places MAZAJ beside it, and starts working with focus and confidence. Street life moves around her.", camera: "Wide street café shot, then smooth side tracking shot ending on her laptop and can.", mood: "Cool, productive" },
+              { frame: "9", duration: "26–30 sec", vo: "VO / Text: “MAZAJ Iced Coffee — Until your mood finds you.”", visual: "Final beauty shot: MAZAJ can on café table, laptop open, Jamila smiling in the blurred background. The tagline appears clearly.", camera: "Static hero shot with subtle slow push-in on the can.", mood: "Bold, fresh, memorable" },
+            ],
+          },
         },
       ],
     },

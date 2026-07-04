@@ -465,6 +465,26 @@ function VcPanelContent({ sec }) {
           <p>{sec.exampleText}</p>
           {sec.negative && <p className="vc-negative"><strong>Negative prompt:</strong> {sec.negative}</p>}
         </div>
+        {sec.exampleScript && (
+          <>
+            <p className="vc-sub-head">{sec.exampleScript.title}</p>
+            <div className="vc-script-table">
+              <div className="vc-script-head">
+                <span>Frame</span><span>Duration</span><span>VO / Text</span><span>Visual Description</span><span>Camera</span><span>Mood</span>
+              </div>
+              {sec.exampleScript.rows.map((r, i) => (
+                <div className="vc-script-row" key={i}>
+                  <span data-label="Frame"><b>{r.frame}</b></span>
+                  <span data-label="Duration">{r.duration}</span>
+                  <span data-label="VO / Text">{r.vo}</span>
+                  <span data-label="Visual Description">{r.visual}</span>
+                  <span data-label="Camera">{r.camera}</span>
+                  <span data-label="Mood">{r.mood}</span>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
       </>
     );
   }
