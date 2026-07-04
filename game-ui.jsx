@@ -523,6 +523,12 @@ function VcPanelContent({ sec }) {
                 {st.includes.map((it, i) => <li key={i}>{it}</li>)}
               </ul>
             )}
+            {st.example && (
+              <div className="vc-example">
+                <span className="vc-example-label">Reference Sheet Prompt</span>
+                <p>{st.example}</p>
+              </div>
+            )}
             {st.categories && (
               <div className="vc-char-categories">
                 {st.categories.map((cat, i) => (

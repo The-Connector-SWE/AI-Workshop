@@ -217,6 +217,7 @@ const LEVELS = [
               n: 3,
               title: "Make a Character Reference Sheet",
               includes: ["Front view", "Side view", "Back view", "Face close-up", "Expression sheet", "Important accessories", "Color palette"],
+              example: "Character reference sheet of Abdullah, a 25 year old Saudi man with short black hair, warm brown eyes, tan skin, average athletic body, wearing the Saudi Arabia 2026 football jersey, dark pants, white sneakers, and a green and white Saudi scarf around his neck. Show front view, side view, back view, face close-up, and 5 expressions: happy, nervous, proud, shocked, and celebrating. Clean white background, cinematic sports character design, consistent proportions, clear outfit details, high quality concept art.",
             },
             {
               n: 4,
