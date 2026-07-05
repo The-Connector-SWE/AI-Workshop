@@ -27,7 +27,7 @@
   <section class="fb-section anim a4">
     <div class="fb-card glass">
       <div class="fb-stage">
-        <iframe src="https://form.jotform.com/261852308286058" title="Workshop feedback form" allow="clipboard-write" allowfullscreen></iframe>
+        <iframe id="JotFormIFrame-261852308286058" src="https://form.jotform.com/261852308286058" title="Workshop feedback form" allowtransparency="true" allow="geolocation; microphone; camera; clipboard-write" allowfullscreen scrolling="no"></iframe>
       </div>
     </div>
   </section>
@@ -39,5 +39,9 @@
 </footer>
 
 <script src="site.js"></script>
+<script src="https://cdn.jotfor.ms/s/umd/latest/for-form-embed-handler.js"></script>
+<script>
+  window.jotformEmbedHandler("iframe[id='JotFormIFrame-261852308286058']", "https://form.jotform.com/");
+</script>
 </body>
 </html>
