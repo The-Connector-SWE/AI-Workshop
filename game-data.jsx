@@ -301,6 +301,7 @@ const LEVELS = [
           title: "Reference Output: Final Frame Gallery",
           summary: "The complete 15-frame set generated end-to-end with a locked character and style.",
           type: "gallery",
+          pdf: "assets/frames/video-frames-reference.pdf",
           images: [
             { src: "assets/frames/frame-01.jpg", label: "Frame 1" },
             { src: "assets/frames/frame-02.jpg", label: "Frame 2" },
