@@ -293,18 +293,16 @@ body {
   background: rgba(255,255,255,.22);
   flex: none;
 }
-/* Second partner logo — crop to top line only (source file is a 2-line lockup) */
+/* Second partner logo */
 .cert-logo .logo-partner-wrap {
   height: 45px;
-  overflow: hidden;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
 }
 .cert-logo .logo-partner {
-  height: 76px;
+  height: 45px;
   width: auto;
   display: block;
-  margin-top: 3px;
   opacity: .9;
 }
 
@@ -571,7 +569,7 @@ function certHTML(name, date) {
   // Drop the partner logo file into this folder, then update
   // PARTNER_LOGO_SRC with the filename (e.g. 'partner-logo.png').
   // Leave as '' to hide it until ready.
-  const PARTNER_LOGO_SRC = 'hayy-logo.svg';
+  const PARTNER_LOGO_SRC = 'hayy-logo2.png';
   const partnerLogo = PARTNER_LOGO_SRC
     ? `<span class="logo-sep"></span><span class="logo-partner-wrap"><img class="logo-partner" src="${PARTNER_LOGO_SRC}" alt="partner" /></span>`
     : '';

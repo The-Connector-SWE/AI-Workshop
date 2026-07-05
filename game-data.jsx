@@ -489,6 +489,13 @@ const LEVELS = [
             "Go global — export any English video or podcast in Spanish, Japanese, German, and more in your exact voice",
           ],
         },
+        {
+          n: "04",
+          title: "Upload",
+          summary: "Submit your finished video files to the shared Drive folder",
+          type: "upload",
+          driveUrl: "https://drive.google.com/drive/folders/1pe1HnLVIAW_lvKHUain4S6w1M620lw5H?usp=sharing",
+        },
       ],
     },
   },

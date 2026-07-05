@@ -749,7 +749,73 @@ function VcPanelContent({ sec }) {
       </>
     );
   }
+  if (sec.type === "upload") {
+    return <UploadPanel sec={sec} />;
+  }
   return null;
+}
+
+/* -------- Launch Control: video upload panel -------- */
+function UploadPanel({ sec }) {
+  const { useState, useRef } = React;
+  const [files, setFiles] = useState([]);
+  const inputRef = useRef(null);
+
+  function addFiles(fileList) {
+    const vids = Array.from(fileList).filter((f) => f.type.startsWith("video/"));
+    setFiles((prev) => [...prev, ...vids]);
+  }
+
+  function removeFile(i) {
+    setFiles((prev) => prev.filter((_, idx) => idx !== i));
+  }
+
+  function fmtSize(bytes) {
+    return bytes < 1024 * 1024
+      ? Math.round(bytes / 1024) + " KB"
+      : (bytes / (1024 * 1024)).toFixed(1) + " MB";
+  }
+
+  return (
+    <>
+      <div
+        className="vc-upload-drop"
+        onDragOver={(e) => e.preventDefault()}
+        onDrop={(e) => { e.preventDefault(); addFiles(e.dataTransfer.files); }}
+        onClick={() => inputRef.current.click()}
+      >
+        <input
+          ref={inputRef}
+          type="file"
+          accept="video/*"
+          multiple
+          hidden
+          onChange={(e) => { addFiles(e.target.files); e.target.value = ""; }}
+        />
+        <span className="vc-upload-icon">⬆</span>
+        <p><b>Click to select</b> or drag video files here</p>
+      </div>
+
+      {files.length > 0 && (
+        <ul className="vc-upload-list">
+          {files.map((f, i) => (
+            <li key={i}>
+              <span className="vc-upload-name">{f.name}</span>
+              <span className="vc-upload-size">{fmtSize(f.size)}</span>
+              <button className="vc-upload-remove" onClick={() => removeFile(i)} aria-label={"Remove " + f.name}>✕</button>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <a className="btn-primary vc-upload-cta" href={sec.driveUrl} target="_blank" rel="noopener">
+        Open Drive folder &amp; drop your files <i>↗</i>
+      </a>
+      <p className="vc-upload-hint">
+        Files can't be auto-uploaded from this page — select or drag your videos above, then drop them into the shared Drive folder to submit.
+      </p>
+    </>
+  );
 }
 
 /* -------- Level 3: Visual Crafting six-box section -------- */
