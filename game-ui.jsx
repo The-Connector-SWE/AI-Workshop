@@ -738,7 +738,10 @@ function VcPanelContent({ sec }) {
         <div className="vc-gallery">
           {sec.images.map((img, i) => (
             <figure className="vc-gallery-item" key={i}>
-              <img src={img.src} alt={img.label} loading="lazy" />
+              <a className="vc-gallery-link" href={img.src} download={img.label.replace(/\s+/g, "-").toLowerCase() + ".jpg"} title={"Download " + img.label}>
+                <img src={img.src} alt={img.label} loading="lazy" />
+                <span className="vc-gallery-dl-icon">↓</span>
+              </a>
               <figcaption>{img.label}</figcaption>
             </figure>
           ))}

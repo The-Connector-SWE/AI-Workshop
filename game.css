@@ -521,7 +521,11 @@
 .vc-gallery-dl { margin-bottom: 14px; }
 .vc-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
 .vc-gallery-item { margin: 0; border-radius: 10px; overflow: hidden; border: 1px solid var(--line); background: rgba(255,255,255,.04); }
+.vc-gallery-link { position: relative; display: block; }
 .vc-gallery-item img { display: block; width: 100%; aspect-ratio: 9 / 16; object-fit: cover; }
+.vc-gallery-dl-icon { position: absolute; top: 6px; right: 6px; width: 26px; height: 26px; display: grid; place-items: center;
+  border-radius: 50%; background: rgba(8,5,24,.75); color: var(--ink); font-size: 14px; opacity: 0; transition: opacity .15s, background .15s; }
+.vc-gallery-link:hover .vc-gallery-dl-icon { opacity: 1; background: rgba(255,46,63,.75); }
 .vc-gallery-item figcaption { padding: 6px 8px; font-family: 'Space Grotesk', sans-serif; font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); text-align: center; }
 
 /* ---- pipeline with desc (Levels 1-2 reuse) ---- */
