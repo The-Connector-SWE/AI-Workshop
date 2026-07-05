@@ -11,6 +11,25 @@ function shuffleArr(arr) {
   return r;
 }
 
+/* ---------------- Copy to clipboard (shared) ---------------- */
+function CopyButton({ text }) {
+  const { useState } = React;
+  const [copied, setCopied] = useState(false);
+
+  function copy() {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1600);
+    });
+  }
+
+  return (
+    <button className={"copy-btn" + (copied ? " copied" : "")} onClick={copy} type="button">
+      {copied ? "✓ Copied" : "Copy"}
+    </button>
+  );
+}
+
 /* ---------------- Progress dots (shared) ---------------- */
 function ChDots({ count, idx }) {
   return (
@@ -369,11 +388,17 @@ function OpenChallenge({ challenge, onDone }) {
         <p className="open-intro">{challenge.intro}</p>
 
         {challenge.prompt && (
-          <blockquote className="open-prompt">{challenge.prompt}</blockquote>
+          <blockquote className="open-prompt">
+            {challenge.prompt}
+            <CopyButton text={challenge.prompt} />
+          </blockquote>
         )}
 
         {b && typeof b === "string" && (
-          <blockquote className="open-prompt">{b}</blockquote>
+          <blockquote className="open-prompt">
+            {b}
+            <CopyButton text={b} />
+          </blockquote>
         )}
 
         {b && typeof b === "object" && (
