@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Certificates · The Director's Game</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="theme.css" />
+<style>
+  .cert-section { max-width: 560px; margin: clamp(26px,4vw,40px) auto 0; }
+  .cert-card { padding: clamp(28px,4.5vw,44px); border-radius: 24px; text-align: center; }
+  .cert-card p { color: var(--muted); font-size: 14.5px; line-height: 1.6; margin: 10px 0 22px; }
+  .cert-qr { width: min(240px, 60vw); height: auto; border-radius: 14px; background: #fff; padding: 14px; display: block; margin: 0 auto; }
+</style>
+</head>
+<body data-page="certificates">
+
+<main class="page">
+  <header class="page-head">
+    <div class="pill anim a1"><span class="dot"></span> You made it</div>
+    <h1 class="page-title anim a2">Workshop <span class="iri">Certificates</span></h1>
+    <p class="page-sub anim a3">Scan the code below to claim your certificate of completion.</p>
+  </header>
+
+  <section class="cert-section anim a4">
+    <div class="cert-card glass">
+      <img class="cert-qr" src="assets/certificates/certificate-qr.png" alt="Certificate QR code" />
+      <p>Point your phone's camera at the code, or download it below.</p>
+      <a class="btn-ghost" href="assets/certificates/certificate-qr.png" download="workshop-certificate-qr.png">
+        Download QR Code <i>↓</i>
+      </a>
+    </div>
+  </section>
+</main>
+
+<footer class="site-foot">
+  <span>The Director's Game — workshop companion</span>
+  <span><a href="index.html">Levels</a></span>
+</footer>
+
+<script src="site.js"></script>
+</body>
+</html>
