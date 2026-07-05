@@ -727,6 +727,18 @@ function VcPanelContent({ sec }) {
       </div>
     );
   }
+  if (sec.type === "gallery") {
+    return (
+      <div className="vc-gallery">
+        {sec.images.map((img, i) => (
+          <figure className="vc-gallery-item" key={i}>
+            <img src={img.src} alt={img.label} loading="lazy" />
+            <figcaption>{img.label}</figcaption>
+          </figure>
+        ))}
+      </div>
+    );
+  }
   return null;
 }
 

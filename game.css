@@ -517,6 +517,12 @@
 .vc-cam-desc { color: var(--muted); font-size: 12.5px; line-height: 1.45; }
 @media (max-width: 640px) { .vc-cam-row { grid-template-columns: 1fr; gap: 4px; } .vc-cam-desc { display: none; } }
 
+/* ---- gallery (Level 2 box 07) ---- */
+.vc-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+.vc-gallery-item { margin: 0; border-radius: 10px; overflow: hidden; border: 1px solid var(--line); background: rgba(255,255,255,.04); }
+.vc-gallery-item img { display: block; width: 100%; aspect-ratio: 9 / 16; object-fit: cover; }
+.vc-gallery-item figcaption { padding: 6px 8px; font-family: 'Space Grotesk', sans-serif; font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); text-align: center; }
+
 /* ---- pipeline with desc (Levels 1-2 reuse) ---- */
 .vc-pipe-desc { margin-top: 8px; font-size: 12.5px; color: var(--muted); line-height: 1.5; }
 
