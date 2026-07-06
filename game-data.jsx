@@ -1,4 +1,4 @@
-// game-data.jsx — The Director's Game: 5 levels, each with learning, tools, challenge.
+// game-data.jsx — The Director's Game: 3 levels, each with learning, tools, challenge.
 // Exports to window.GAME = { LEVELS, RANKS }.
 
 const RANKS = [
@@ -6,7 +6,6 @@ const RANKS = [
   "Storyboard Artist",    // 1
   "Art Director",         // 2
   "Motion Director",      // 3
-  "The Director",         // 4
 ];
 
 const LEVELS = [
@@ -18,7 +17,7 @@ const LEVELS = [
     rank: "Storyboard Artist",
     mission:
       "Convert your script into a storyboard — highlight the moments, build one visual box per script line, and choose your shot type before anything is rendered.",
-    tools: ["gemini"],
+    tools: ["gemini", "vusion"],
     learning: [],
     strategicViz: {
       title: "Strategic Visualization",
@@ -332,7 +331,7 @@ const LEVELS = [
     rank: "Motion Director",
     mission:
       "Frames become film. Follow the six-step production pipeline — from locking motion for each frame to merging clips into a finished video.",
-    tools: ["kling", "veo", "seedance", "firefly-video"],
+    tools: ["kling", "veo", "seedance", "firefly-video", "vusion"],
     learning: [],
     motionOrchestration: {
       title: "Motion Orchestration",
@@ -432,72 +431,6 @@ const LEVELS = [
         ],
       },
     ],
-  },
-
-  {
-    id: 4,
-    code: "Level 04",
-    name: "Launch Control",
-    tag: "Platform Walkthrough",
-    rank: "The Director",
-    mission:
-      "Three platforms that transform raw AI output into polished, delivered productions — master the all-in-one video suite, the enterprise design canvas, and the king of voice synthesis.",
-    tools: ["artlist", "magnifica", "elevenlabs"],
-    learning: [],
-    launchControl: {
-      title: "Launch Control",
-      sections: [
-        {
-          n: "01",
-          title: "Artlist — The AI Video Platform",
-          summary: "Multi-model video suite with 30,000+ music tracks, 8K stock, and production plugins",
-          type: "points",
-          points: [
-            "Artlist Studio — cast consistent AI characters, lock locations, and layer video projects across scenes",
-            "Multi-model aggregation — runs Google Veo, OpenAI Sora, and Kling so you choose the best generator per shot",
-            "Stock library — 30,000+ music tracks, 70,000+ SFX, 8K footage, and custom LUTs",
-            "Native plugins — integrates directly into Premiere Pro, Final Cut, and DaVinci Resolve",
-            "Artboards — AI pulls matching clips, music, and SFX into a unified mood board for ads and short films",
-            "Character consistency — generate a character once and reuse them across multiple AI-generated scenes",
-          ],
-        },
-        {
-          n: "02",
-          title: "Magnific — Pocket AI Design Studio",
-          summary: "Multi-model image and video generation, AI editing, and a 250M+ licensed asset library",
-          type: "points",
-          points: [
-            "Image engines — Flux, Ideogram, GPT Image, Nano Banana, Imagen, Mystic, and Seedream in one workspace",
-            "Video engines — Seedance, Veo, Kling, Runway Gen, MiniMax Hailuo, and PixVerse for text-to-video and photo-to-video",
-            "Camera integration — snap a photo on your phone and instantly feed it as a style, structure, or pose reference",
-            "AI photo editor — modify image details with text commands, composition-aware resizing, and background removal",
-            "AI upscaler — transform compressed or low-res assets into campaign-ready, high-fidelity files",
-            "250M+ licensed assets — photos, vectors, icons, videos, templates, and PSD files connected natively to the workspace",
-          ],
-        },
-        {
-          n: "03",
-          title: "ElevenLabs — Voice & Audio Synthesis",
-          summary: "Emotional voiceovers, 30-language dubbing, music stems, and lip-sync",
-          type: "points",
-          points: [
-            "v3 Alpha speech — hyper-realistic, emotionally aware voiceovers that grasp context, pacing, and subtext",
-            "AI Dubbing — translates video into 30+ languages while preserving the speaker's voice and emotional inflection",
-            "Eleven Music & SFX — generates full tracks with customizable stems and sound effects from text prompts",
-            "Advanced lip-sync — dedicated model integrations match generated audio to existing talking-head videos",
-            "Voice Design — engineer custom accents, ages, and tones for characters or narration without hiring voice actors",
-            "Go global — export any English video or podcast in Spanish, Japanese, German, and more in your exact voice",
-          ],
-        },
-        {
-          n: "04",
-          title: "Upload",
-          summary: "Submit your finished video files to the shared Drive folder",
-          type: "upload",
-          driveUrl: "https://drive.google.com/drive/folders/1pe1HnLVIAW_lvKHUain4S6w1M620lw5H?usp=sharing",
-        },
-      ],
-    },
   },
 ];
 

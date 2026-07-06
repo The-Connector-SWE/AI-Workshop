@@ -138,7 +138,7 @@ const MODULES = [
   {
     id: 1, kicker: "Module 01", title: "Strategic Pre-Visualisation",
     summary: "AI storyboarding in practice and character-locking to keep your subject consistent across every scene. You are the director — the Gem is your producer.",
-    platforms: ["gemini"],
+    platforms: ["gemini", "vusion"],
     quiz: [
       {
         q: "What role does the custom \u201cGem\u201d play in the workflow?",
@@ -213,7 +213,7 @@ const MODULES = [
   {
     id: 3, kicker: "Module 03", title: "The Finishing Stack",
     summary: "Walkthrough of Artlist, Magnifica and Arcana \u2014 when to use which tool. The audio, upscaling and finishing layer that takes a project to delivery.",
-    platforms: ["artlist", "magnifica", "arcana"],
+    platforms: ["artlist", "magnifica", "arcana", "vusion"],
     quiz: [
       {
         q: "Which tool is your source for licensed music, SFX and footage?",
