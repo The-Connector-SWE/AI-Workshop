@@ -118,7 +118,7 @@ const LEVELS = [
     rank: "Art Director",
     mission:
       "Six steps to bring your storyboard to life — from locking the visual style to reviewing every frame for story fit.",
-    tools: ["firefly", "nano-banana", "gpt-image"],
+    tools: ["vusion", "nano-banana", "gpt-image"],
     learning: [],
     challenges: [
       {

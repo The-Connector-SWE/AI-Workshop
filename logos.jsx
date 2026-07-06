@@ -19,11 +19,13 @@ function PlatformLogo({ id, size = 32 }) {
         <path d="M20 6 L20 26" />
       </svg>
     ),
-    // Adobe Firefly — flame
-    firefly: (
+    // Vusion.art — aperture/lens rings
+    vusion: (
       <svg {...S}>
-        <path d="M16 3 C19 8 23 10 23 16 C23 21 20 25 16 25 C12 25 9 21 9 16 C9 12.5 11 11 12.5 13 C12.5 9 14 6 16 3 Z" />
-        <circle cx="16" cy="18.5" r="3" />
+        <circle cx="16" cy="16" r="10" />
+        <circle cx="16" cy="16" r="4.5" />
+        <path d="M16 6 L16 11.5" /><path d="M26 16 L20.5 16" />
+        <path d="M16 26 L16 20.5" /><path d="M6 16 L11.5 16" />
       </svg>
     ),
     // Nano Banana 2 — crescent

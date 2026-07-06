@@ -24,15 +24,15 @@ const PLATFORMS = {
       "Generate music stems and SFX from text",
     ],
   },
-  firefly: {
-    id: "firefly", name: "Adobe Firefly", vendor: "Adobe · Image 5", hue: "#ff6f91",
-    tagline: "Commercial-safe photorealism",
-    about: "Photorealistic image generation with strong commercial safety. Excels at natural skin tones, cinematic lighting and material textures, with workspace-integrated editing through Generative Fill and Firefly Boards.",
+  vusion: {
+    id: "vusion", name: "Vusion.art", vendor: "AI Image Generation", hue: "#ff6f91", url: "https://beta.vusion.art/",
+    tagline: "AI image generation for your storyboard",
+    about: "Generate high-quality images from the Gem's per-scene prompts, turning the storyboard into finished visuals ready for the video pipeline.",
     usage: [
-      "Create a new board",
-      "Upload the generated storyboard",
-      "Generate 2K images from the Gem's prompts",
-      "Refine with Generative Fill inside Photoshop",
+      "Upload or paste the generated storyboard prompts",
+      "Generate images from the Gem's prompts",
+      "Iterate on composition and style",
+      "Export images for the next stage of the pipeline",
     ],
   },
   "nano-banana": {
@@ -43,7 +43,7 @@ const PLATFORMS = {
       "Lock a character's look across scenes",
       "Render accurate text overlays in multiple languages",
       "Sequential edits + photo merging",
-      "Access via Gemini app, AI Studio, or Firefly",
+      "Access via Gemini app or AI Studio",
     ],
   },
   "gpt-image": {
@@ -54,7 +54,7 @@ const PLATFORMS = {
       "Structured panels & exact object placement",
       "Diagrams + sequential comic formatting",
       "Chat-based edits (\u201cmake the book red\u201d)",
-      "Access via ChatGPT, the API, or Firefly",
+      "Access via ChatGPT or the API",
     ],
   },
 
@@ -175,17 +175,17 @@ const MODULES = [
   {
     id: 2, kicker: "Module 02", title: "Advanced Video Orchestration",
     summary: "Image-to-video multimodal prompting. Meet the image models that build your frames and the video models that bring them to life \u2014 and learn when to use which.",
-    platforms: ["firefly", "nano-banana", "gpt-image", "kling", "veo", "seedance", "firefly-video"],
+    platforms: ["vusion", "nano-banana", "gpt-image", "kling", "veo", "seedance", "firefly-video"],
     quiz: [
       {
         q: "Which image model is best for 99% text-rendering accuracy and structured layouts?",
-        options: ["Adobe Firefly", "Nano Banana 2", "GPT Image 2", "Seedance 2.0"],
+        options: ["Vusion.art", "Nano Banana 2", "GPT Image 2", "Seedance 2.0"],
         answer: 2,
         why: "GPT Image 2 is the layout & communication specialist \u2014 excellent for structural text and exact placement.",
       },
       {
         q: "You need the same character to stay consistent across dozens of shots. Which image model?",
-        options: ["Nano Banana 2", "GPT Image 2", "Adobe Firefly", "Veo 3.1"],
+        options: ["Nano Banana 2", "GPT Image 2", "Vusion.art", "Veo 3.1"],
         answer: 0,
         why: "Nano Banana 2 maintains extreme character consistency with high-fidelity multilingual text.",
       },
