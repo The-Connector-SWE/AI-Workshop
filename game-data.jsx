@@ -331,7 +331,7 @@ const LEVELS = [
     rank: "Motion Director",
     mission:
       "Frames become film. Follow the six-step production pipeline — from locking motion for each frame to merging clips into a finished video.",
-    tools: ["kling", "veo", "seedance", "firefly-video", "vusion"],
+    tools: ["kling", "veo", "seedance", "vusion"],
     learning: [],
     motionOrchestration: {
       title: "Motion Orchestration",
@@ -384,7 +384,7 @@ const LEVELS = [
           type: "promptFormula",
           formula: ["Image / Frame", "Script or VO", "Shot Duration", "Platform / Tool", "Ratio", "Motion Style", "Consistency Lock"],
           exampleTitle: "The AI Prompt",
-          exampleText: "Act as a professional film director, AI video prompt engineer, and motion designer. I will upload one storyboard frame/image. Analyze the image carefully and write the best image-to-video prompt for [TOOL NAME: Kling / Runway / Firefly / Seedance]. Goal of the shot: [Write the purpose of the shot or paste the VO/script line] Video duration: [5 seconds / 10 seconds] Aspect ratio: [1:1 / 16:9 / 9:16] Visual style: [Cinematic / realistic / luxury commercial / documentary / Gen Z lifestyle / premium product ad]. Your task: Identify the main subject. Suggest subject motion. Suggest camera movement. Add subtle environment motion. Keep the prompt short, clear, and cinematic. Do not rewrite the whole image description. Focus mainly on object, motion and environment. Add a consistency lock: keep the same identity, face, outfit, product, composition, lighting, background, and visual style. Output format: Image-to-video prompt: / Negative / avoid:",
+          exampleText: "Act as a professional film director, AI video prompt engineer, and motion designer. I will upload one storyboard frame/image. Analyze the image carefully and write the best image-to-video prompt for [TOOL NAME: Kling / Runway / Vusion / Seedance]. Goal of the shot: [Write the purpose of the shot or paste the VO/script line] Video duration: [5 seconds / 10 seconds] Aspect ratio: [1:1 / 16:9 / 9:16] Visual style: [Cinematic / realistic / luxury commercial / documentary / Gen Z lifestyle / premium product ad]. Your task: Identify the main subject. Suggest subject motion. Suggest camera movement. Add subtle environment motion. Keep the prompt short, clear, and cinematic. Do not rewrite the whole image description. Focus mainly on object, motion and environment. Add a consistency lock: keep the same identity, face, outfit, product, composition, lighting, background, and visual style. Output format: Image-to-video prompt: / Negative / avoid:",
           negative: "",
         },
         {

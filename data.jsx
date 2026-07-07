@@ -25,7 +25,7 @@ const PLATFORMS = {
     ],
   },
   vusion: {
-    id: "vusion", name: "Vusion.art", vendor: "AI Image Generation", hue: "#ff6f91", url: "https://beta.vusion.art/",
+    id: "vusion", name: "Vusion.art", vendor: "Developing Advanced AI-Driven Tools", hue: "#ff6f91", url: "https://beta.vusion.art/",
     tagline: "AI image generation for your storyboard",
     about: "Generate high-quality images from the Gem's per-scene prompts, turning the storyboard into finished visuals ready for the video pipeline.",
     usage: [
