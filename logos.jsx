@@ -3,6 +3,13 @@
 // Exported to window.PlatformLogo({id, size}).
 
 function PlatformLogo({ id, size = 32 }) {
+  if (id === "vusion") {
+    return (
+      <img src="Vusion.art_logo.png" alt="Vusion.art"
+        width={size} height={size}
+        style={{ width: size, height: size, objectFit: "contain", borderRadius: "20%" }} />
+    );
+  }
   const S = { width: size, height: size, viewBox: "0 0 32 32", fill: "none",
     stroke: "currentColor", strokeWidth: 1.7, strokeLinecap: "round", strokeLinejoin: "round" };
   const glyphs = {
@@ -17,15 +24,6 @@ function PlatformLogo({ id, size = 32 }) {
       <svg {...S}>
         <path d="M12 6 L12 26" />
         <path d="M20 6 L20 26" />
-      </svg>
-    ),
-    // Vusion.art — aperture/lens rings
-    vusion: (
-      <svg {...S}>
-        <circle cx="16" cy="16" r="10" />
-        <circle cx="16" cy="16" r="4.5" />
-        <path d="M16 6 L16 11.5" /><path d="M26 16 L20.5 16" />
-        <path d="M16 26 L16 20.5" /><path d="M6 16 L11.5 16" />
       </svg>
     ),
     // Nano Banana 2 — crescent
