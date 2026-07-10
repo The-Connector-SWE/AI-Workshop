@@ -83,10 +83,10 @@ const LEVELS = [
     },
     challenge: {
       kind: "open",
-      title: "Frame by Frame",
+      title: "Convert Script to Visual Story Board",
       intro: "In 5 minutes, convert this script into 5 storyboard frames.",
       prompt: "Jamila wakes up tired before work. She opens the fridge and finds MAZAJ Iced Coffee. After one sip, her mood changes. She gets ready, opens her laptop, and starts working feeling confident. The product appears with the tagline: MAZAJ Iced Coffee — Until your mood finds you.",
-      columns: ["Duration", "VO / Text", "Shot Type", "Camera / Motion", "Description"],
+      columns: ["Time", "VO", "Visual Description", "Shot Type", "Mood", "Camera Movement"],
       items: [
         { label: "Frame 1" },
         { label: "Frame 2" },
