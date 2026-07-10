@@ -587,15 +587,23 @@ function VcPanelContent({ sec }) {
   }
   if (sec.type === "pipeline") {
     return (
-      <div className="vc-sg-grid">
-        {sec.steps.map((s) => (
-          <div className="vc-pipe-step" key={s.n}>
-            <div className="vc-sg-n">{s.n}</div>
-            <h4>{s.title}</h4>
-            {s.desc && <p className="vc-pipe-desc">{s.desc}</p>}
+      <>
+        <div className="vc-sg-grid">
+          {sec.steps.map((s) => (
+            <div className="vc-pipe-step" key={s.n}>
+              <div className="vc-sg-n">{s.n}</div>
+              <h4>{s.title}</h4>
+              {s.desc && <p className="vc-pipe-desc">{s.desc}</p>}
+            </div>
+          ))}
+        </div>
+        {sec.exampleText && (
+          <div className="vc-example">
+            <span className="vc-example-label">{sec.exampleTitle || "Prompt Example"}</span>
+            <p>{sec.exampleText}</p>
           </div>
-        ))}
-      </div>
+        )}
+      </>
     );
   }
   if (sec.type === "scriptSteps") {
