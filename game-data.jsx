@@ -81,20 +81,47 @@ const LEVELS = [
         },
       ],
     },
-    challenge: {
-      kind: "open",
-      title: "Convert Script to Visual Story Board",
-      intro: "In 5 minutes, convert this script into 5 storyboard frames.",
-      prompt: "Jamila wakes up tired before work. She opens the fridge and finds MAZAJ Iced Coffee. After one sip, her mood changes. She gets ready, opens her laptop, and starts working feeling confident. The product appears with the tagline: MAZAJ Iced Coffee — Until your mood finds you.",
-      columns: ["Time", "VO", "Visual Description", "Shot Type", "Mood", "Camera Movement"],
-      items: [
-        { label: "Frame 1" },
-        { label: "Frame 2" },
-        { label: "Frame 3" },
-        { label: "Frame 4" },
-        { label: "Frame 5" },
-      ],
-    },
+    challenges: [
+      {
+        kind: "open",
+        title: "How to Create a Gem",
+        intro: "Build a custom Gem that works as your AI executive producer, then put it to work producing a demo package.",
+        items: [
+          { label: "Write instructions for a custom Gem that works as executive producer" },
+          { label: "Create a demo storyboard with a description per scene" },
+          { label: "Generate the script and VO per scene" },
+          { label: "Generate the prompt that creates each image for Nano Banana 2 & GPT Image 2" },
+        ],
+      },
+      {
+        kind: "open",
+        title: "Idea to Script",
+        intro: "Turn this brief into a professional 30-second script table.",
+        prompt: "Act as a senior creative director, copywriter, and film director. Create a professional 30-second TikTok / Instagram Reels script from this brief. Write the table script using this format: Frame | Duration | VO / Text | Visual Description | Camera | Mood. Style camera movement requirements: Cinematic, colorful, playful street style, Gen Z-focused, not generic, built around the transformation: \"One sip changes the whole mood.\" Use natural mixed English. Brief: Jamila wakes up tired before work. She opens the fridge and finds MAZAJ Iced Coffee. After one sip, her mood changes. She gets ready, opens her laptop, and start working feeling confident. The product appears with the tagline: MAZAJ Iced Coffee — Until your mood finds you. Brand: Mazaj Product: Ice Coffee Audience: Gen Z, university students, young creatives Goal: Launch new iced coffee CTA: Until your mood finds you Benefit: Strong caffeine, affordable Packaging: Can Location: Street café / urban street Platform: TikTok / Instagram Reels Duration: 30 sec. Output: Script Table",
+        columns: ["Duration", "VO / Text", "Visual Description", "Camera", "Mood"],
+        items: [
+          { label: "Frame 1" },
+          { label: "Frame 2" },
+          { label: "Frame 3" },
+          { label: "Frame 4" },
+          { label: "Frame 5" },
+        ],
+      },
+      {
+        kind: "open",
+        title: "Create Visual Story Board",
+        intro: "Convert the script into a clear, detailed, cinematic visual storyboard.",
+        prompt: "Act as a professional film director, art director, and AI visual storyboard creator. Convert the script that contains a storyboard table with the following columns: Frame No. | Time | VO | Visual Description | Shot Type | Mood | Camera Movement. Your task is to convert this script into a clear, detailed, cinematic visual storyboard. Do not rewrite the script or change the voice-over meaning. Use the existing script as the foundation, then upgrade the visual direction professionally.",
+        columns: ["Time", "VO", "Visual Description", "Shot Type", "Mood", "Camera Movement"],
+        items: [
+          { label: "Frame 1" },
+          { label: "Frame 2" },
+          { label: "Frame 3" },
+          { label: "Frame 4" },
+          { label: "Frame 5" },
+        ],
+      },
+    ],
   },
 
   {
