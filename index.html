@@ -53,11 +53,14 @@ document.addEventListener("click", (e) => {
 });
 
 const UTIL_TABS = [
-  { id: "instructors", label: "Instructors", src: "instructors.html" },
-  { id: "aifun",       label: "AI Fun",      src: "real-or-ai.html" },
-  { id: "agenda",      label: "Agenda",      src: "agenda-haymakers.html" },
-  { id: "accounts",    label: "Accounts",    src: "accounts.html" },
-  { id: "aiworld",     label: "AI World",    src: "ai-world.html" },
+  { id: "instructors",  label: "Instructors",  src: "instructors.html" },
+  { id: "aifun",        label: "AI Fun",       src: "real-or-ai.html" },
+  { id: "agenda",       label: "Agenda",       src: "agenda-haymakers.html" },
+  { id: "accounts",     label: "Accounts",     src: "accounts.html" },
+  { id: "aiworld",      label: "AI World",     src: "ai-world.html" },
+  { id: "certificates", label: "Certificates", src: "certificates.html" },
+  { id: "feedback",     label: "Feedback",     src: "feedback.html" },
+  { id: "upload",       label: "Upload",       external: "https://drive.google.com/drive/folders/1DAcgDhDT-VM-sZQGikNaypN-ka_Wwi7S?usp=sharing" },
 ];
 
 function GameAppV2() {
@@ -160,6 +163,17 @@ function GameAppV2() {
         </nav>
         {activeUtil && activeUtil.src ? (
           <iframe key={activeUtil.id} className="util-iframe" src={activeUtil.src} title={activeUtil.label} />
+        ) : activeUtil && activeUtil.external ? (
+          <div className="util-placeholder">
+            <svg viewBox="0 0 48 48" width="48" height="48" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: .35 }}>
+              <path d="M14 26l20-20M34 6h8v8M20 8H10a2 2 0 0 0-2 2v28a2 2 0 0 0 2 2h28a2 2 0 0 0 2-2V30" />
+            </svg>
+            <h2>{activeUtil.label}</h2>
+            <p>This opens in Google Drive, outside this panel.</p>
+            <a className="util-external-link" href={activeUtil.external} target="_blank" rel="noopener noreferrer">
+              Open {activeUtil.label} folder ↗
+            </a>
+          </div>
         ) : (
           <div className="util-placeholder">
             <svg viewBox="0 0 48 48" width="48" height="48" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: .35 }}>
