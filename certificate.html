@@ -565,14 +565,18 @@ function parseNames(text) {
 function certHTML(name, date) {
   const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 
-  // ── SECOND LOGO ──────────────────────────────────────────
-  // Drop the partner logo file into this folder, then update
-  // PARTNER_LOGO_SRC with the filename (e.g. 'partner-logo.png').
-  // Leave as '' to hide it until ready.
-  const PARTNER_LOGO_SRC = 'hayy-logo2.png';
-  const partnerLogo = PARTNER_LOGO_SRC
-    ? `<span class="logo-sep"></span><span class="logo-partner-wrap"><img class="logo-partner" src="${PARTNER_LOGO_SRC}" alt="partner" /></span>`
-    : '';
+  // ── PARTNER LOGOS ────────────────────────────────────────
+  // Drop partner logo files into this folder, then list their
+  // filenames below in display order. Leave the array empty to
+  // hide partner logos until ready.
+  const PARTNER_LOGOS = [
+    { src: 'jax.png', alt: 'Jax' },
+    { src: 'millimeter.png', alt: 'Millimeter' },
+    { src: 'vusion.png', alt: 'Vusion' },
+  ];
+  const partnerLogo = PARTNER_LOGOS
+    .map(p => `<span class="logo-sep"></span><span class="logo-partner-wrap"><img class="logo-partner" src="${p.src}" alt="${p.alt}" /></span>`)
+    .join('');
   // ─────────────────────────────────────────────────────────
 
   return `
