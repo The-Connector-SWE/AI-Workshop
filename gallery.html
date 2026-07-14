@@ -27,12 +27,13 @@
   }
   .gal-lightbox.is-open { display: flex; }
   .gal-lightbox img { max-width: 100%; max-height: 88vh; border-radius: 12px; box-shadow: 0 30px 80px rgba(0,0,0,.6); }
-  .gal-lb-close, .gal-lb-prev, .gal-lb-next {
+  .gal-lb-close, .gal-lb-prev, .gal-lb-next, .gal-lb-download {
     position: absolute; display: grid; place-items: center; width: 42px; height: 42px; border-radius: 50%;
     background: rgba(255,255,255,.08); border: 1px solid var(--line2); color: var(--ink); transition: .2s;
   }
-  .gal-lb-close:hover, .gal-lb-prev:hover, .gal-lb-next:hover { background: rgba(255,255,255,.18); }
+  .gal-lb-close:hover, .gal-lb-prev:hover, .gal-lb-next:hover, .gal-lb-download:hover { background: rgba(255,255,255,.18); }
   .gal-lb-close { top: 20px; right: 20px; }
+  .gal-lb-download { top: 20px; right: 74px; }
   .gal-lb-prev { left: 20px; top: 50%; transform: translateY(-50%); }
   .gal-lb-next { right: 20px; top: 50%; transform: translateY(-50%); }
 
@@ -40,6 +41,8 @@
     .gal-grid { columns: 2 160px; }
     .gal-lb-prev, .gal-lb-next { width: 36px; height: 36px; }
   }
+
+  .hud { display: none; }
 </style>
 </head>
 <body data-page="gallery">
@@ -48,7 +51,7 @@
   <header class="page-head">
     <div class="pill anim a1"><span class="dot"></span> Behind the scenes</div>
     <h1 class="page-title anim a2">Riyadh <span class="iri">Gallery</span></h1>
-    <p class="page-sub anim a3">Photos from the workshop floor — plus the full video outcome from the session.</p>
+    <p class="page-sub anim a3">Photos from the workshop floor.</p>
   </header>
 
   <div class="gal-actions anim a4">
@@ -61,6 +64,9 @@
 </main>
 
 <div class="gal-lightbox" id="galLightbox">
+  <a class="gal-lb-download" id="galDownload" download aria-label="Download photo">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+  </a>
   <button class="gal-lb-close" id="galClose" aria-label="Close">
     <svg width="16" height="16" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M1 1l10 10M11 1L1 11"/></svg>
   </button>
@@ -91,11 +97,15 @@
 
   var lightbox = document.getElementById("galLightbox");
   var lbImg = document.getElementById("galLbImg");
+  var lbDownload = document.getElementById("galDownload");
   var current = 0;
 
   function openAt(i) {
     current = (i + PHOTOS.length) % PHOTOS.length;
-    lbImg.src = "assets/gallery/riyadh/full/" + PHOTOS[current] + ".jpg";
+    var src = "assets/gallery/riyadh/full/" + PHOTOS[current] + ".jpg";
+    lbImg.src = src;
+    lbDownload.href = src;
+    lbDownload.download = "riyadh-" + PHOTOS[current] + ".jpg";
     lightbox.classList.add("is-open");
   }
   function closeLb() { lightbox.classList.remove("is-open"); lbImg.src = ""; }
