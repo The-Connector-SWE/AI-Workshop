@@ -11,11 +11,11 @@
 
 /* ─── TOKENS ──────────────────────────────────────────────── */
 :root {
-  --bg: #08080c; --bg2: #0d0c14;
-  --ink: #f6f4fb; --muted: #a39db8; --muted2: #cfc9e0;
+  --bg: #0c0a08; --bg2: #17120d;
+  --ink: #f5efe2; --muted: #9c8f79; --muted2: #d3c7ae;
   --line: rgba(255,255,255,.09); --line2: rgba(255,255,255,.16);
-  --red: #ff2e3f; --glow: rgba(255,46,63,.55);
-  --grad: linear-gradient(100deg, #ff2e3f, #ff5a4d 55%, #ff8a3d);
+  --red: #e2371f; --glow: rgba(226,55,31,.55);
+  --grad: linear-gradient(100deg, #e2371f, #ff6a2e 55%, #ffab2e);
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 body {
@@ -28,7 +28,7 @@ body {
 .bg-fx {
   position: fixed; inset: 0; z-index: 0; overflow: hidden;
   background: radial-gradient(120% 80% at 50% -10%, #1a0a12, transparent 55%),
-    radial-gradient(80% 60% at 85% 10%, rgba(255,46,63,.1), transparent 60%), var(--bg);
+    radial-gradient(80% 60% at 85% 10%, rgba(226,55,31,.1), transparent 60%), var(--bg);
 }
 .bg-fx .grid {
   position: absolute; inset: 0; opacity: .35;
@@ -69,8 +69,8 @@ body {
 .eyebrow {
   display: inline-flex; align-items: center; gap: 8px;
   font-size: 11.5px; letter-spacing: .2em; text-transform: uppercase;
-  color: var(--muted2); background: rgba(255,46,63,.1);
-  border: 1px solid rgba(255,46,63,.28); padding: 7px 14px;
+  color: var(--muted2); background: rgba(226,55,31,.1);
+  border: 1px solid rgba(226,55,31,.28); padding: 7px 14px;
   border-radius: 999px; margin-bottom: 22px;
 }
 .eyebrow .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--red); flex: none; }
@@ -95,7 +95,7 @@ body {
 }
 .search-box input:focus {
   outline: none; border-color: var(--red);
-  box-shadow: 0 0 0 3px rgba(255,46,63,.15);
+  box-shadow: 0 0 0 3px rgba(226,55,31,.15);
 }
 .search-box input::placeholder { color: rgba(163,157,184,.45); }
 
@@ -118,15 +118,15 @@ body {
   cursor: pointer; transition: background .15s, border-color .15s; font-size: 15px;
   color: var(--muted2);
 }
-.sug-item:hover { background: rgba(255,46,63,.09); border-color: rgba(255,46,63,.35); color: var(--ink); }
+.sug-item:hover { background: rgba(226,55,31,.09); border-color: rgba(226,55,31,.35); color: var(--ink); }
 .sug-icon {
   width: 34px; height: 34px; border-radius: 10px; flex: none;
-  background: rgba(255,46,63,.12); display: grid; place-items: center; color: var(--red);
+  background: rgba(226,55,31,.12); display: grid; place-items: center; color: var(--red);
 }
 
 /* ─── MESSAGES ───────────────────────────────────────────── */
 .msg { padding: 14px 18px; border-radius: 13px; font-size: 14px; line-height: 1.5; }
-.msg-err { background: rgba(255,46,63,.08); border: 1px solid rgba(255,46,63,.3); color: #ff8a9a; }
+.msg-err { background: rgba(226,55,31,.08); border: 1px solid rgba(226,55,31,.3); color: #ff8a9a; }
 .msg-ok  { background: rgba(46,255,140,.06); border: 1px solid rgba(46,255,140,.25); color: #7affb0; }
 
 /* ─── INVALID STATE ──────────────────────────────────────── */
@@ -173,7 +173,7 @@ body {
 }
 .cert-page::before {
   content: ''; position: absolute; top: 0; left: 0; right: 0; height: 9px;
-  background: linear-gradient(90deg, #ff2e3f 0%, #ff5a4d 55%, #ff8a3d 100%); z-index: 2;
+  background: linear-gradient(90deg, #e2371f 0%, #ff6a2e 55%, #ffab2e 100%); z-index: 2;
 }
 .cert-frame {
   position: absolute; inset: 14mm;
@@ -181,11 +181,11 @@ body {
 }
 .cert-frame::before {
   content: ''; position: absolute; top: -1px; left: -1px;
-  width: 22px; height: 22px; border-top: 2.5px solid #ff2e3f; border-left: 2.5px solid #ff2e3f;
+  width: 22px; height: 22px; border-top: 2.5px solid #e2371f; border-left: 2.5px solid #e2371f;
 }
 .cert-frame::after {
   content: ''; position: absolute; bottom: -1px; right: -1px;
-  width: 22px; height: 22px; border-bottom: 2.5px solid #ff2e3f; border-right: 2.5px solid #ff2e3f;
+  width: 22px; height: 22px; border-bottom: 2.5px solid #e2371f; border-right: 2.5px solid #e2371f;
 }
 .cert-inner {
   position: absolute; inset: 9px 0 0 0;
@@ -199,7 +199,7 @@ body {
 .cert-logo .logo-partner-wrap { height: 45px; display: flex; align-items: center; }
 .cert-logo .logo-partner { height: 45px; width: auto; display: block; opacity: .9; }
 .cert-org { font-family: 'Space Grotesk', sans-serif; font-size: 8pt; letter-spacing: .3em; text-transform: uppercase; color: rgba(255,255,255,.38); margin-bottom: 4.5mm; }
-.cert-heading { font-family: 'Space Grotesk', sans-serif; font-size: 10.5pt; font-weight: 700; letter-spacing: .25em; text-transform: uppercase; color: #ff2e3f; margin-bottom: 4mm; }
+.cert-heading { font-family: 'Space Grotesk', sans-serif; font-size: 10.5pt; font-weight: 700; letter-spacing: .25em; text-transform: uppercase; color: #e2371f; margin-bottom: 4mm; }
 .cert-preamble { font-family: 'Playfair Display', serif; font-style: italic; font-size: 11.5pt; color: rgba(255,255,255,.5); margin-bottom: 3.5mm; }
 .cert-name { font-family: 'Playfair Display', serif; font-size: 28pt; font-weight: 700; color: #f8f4ee; line-height: 1.1; margin-bottom: 4mm; max-width: 230mm; word-break: break-word; }
 .cert-completed { font-family: 'Playfair Display', serif; font-style: italic; font-size: 11pt; color: rgba(255,255,255,.5); margin-bottom: 2mm; }
@@ -207,7 +207,7 @@ body {
 .cert-subtitle { font-family: 'Sora', sans-serif; font-size: 8.5pt; color: rgba(255,255,255,.35); margin-bottom: 5mm; }
 .cert-rule { display: flex; align-items: center; gap: 10px; width: 140mm; margin: 0 auto 4mm; }
 .cert-rule::before, .cert-rule::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,.15); }
-.cert-rule span { width: 8px; height: 8px; background: #ff2e3f; transform: rotate(45deg); flex: none; }
+.cert-rule span { width: 8px; height: 8px; background: #e2371f; transform: rotate(45deg); flex: none; }
 .cert-date { font-family: 'Space Grotesk', sans-serif; font-size: 8.5pt; color: rgba(255,255,255,.38); letter-spacing: .08em; margin-bottom: 5mm; }
 .cert-sigs { display: flex; justify-content: center; gap: 20mm; }
 .cert-sig { text-align: center; }
@@ -335,8 +335,8 @@ function renderInvalid() {
       </div>
     </header>
     <div class="invalid-state">
-      <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#ff2e3f" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r=".5" fill="#ff2e3f"/>
+      <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#e2371f" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r=".5" fill="#e2371f"/>
       </svg>
       <h2>Invalid Link</h2>
       <p>This certificate link is invalid or has expired.<br>Ask your instructor for the correct QR code or link.</p>
