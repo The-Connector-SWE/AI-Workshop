@@ -24,8 +24,8 @@ const PLATFORMS = {
       "Generate music stems and SFX from text",
     ],
   },
-  vusion: {
-    id: "vusion", name: "Vusion.art", vendor: "Developing Advanced AI-Driven Tools", hue: "#ff6f91", url: "https://beta.vusion.art/",
+  firefly: {
+    id: "firefly", name: "Adobe Firefly", vendor: "Adobe", hue: "#ff7a9c", url: "https://firefly.adobe.com",
     tagline: "AI image generation for your storyboard",
     about: "Generate high-quality images from the Gem's per-scene prompts, turning the storyboard into finished visuals ready for the video pipeline.",
     usage: [
@@ -138,7 +138,7 @@ const MODULES = [
   {
     id: 1, kicker: "Module 01", title: "Strategic Pre-Visualisation",
     summary: "AI storyboarding in practice and character-locking to keep your subject consistent across every scene. You are the director — the Gem is your producer.",
-    platforms: ["gemini", "vusion"],
+    platforms: ["gemini", "firefly"],
     quiz: [
       {
         q: "What role does the custom \u201cGem\u201d play in the workflow?",
@@ -175,17 +175,17 @@ const MODULES = [
   {
     id: 2, kicker: "Module 02", title: "Advanced Video Orchestration",
     summary: "Image-to-video multimodal prompting. Meet the image models that build your frames and the video models that bring them to life \u2014 and learn when to use which.",
-    platforms: ["vusion", "nano-banana", "gpt-image", "kling", "veo", "seedance", "firefly-video"],
+    platforms: ["firefly", "nano-banana", "gpt-image", "kling", "veo", "seedance", "firefly-video"],
     quiz: [
       {
         q: "Which image model is best for 99% text-rendering accuracy and structured layouts?",
-        options: ["Vusion.art", "Nano Banana 2", "GPT Image 2", "Seedance 2.0"],
+        options: ["Adobe Firefly", "Nano Banana 2", "GPT Image 2", "Seedance 2.0"],
         answer: 2,
         why: "GPT Image 2 is the layout & communication specialist \u2014 excellent for structural text and exact placement.",
       },
       {
         q: "You need the same character to stay consistent across dozens of shots. Which image model?",
-        options: ["Nano Banana 2", "GPT Image 2", "Vusion.art", "Veo 3.1"],
+        options: ["Nano Banana 2", "GPT Image 2", "Adobe Firefly", "Veo 3.1"],
         answer: 0,
         why: "Nano Banana 2 maintains extreme character consistency with high-fidelity multilingual text.",
       },
@@ -213,7 +213,7 @@ const MODULES = [
   {
     id: 3, kicker: "Module 03", title: "The Finishing Stack",
     summary: "Walkthrough of Artlist, Magnifica and Arcana \u2014 when to use which tool. The audio, upscaling and finishing layer that takes a project to delivery.",
-    platforms: ["artlist", "magnifica", "arcana", "vusion"],
+    platforms: ["artlist", "magnifica", "arcana", "firefly"],
     quiz: [
       {
         q: "Which tool is your source for licensed music, SFX and footage?",

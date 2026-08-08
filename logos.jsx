@@ -3,13 +3,6 @@
 // Exported to window.PlatformLogo({id, size}).
 
 function PlatformLogo({ id, size = 32 }) {
-  if (id === "vusion") {
-    return (
-      <img src="Vusion.art_logo.png" alt="Vusion.art"
-        width={size} height={size}
-        style={{ width: size, height: size, objectFit: "contain", borderRadius: "20%" }} />
-    );
-  }
   const S = { width: size, height: size, viewBox: "0 0 32 32", fill: "none",
     stroke: "currentColor", strokeWidth: 1.7, strokeLinecap: "round", strokeLinejoin: "round" };
   const glyphs = {
@@ -68,6 +61,12 @@ function PlatformLogo({ id, size = 32 }) {
       <svg {...S}>
         <path d="M6 9 L15 16 L6 23 Z" />
         <path d="M16 9 L25 16 L16 23 Z" />
+      </svg>
+    ),
+    // Adobe Firefly — flame
+    firefly: (
+      <svg {...S}>
+        <path d="M16 3 C19 8 23 10 23 16 C23 21 20 26 16 26 C12 26 9 21 9 16 C9 12.5 11 11 12.5 13 C12.5 9 14 6 16 3 Z" />
       </svg>
     ),
     // Firefly Video — flame with play
