@@ -14,6 +14,8 @@
   .fb-card h2 { font-size: 18px; font-weight: 800; letter-spacing: -.01em; }
   .fb-card p { color: var(--muted); font-size: 14.5px; line-height: 1.6; margin: 8px 0 20px; }
   .fb-link { display: inline-flex; }
+  .fb-link.locked { opacity: .4; filter: grayscale(1); pointer-events: none; cursor: not-allowed; }
+  .fb-unlock-note { display: block; margin-top: 10px; font-size: 12.5px; color: var(--muted); letter-spacing: .02em; }
 </style>
 </head>
 <body data-page="feedback">
@@ -36,16 +38,20 @@
     <div class="fb-card glass">
       <h2>Day 2</h2>
       <p>Opens in a new tab — takes about 2 minutes.</p>
-      <a class="btn-ghost fb-link" href="https://form.jotform.com/262211656871054" target="_blank" rel="noopener noreferrer">
+      <a class="btn-ghost fb-link locked" data-unlock-at="2026-08-11T19:00:00+03:00"
+         href="https://form.jotform.com/262211656871054" target="_blank" rel="noopener noreferrer">
         Open Day 2 Feedback <i>→</i>
       </a>
+      <span class="fb-unlock-note">Unlocks Day 2 · 7:00 PM</span>
     </div>
     <div class="fb-card glass">
       <h2>Day 3</h2>
       <p>Opens in a new tab — takes about 2 minutes.</p>
-      <a class="btn-ghost fb-link" href="https://form.jotform.com/262211954875059" target="_blank" rel="noopener noreferrer">
+      <a class="btn-ghost fb-link locked" data-unlock-at="2026-08-12T19:00:00+03:00"
+         href="https://form.jotform.com/262211954875059" target="_blank" rel="noopener noreferrer">
         Open Day 3 Feedback <i>→</i>
       </a>
+      <span class="fb-unlock-note">Unlocks Day 3 · 7:00 PM</span>
     </div>
   </section>
 </main>
@@ -56,5 +62,27 @@
 </footer>
 
 <script src="site.js"></script>
+<script>
+  (function () {
+    var links = document.querySelectorAll('.fb-link[data-unlock-at]');
+    if (!links.length) return;
+
+    function checkUnlocks() {
+      var now = Date.now();
+      links.forEach(function (link) {
+        if (!link.classList.contains('locked')) return;
+        var unlockAt = new Date(link.dataset.unlockAt).getTime();
+        if (now >= unlockAt) {
+          link.classList.remove('locked');
+          var note = link.nextElementSibling;
+          if (note && note.classList.contains('fb-unlock-note')) note.remove();
+        }
+      });
+    }
+
+    checkUnlocks();
+    setInterval(checkUnlocks, 30000); // re-check every 30s so a page left open unlocks itself at 7pm
+  })();
+</script>
 </body>
 </html>
