@@ -15,7 +15,6 @@
   .fb-card p { color: var(--muted); font-size: 14.5px; line-height: 1.6; margin: 8px 0 20px; }
   .fb-link { display: inline-flex; }
   .fb-link.locked { opacity: .4; filter: grayscale(1); pointer-events: none; cursor: not-allowed; }
-  .fb-unlock-note { display: block; margin-top: 10px; font-size: 12.5px; color: var(--muted); letter-spacing: .02em; }
 </style>
 </head>
 <body data-page="feedback">
@@ -42,7 +41,6 @@
          href="https://form.jotform.com/262211656871054" target="_blank" rel="noopener noreferrer">
         Open Day 2 Feedback <i>→</i>
       </a>
-      <span class="fb-unlock-note">Unlocks Day 2 · 7:00 PM</span>
     </div>
     <div class="fb-card glass">
       <h2>Day 3</h2>
@@ -51,7 +49,6 @@
          href="https://form.jotform.com/262211954875059" target="_blank" rel="noopener noreferrer">
         Open Day 3 Feedback <i>→</i>
       </a>
-      <span class="fb-unlock-note">Unlocks Day 3 · 7:00 PM</span>
     </div>
   </section>
 </main>
@@ -72,11 +69,7 @@
       links.forEach(function (link) {
         if (!link.classList.contains('locked')) return;
         var unlockAt = new Date(link.dataset.unlockAt).getTime();
-        if (now >= unlockAt) {
-          link.classList.remove('locked');
-          var note = link.nextElementSibling;
-          if (note && note.classList.contains('fb-unlock-note')) note.remove();
-        }
+        if (now >= unlockAt) link.classList.remove('locked');
       });
     }
 
