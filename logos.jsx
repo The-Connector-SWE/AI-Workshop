@@ -12,6 +12,12 @@ function PlatformLogo({ id, size = 32 }) {
         <path d="M16 3 C16 10 22 16 29 16 C22 16 16 22 16 29 C16 22 10 16 3 16 C10 16 16 10 16 3 Z" />
       </svg>
     ),
+    // ChatGPT — speech bubble
+    chatgpt: (
+      <svg {...S}>
+        <path d="M6 11 C6 8 8.5 5.5 11.5 5.5 L20.5 5.5 C23.5 5.5 26 8 26 11 L26 17.5 C26 20.5 23.5 23 20.5 23 L13 23 L7.5 27 L8.5 22.2 C7 21.2 6 19.5 6 17.5 Z" />
+      </svg>
+    ),
     // ElevenLabs — speech waveform bars in a rounded frame
     elevenlabs: (
       <svg {...S}>

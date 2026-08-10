@@ -17,7 +17,7 @@ const LEVELS = [
     rank: "Storyboard Artist",
     mission:
       "Convert your script into a storyboard. A storyboard is a visual map that explains how an idea, experience, product, or story unfolds step by step.",
-    tools: ["gemini"],
+    tools: ["gemini", "chatgpt"],
     learning: [],
     strategicViz: {
       title: "Strategic Visualization",

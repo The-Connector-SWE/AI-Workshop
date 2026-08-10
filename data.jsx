@@ -13,6 +13,17 @@ const PLATFORMS = {
       "Generate the prompt that creates each image",
     ],
   },
+  chatgpt: {
+    id: "chatgpt", name: "ChatGPT", vendor: "OpenAI", hue: "#10a37f", url: "https://chatgpt.com",
+    tagline: "Alternative executive producer for pre-vis",
+    about: "Use ChatGPT as an alternative to the custom Gem — build out your storyboard, script and per-scene image prompts through natural conversation.",
+    usage: [
+      "Draft a storyboard through conversational prompting",
+      "Generate scripts and voiceover copy",
+      "Iterate on per-scene image prompts",
+      "Access via chatgpt.com or the API",
+    ],
+  },
   elevenlabs: {
     id: "elevenlabs", name: "ElevenLabs", vendor: "Voice AI", hue: "#9affe8", url: "https://elevenlabs.io",
     tagline: "Voice synthesis & global dubbing",
@@ -138,7 +149,7 @@ const MODULES = [
   {
     id: 1, kicker: "Module 01", title: "Strategic Pre-Visualisation",
     summary: "AI storyboarding in practice and character-locking to keep your subject consistent across every scene. You are the director — the Gem is your producer.",
-    platforms: ["gemini"],
+    platforms: ["gemini", "chatgpt"],
     quiz: [
       {
         q: "What role does the custom \u201cGem\u201d play in the workflow?",
