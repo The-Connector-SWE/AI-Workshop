@@ -166,23 +166,6 @@ const LEVELS = [
           { label: "Frame 9" },
         ],
       },
-      {
-        kind: "open",
-        title: "Generate the Storyboard, Frame by Frame",
-        intro: "Feed the storyboard to your image model one frame at a time, using this iterative method — never generate the whole board in one shot.",
-        prompt: "Read the storyboard.\n\nExtract Frame 01 only.\n\nGenerate one production-ready AI image prompt for Frame 01.\n\nWait.\n\nWhen I say \"Next\"\n\nGenerate Frame 02.\n\nContinue until the storyboard ends.\n\nKeep full consistency from previous frames.",
-        items: [
-          { label: "Frame 1 image" },
-          { label: "Frame 2 image" },
-          { label: "Frame 3 image" },
-          { label: "Frame 4 image" },
-          { label: "Frame 5 image" },
-          { label: "Frame 6 image" },
-          { label: "Frame 7 image" },
-          { label: "Frame 8 image" },
-          { label: "Frame 9 image" },
-        ],
-      },
     ],
     visualCrafting: {
       title: "Visual Crafting",
