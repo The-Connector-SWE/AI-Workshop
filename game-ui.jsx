@@ -309,9 +309,9 @@ function LevelView({ level, platforms, best, onFinish, onBack }) {
       {hasChallenges && stage === "challenge" && !running && (
         <div className="ch-intro anim a4" key="chi">
           <span className="quiz-kicker">{level.code} · Challenge</span>
-          <h2>{multi ? "Two-stage challenge" : challenges[0].title}</h2>
+          <h2>{multi ? `${challenges.length}-stage challenge` : challenges[0].title}</h2>
           <p>{multi
-            ? "Two open tasks — apply the script-intelligence method, then write a full script from a live brief."
+            ? `${challenges.length} open tasks — work through each stage below, in order.`
             : challenges[0].intro}</p>
           {multi && (
             <div className="ch-stage-list">
