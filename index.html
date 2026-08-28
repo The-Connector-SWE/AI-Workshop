@@ -52,14 +52,16 @@ document.addEventListener("click", (e) => {
   if (e.target.closest("button, a") && window.SFX) window.SFX.click();
 });
 
+const UTIL_UNLOCK_AAST = "2026-08-30T14:00:00+03:00"; // Sunday, Aug 30 · 2:00 PM (Africa/Cairo)
+
 const UTIL_TABS = [
   { id: "instructors",  label: "Instructors",  src: "instructors.html" },
   { id: "aifun",        label: "AI Fun",       src: "real-or-ai.html" },
   { id: "agenda",       label: "Agenda",       src: "agenda-aast.html" },
   { id: "accounts",     label: "Accounts",     src: "accounts.html" },
-  { id: "certificates", label: "Certificates", external: "https://enterperformhub-aiworkshop.podmedia.network/claim.html?d=eyJuYW1lcyI6WyJOYWRhIE1hZ2R5IiwiRmF0aW1hIEFsaSIsIllhcmEgS2hhbGVkIiwiUmFteSBTYWxlbSIsIk1vbWVuIEFiZCBFbHNhbGFtIiwiTW9oYW1lZCBNb2hhbWFkeSIsIk1vaGFtbWVkIERlbmxleSIsIkFsYWEgQXRpYSJdLCJkYXRlIjoiQXVndXN0IDEwLCAxMSAmIDEyLCAyMDI2In0=" },
   { id: "feedback",     label: "Feedback",     src: "feedback.html" },
-  { id: "upload",       label: "Upload",       external: "https://drive.google.com/drive/folders/1RpfR8Hl-x79_1BmwO3_bZpTmmsMo09ea?usp=sharing" },
+  { id: "upload",       label: "Upload",       external: "https://drive.google.com/drive/folders/1RpfR8Hl-x79_1BmwO3_bZpTmmsMo09ea?usp=sharing", unlockAt: UTIL_UNLOCK_AAST, unlockLabel: "Sunday, Aug 30 at 2:00 PM" },
+  { id: "certificates", label: "Certificates", external: "https://enterperformhub-aiworkshop.podmedia.network/claim.html?d=eyJuYW1lcyI6WyJOYWRhIE1hZ2R5IiwiRmF0aW1hIEFsaSIsIllhcmEgS2hhbGVkIiwiUmFteSBTYWxlbSIsIk1vbWVuIEFiZCBFbHNhbGFtIiwiTW9oYW1lZCBNb2hhbWFkeSIsIk1vaGFtbWVkIERlbmxleSIsIkFsYWEgQXRpYSJdLCJkYXRlIjoiQXVndXN0IDEwLCAxMSAmIDEyLCAyMDI2In0=", unlockAt: UTIL_UNLOCK_AAST, unlockLabel: "Sunday, Aug 30 at 2:00 PM" },
 ];
 
 function GameAppV2() {
@@ -69,6 +71,7 @@ function GameAppV2() {
   const [muted, setMuted] = useState(window.SFX ? window.SFX.muted : false);
   const [utilOpen, setUtilOpen] = useState(false);
   const [utilTab, setUtilTab] = useState("instructors");
+  const [now, setNow] = useState(() => Date.now());
 
   const [best, setBest] = useState(() => loadGame().best || {});
   const [labChecks, setLabChecks] = useState(() => loadGame().labs || {});
@@ -77,9 +80,17 @@ function GameAppV2() {
   useEffect(() => { saveGame({ best, labs: labChecks }); }, [best, labChecks]);
   useEffect(() => { window.scrollTo({ top: 0, behavior: "smooth" }); }, [missionView]);
   useEffect(() => {
+    document.documentElement.style.overflow = utilOpen ? "hidden" : "";
     document.body.style.overflow = utilOpen ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
+    return () => {
+      document.documentElement.style.overflow = "";
+      document.body.style.overflow = "";
+    };
   }, [utilOpen]);
+  useEffect(() => {
+    const t = setInterval(() => setNow(Date.now()), 30000); // re-check every 30s so a tab left open unlocks itself
+    return () => clearInterval(t);
+  }, []);
   useEffect(() => {
     const onKey = (e) => { if (e.key === "Escape") setUtilOpen(false); };
     window.addEventListener("keydown", onKey);
@@ -152,15 +163,33 @@ function GameAppV2() {
           </button>
         </div>
         <nav className="util-subnav">
-          {UTIL_TABS.map((t) => (
-            <button key={t.id}
-              className={"util-subtab" + (utilTab === t.id ? " ust-active" : "")}
-              onClick={() => setUtilTab(t.id)}>
-              {t.label}
-            </button>
-          ))}
+          {UTIL_TABS.map((t) => {
+            const tabLocked = t.unlockAt && now < new Date(t.unlockAt).getTime();
+            return (
+              <button key={t.id}
+                className={"util-subtab" + (utilTab === t.id ? " ust-active" : "") + (tabLocked ? " ust-locked" : "")}
+                onClick={() => setUtilTab(t.id)}>
+                {t.label}
+                {tabLocked && (
+                  <svg className="ust-lock" viewBox="0 0 12 12" width="10" height="10" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="2.5" y="5.5" width="7" height="5" rx="1" />
+                    <path d="M4 5.5V3.5a2 2 0 0 1 4 0v2" />
+                  </svg>
+                )}
+              </button>
+            );
+          })}
         </nav>
-        {activeUtil && activeUtil.src ? (
+        {activeUtil && activeUtil.unlockAt && now < new Date(activeUtil.unlockAt).getTime() ? (
+          <div className="util-placeholder">
+            <svg viewBox="0 0 48 48" width="48" height="48" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: .35 }}>
+              <rect x="10" y="22" width="28" height="20" rx="4" />
+              <path d="M16 22v-6a8 8 0 0 1 16 0v6" />
+            </svg>
+            <h2>{activeUtil.label}</h2>
+            <p>Unlocks {activeUtil.unlockLabel}.</p>
+          </div>
+        ) : activeUtil && activeUtil.src ? (
           <iframe key={activeUtil.id} className="util-iframe" src={activeUtil.src} title={activeUtil.label} />
         ) : activeUtil && activeUtil.external ? (
           <div className="util-placeholder">
