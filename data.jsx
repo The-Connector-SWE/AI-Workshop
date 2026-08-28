@@ -143,6 +143,50 @@ const PLATFORMS = {
       "Compare AI credits & pricing",
     ],
   },
+  canva: {
+    id: "canva", name: "Canva", vendor: "Canva", hue: "#00c4cc", url: "https://canva.com",
+    tagline: "Fast timeline assembly & templated exports",
+    about: "A fast, template-driven place to lay clips in order, trim to length, and export in the right aspect ratio when you need a finished cut without a full NLE.",
+    usage: [
+      "Drop shots and VO onto a simple timeline",
+      "Trim and re-order clips quickly",
+      "Apply on-brand templates and captions",
+      "Export straight to the platform's aspect ratio",
+    ],
+  },
+  "firefly-timeline": {
+    id: "firefly-timeline", name: "Firefly Timeline", vendor: "Adobe", hue: "#ff7a9c", url: "https://firefly.adobe.com",
+    tagline: "Timeline-based assembly inside Firefly",
+    about: "Adobe Firefly's timeline tools for laying up shots, VO, and music in sequence — the assembly layer before a full NLE pass.",
+    usage: [
+      "Assemble shots, VO and music in order",
+      "Rough-cut pacing before finishing",
+      "Hand off directly into Premiere Pro",
+      "Quick trims without leaving Firefly",
+    ],
+  },
+  capcut: {
+    id: "capcut", name: "CapCut", vendor: "ByteDance", hue: "#4fd1ff", url: "https://capcut.com",
+    tagline: "Fast, mobile-friendly cutting",
+    about: "A quick, mobile-friendly editor for cutting, captioning, and pacing a cut fast — especially for social-first exports.",
+    usage: [
+      "Cut and re-pace clips quickly",
+      "Auto-captions and on-brand text",
+      "Layer music and SFX",
+      "Export straight to social aspect ratios",
+    ],
+  },
+  premiere: {
+    id: "premiere", name: "Premiere Pro", vendor: "Adobe", hue: "#b19cff", url: "https://adobe.com/products/premiere.html",
+    tagline: "Full-stack, professional finishing",
+    about: "The professional non-linear editor for the final assembly — layering visuals, motion, and voice-over into one graded, mixed, delivery-ready cut.",
+    usage: [
+      "Assemble visuals, motion and VO on one timeline",
+      "Color and look consistency across shots",
+      "Mix VO, music and SFX into a final mix",
+      "Export for delivery across formats/ratios",
+    ],
+  },
 };
 
 const MODULES = [

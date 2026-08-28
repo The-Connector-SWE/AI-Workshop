@@ -104,6 +104,34 @@ function PlatformLogo({ id, size = 32 }) {
         <path d="M16 9 L21.5 18.5 L10.5 18.5 Z" opacity="0.85" />
       </svg>
     ),
+    // Canva — abstract swirl "C"
+    canva: (
+      <svg {...S}>
+        <circle cx="16" cy="16" r="10.5" />
+        <path d="M21 12.5 C19 10.5 16.5 10 14.5 11.3 C12 12.9 11.5 16.3 13.3 18.6 C14.7 20.3 17 20.9 18.8 19.9" />
+      </svg>
+    ),
+    // Firefly Timeline — flame over a clip-marked timeline
+    "firefly-timeline": (
+      <svg {...S}>
+        <path d="M16 3.5 C18.5 7.5 21 9 21 13.5 C21 17 18.7 20.5 16 20.5 C13.3 20.5 11 17 11 13.5 C11 10.8 12.3 9.8 13.4 11.3 C13.4 8.5 14.5 6 16 3.5 Z" />
+        <path d="M4 27 L28 27" /><path d="M9.5 25 L9.5 29" /><path d="M16 25 L16 29" /><path d="M22.5 25 L22.5 29" />
+      </svg>
+    ),
+    // CapCut — scissors
+    capcut: (
+      <svg {...S}>
+        <circle cx="8" cy="9" r="3" /><circle cx="8" cy="23" r="3" />
+        <path d="M10.5 11 L26 24" /><path d="M10.5 21 L26 8" />
+      </svg>
+    ),
+    // Premiere Pro — clapperboard
+    premiere: (
+      <svg {...S}>
+        <rect x="5" y="13" width="22" height="14" rx="2" />
+        <path d="M5 13 L9 6 L14 6 L11 13 Z" /><path d="M15 13 L19 6 L24 6 L21 13 Z" />
+      </svg>
+    ),
   };
   return glyphs[id] || glyphs.gemini;
 }
