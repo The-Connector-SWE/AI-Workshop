@@ -610,6 +610,61 @@ function VcPanelContent({ sec }) {
       </>
     );
   }
+  if (sec.type === "repairLadder") {
+    const n = sec.steps.length;
+    return (
+      <div className="vc-ladder">
+        <div className="vc-ladder-head">
+          <span>{sec.leftLabel || "Cheap · Fast"}</span>
+          <span className="hi">{sec.rightLabel || "Slow · Expensive"}</span>
+        </div>
+        <div className="vc-ladder-row" style={{ "--n": n }}>
+          {sec.steps.map((s, i) => (
+            <div
+              className={"vc-ladder-bar" + (i === n - 1 ? " hot" : "")}
+              key={s.n}
+              style={{ height: 60 + (i * (140 / (n - 1 || 1))) + "px" }}
+            >
+              <span className="vc-ladder-n">{s.n}</span>
+              <h4>{s.title}</h4>
+            </div>
+          ))}
+        </div>
+        <div className="vc-ladder-descs" style={{ "--n": n }}>
+          {sec.steps.map((s) => (
+            <p key={s.n}>{s.desc}</p>
+          ))}
+        </div>
+        {sec.exampleText && <p className="vc-ladder-note">{sec.exampleText}</p>}
+      </div>
+    );
+  }
+  if (sec.type === "frameChain") {
+    return (
+      <div className="vc-chain">
+        {sec.rows.map((row, ri) => (
+          <React.Fragment key={ri}>
+            <div className="vc-chain-row">
+              <span className="vc-chain-label">{row.label}</span>
+              {row.cells.map((c, ci) => (
+                <span className={"vc-chain-cell" + (c.hot ? " hot" : "")} key={ci}>{c.text}</span>
+              ))}
+            </div>
+            {row.handoffAfter && (
+              <div className="vc-chain-handoff">
+                <span>↓ {row.handoffAfter}</span>
+              </div>
+            )}
+          </React.Fragment>
+        ))}
+        {sec.lines && (
+          <div className="vc-chain-lines">
+            {sec.lines.map((l, i) => <p key={i}>{l}</p>)}
+          </div>
+        )}
+      </div>
+    );
+  }
   if (sec.type === "scriptSteps") {
     return (
       <>

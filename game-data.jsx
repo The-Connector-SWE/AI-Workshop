@@ -321,29 +321,46 @@ const LEVELS = [
           n: "06",
           title: "Frame Chaining",
           summary: "Design the handoff, not just the shot. This is the difference between a film and a pile of clips.",
-          type: "pipeline",
-          steps: [
-            { n: "01", title: "Shot 01 — Opening", desc: "How the shot begins." },
-            { n: "02", title: "Shot 01 — Action", desc: "The moment plays out." },
-            { n: "03", title: "Shot 01 — End Frame", desc: "Lock the exact composition the shot ends on." },
-            { n: "04", title: "Shot 02 — Open Frame", desc: "Same composition as Shot 01's end frame — the handoff." },
-            { n: "05", title: "Shot 02 — Action → End", desc: "The next beat plays out from that same starting point." },
+          type: "frameChain",
+          rows: [
+            {
+              label: "Shot 01",
+              cells: [
+                { text: "Opening" },
+                { text: "Action" },
+                { text: "End Frame", hot: true },
+              ],
+              handoffAfter: "same composition",
+            },
+            {
+              label: "Shot 02",
+              cells: [
+                { text: "Open Frame", hot: true },
+                { text: "Action" },
+                { text: "End" },
+              ],
+            },
+          ],
+          lines: [
+            "Design the handoff, not just the shot.",
+            "This is the difference between a film and a pile of clips.",
           ],
         },
         {
           n: "07",
           title: "The Repair Ladder",
           summary: "Use the smallest tool that fixes the problem. Only move right if you have to.",
-          type: "pipeline",
+          type: "repairLadder",
+          leftLabel: "Cheap · Fast",
+          rightLabel: "Slow · Expensive",
           steps: [
-            { n: "01", title: "Upscale", desc: "It looks right, it's just soft." },
+            { n: "01", title: "Upscale", desc: "It looks right, it is just soft." },
             { n: "02", title: "Inpaint", desc: "One small detail is broken." },
             { n: "03", title: "Outpaint", desc: "The frame is too tight." },
             { n: "04", title: "New Reference", desc: "The face or the product changed." },
             { n: "05", title: "Regenerate", desc: "Nothing about it works." },
           ],
-          exampleTitle: "Rule",
-          exampleText: "Cheap and fast on the left, slow and expensive on the right. Step 5 is where most students start — it's the one that costs the most.",
+          exampleText: "Step 05 is where most students start. It is the one that costs the most.",
         },
         {
           n: "08",
