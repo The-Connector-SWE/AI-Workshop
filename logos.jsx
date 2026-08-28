@@ -6,23 +6,31 @@ function PlatformLogo({ id, size = 32 }) {
   const S = { width: size, height: size, viewBox: "0 0 32 32", fill: "none",
     stroke: "currentColor", strokeWidth: 1.7, strokeLinecap: "round", strokeLinejoin: "round" };
   const glyphs = {
-    // Gemini — faceted four-point spark
+    // Gemini — real four-point sparkle, official gradient
     gemini: (
-      <svg {...S}>
-        <path d="M16 3 C16 10 22 16 29 16 C22 16 16 22 16 29 C16 22 10 16 3 16 C10 16 16 10 16 3 Z" />
+      <svg width={size} height={size} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="lg-gemini" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#F94046" />
+            <stop offset="30%" stopColor="#FF7A3D" />
+            <stop offset="55%" stopColor="#F6C945" />
+            <stop offset="72%" stopColor="#3EC373" />
+            <stop offset="100%" stopColor="#4285F4" />
+          </linearGradient>
+        </defs>
+        <path fill="url(#lg-gemini)" d="M12 2c0 5.523 4.477 10 10 10c-5.523 0-10 4.477-10 10c0-5.523-4.477-10-10-10c5.523 0 10-4.477 10-10Z" />
       </svg>
     ),
-    // ChatGPT — speech bubble
+    // ChatGPT / OpenAI — real brand mark
     chatgpt: (
-      <svg {...S}>
-        <path d="M6 11 C6 8 8.5 5.5 11.5 5.5 L20.5 5.5 C23.5 5.5 26 8 26 11 L26 17.5 C26 20.5 23.5 23 20.5 23 L13 23 L7.5 27 L8.5 22.2 C7 21.2 6 19.5 6 17.5 Z" />
+      <svg width={size} height={size} viewBox="0 0 260 260" xmlns="http://www.w3.org/2000/svg">
+        <path fill="currentColor" d="M239.184 106.203a64.72 64.72 0 0 0-5.576-53.103C219.452 28.459 191 15.784 163.213 21.74A65.586 65.586 0 0 0 52.096 45.22a64.72 64.72 0 0 0-43.23 31.36c-14.31 24.602-11.061 55.634 8.033 76.74a64.67 64.67 0 0 0 5.525 53.102c14.174 24.65 42.644 37.324 70.446 31.36a64.72 64.72 0 0 0 48.754 21.744c28.481.025 53.714-18.361 62.414-45.481a64.77 64.77 0 0 0 43.229-31.36c14.137-24.558 10.875-55.423-8.083-76.483m-97.56 136.338a48.4 48.4 0 0 1-31.105-11.255l1.535-.87l51.67-29.825a8.6 8.6 0 0 0 4.247-7.367v-72.85l21.845 12.636c.218.111.37.32.409.563v60.367c-.056 26.818-21.783 48.545-48.601 48.601M37.158 197.93a48.35 48.35 0 0 1-5.781-32.589l1.534.921l51.722 29.826a8.34 8.34 0 0 0 8.441 0l63.181-36.425v25.221a.87.87 0 0 1-.358.665l-52.335 30.184c-23.257 13.398-52.97 5.431-66.404-17.803M23.549 85.38a48.5 48.5 0 0 1 25.58-21.333v61.39a8.29 8.29 0 0 0 4.195 7.316l62.874 36.272l-21.845 12.636a.82.82 0 0 1-.767 0L41.353 151.53c-23.211-13.454-31.171-43.144-17.804-66.405zm179.466 41.695l-63.08-36.63L161.73 77.86a.82.82 0 0 1 .768 0l52.233 30.184a48.6 48.6 0 0 1-7.316 87.635v-61.391a8.54 8.54 0 0 0-4.4-7.213m21.742-32.69l-1.535-.922l-51.619-30.081a8.39 8.39 0 0 0-8.492 0L99.98 99.808V74.587a.72.72 0 0 1 .307-.665l52.233-30.133a48.652 48.652 0 0 1 72.236 50.391zM88.061 139.097l-21.845-12.585a.87.87 0 0 1-.41-.614V65.685a48.652 48.652 0 0 1 79.757-37.346l-1.535.87l-51.67 29.825a8.6 8.6 0 0 0-4.246 7.367zm11.868-25.58L128.067 97.3l28.188 16.218v32.434l-28.086 16.218l-28.188-16.218z" />
       </svg>
     ),
-    // ElevenLabs — speech waveform bars in a rounded frame
+    // ElevenLabs — real brand mark (two bars)
     elevenlabs: (
-      <svg {...S}>
-        <path d="M12 6 L12 26" />
-        <path d="M20 6 L20 26" />
+      <svg width={size} height={size} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path fill="currentColor" d="M4.6035 0v24h4.9317V0zm9.8613 0v24h4.9317V0z" />
       </svg>
     ),
     // Nano Banana 2 — crescent
@@ -111,11 +119,19 @@ function PlatformLogo({ id, size = 32 }) {
         <path d="M16 9 L21.5 18.5 L10.5 18.5 Z" opacity="0.85" />
       </svg>
     ),
-    // Canva — abstract swirl "C"
+    // Canva — real brand mark (gradient disc + cursive "C")
     canva: (
-      <svg {...S}>
-        <circle cx="16" cy="16" r="10.5" />
-        <path d="M21 12.5 C19 10.5 16.5 10 14.5 11.3 C12 12.9 11.5 16.3 13.3 18.6 C14.7 20.3 17 20.9 18.8 19.9" />
+      <svg width={size} height={size} viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="lg-canva" x1="10%" y1="0%" x2="90%" y2="100%">
+            <stop offset="0%" stopColor="#00C4CC" />
+            <stop offset="50%" stopColor="#3B7DEE" />
+            <stop offset="100%" stopColor="#7D2AE8" />
+          </linearGradient>
+        </defs>
+        <circle cx="16" cy="16" r="16" fill="url(#lg-canva)" />
+        <path fill="none" stroke="#fff" strokeWidth="3.1" strokeLinecap="round"
+          d="M21.3 12.1c-1.5-1.9-3.7-2.7-6-2.1c-3.1.8-5 4-4.2 7.1c.8 3.1 4 5 7.1 4.2c1.7-.4 3-1.5 3.8-2.9" />
       </svg>
     ),
     // Firefly Timeline — real Adobe app-family mark (product-specific Firefly
@@ -125,11 +141,13 @@ function PlatformLogo({ id, size = 32 }) {
         <path fill="#fa0f00" d="m128.024 83.527l60.288 143.042h-39.513l-18.038-45.554H86.642zM256 0v226.54L161.353 0zM94.684 0L0 226.54V0z" />
       </svg>
     ),
-    // CapCut — scissors
+    // CapCut — real brand mark (white squircle + black bowtie cut)
     capcut: (
-      <svg {...S}>
-        <circle cx="8" cy="9" r="3" /><circle cx="8" cy="23" r="3" />
-        <path d="M10.5 11 L26 24" /><path d="M10.5 21 L26 8" />
+      <svg width={size} height={size} viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1" y="1" width="30" height="30" rx="9" fill="#fff" />
+        <path fill="#000"
+          d="M9 12q0-1 1-1h10.5q1 0 1 1v2.1L16 17l5.5 2.9V22q0 1-1 1H10q-1 0-1-1v-2.1L14.5 17L8 13.9V13q0-1 1-1Z" />
+        <path fill="#000" d="M21.5 12.3L26 10v4.6l-4.5 2.6z" />
       </svg>
     ),
     // Premiere Pro — real brand mark
