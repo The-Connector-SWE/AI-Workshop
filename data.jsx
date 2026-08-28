@@ -46,6 +46,17 @@ const PLATFORMS = {
       "Export images for the next stage of the pipeline",
     ],
   },
+  "firefly-audio": {
+    id: "firefly-audio", name: "Adobe Firefly", vendor: "Adobe", hue: "#ff7a9c", url: "https://firefly.adobe.com",
+    tagline: "Alternative voice generation & audio tools",
+    about: "Adobe Firefly's audio tools generate a performed VO read straight from your script line and let you shape the delivery inside the same suite you used for visuals — a fast alternative to a dedicated voice tool like ElevenLabs.",
+    usage: [
+      "Generate a VO read directly from a script line",
+      "Adjust pace, tone, and emphasis on the read",
+      "Compare against your ElevenLabs pass for the best fit",
+      "Export the file synced to your script table",
+    ],
+  },
   "nano-banana": {
     id: "nano-banana", name: "Nano Banana 2", vendor: "Google", hue: "#ffd36e",
     tagline: "Extreme character consistency",

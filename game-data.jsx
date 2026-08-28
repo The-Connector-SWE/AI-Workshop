@@ -435,7 +435,7 @@ const LEVELS = [
     rank: "Voice Director",
     mission:
       "Directing the sound of a project the way you'd direct its picture — generate a performance, shape it, clone it, or pull it from stock, then know when to use each.",
-    tools: ["elevenlabs", "firefly"],
+    tools: ["elevenlabs", "firefly-audio"],
     learning: [],
     voiceDirection: {
       title: "Voice Direction",

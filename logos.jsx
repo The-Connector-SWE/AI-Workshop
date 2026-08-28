@@ -75,6 +75,13 @@ function PlatformLogo({ id, size = 32 }) {
         <path d="M16 3 C19 8 23 10 23 16 C23 21 20 26 16 26 C12 26 9 21 9 16 C9 12.5 11 11 12.5 13 C12.5 9 14 6 16 3 Z" />
       </svg>
     ),
+    // Adobe Firefly (audio) — flame with sound waves
+    "firefly-audio": (
+      <svg {...S}>
+        <path d="M13 4 C15.5 8 18 9.5 18 14 C18 17.5 15.7 21 13 21 C10.3 21 8 17.5 8 14 C8 11.3 9.3 10.3 10.4 11.8 C10.4 9 11.5 6.5 13 4 Z" />
+        <path d="M21 12 C22 13.3 22 15.7 21 17" /><path d="M24 10 C25.8 12.5 25.8 16.5 24 19" />
+      </svg>
+    ),
     // Firefly Video — flame with play
     "firefly-video": (
       <svg {...S}>
