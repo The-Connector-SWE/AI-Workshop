@@ -60,7 +60,7 @@ function MapView({ levels, platforms, labs, labChecks, best, rank, onEnter, onEn
   return (
     <main className="screen" key="map">
       <section className="map-hero">
-        <div className="pill anim a1"><span className="dot"></span> 5 levels · learn · tools · challenge</div>
+        <div className="pill anim a1"><span className="dot"></span> 6 levels · learn · tools · challenge</div>
         <h1 className="anim a2">The Director's<br /><span className="iri">Game</span></h1>
         <p className="map-sub anim a3">
           Climb from production assistant to director. Each level teaches one stage of the
@@ -75,7 +75,7 @@ function MapView({ levels, platforms, labs, labChecks, best, rank, onEnter, onEn
 
       {allDone && (
         <div className="final-banner anim a4">
-          <strong>That's a wrap, Director.</strong> All five levels cleared. Replay any challenge to chase three stars.
+          <strong>That's a wrap, Director.</strong> All six levels cleared. Replay any challenge to chase three stars.
         </div>
       )}
 
@@ -277,7 +277,9 @@ function LevelView({ level, platforms, best, onFinish, onBack }) {
             ))}
           </div>
           {level.scriptIntelligence && <VisualCraftingSection data={level.scriptIntelligence} />}
+          {level.briefStrategy && <VisualCraftingSection data={level.briefStrategy} />}
           {level.strategicViz && <VisualCraftingSection data={level.strategicViz} />}
+          {level.preVisualization && <VisualCraftingSection data={level.preVisualization} />}
           {level.visualCrafting && <VisualCraftingSection data={level.visualCrafting} />}
           {level.motionOrchestration && <VisualCraftingSection data={level.motionOrchestration} />}
           {level.voiceDirection && <VisualCraftingSection data={level.voiceDirection} />}
