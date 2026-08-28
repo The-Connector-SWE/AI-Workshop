@@ -1,4 +1,4 @@
-// game-data.jsx — The Director's Game: 3 levels, each with learning, tools, challenge.
+// game-data.jsx — The Director's Game: 5 levels, each with learning, tools, challenge.
 // Exports to window.GAME = { LEVELS, RANKS }.
 
 const RANKS = [
@@ -6,6 +6,8 @@ const RANKS = [
   "Storyboard Artist",    // 1
   "Art Director",         // 2
   "Motion Director",      // 3
+  "Voice Director",       // 4
+  "Director",             // 5
 ];
 
 const LEVELS = [
@@ -420,6 +422,163 @@ const LEVELS = [
           { label: "Frame 7" },
           { label: "Frame 8" },
           { label: "Frame 9" },
+        ],
+      },
+    ],
+  },
+
+  {
+    id: 4,
+    code: "Level 04",
+    name: "Voice Direction",
+    tag: "Quick-Learning Module",
+    rank: "Voice Director",
+    mission:
+      "Give every scene a voice. Direct AI narration and dub it across languages before the final assembly — fast, in one focused module.",
+    tools: ["elevenlabs"],
+    learning: [],
+    voiceDirection: {
+      title: "Voice Direction",
+      intro: "Four steps from a locked script to a mixed, localized voice track.",
+      sections: [
+        {
+          n: "01",
+          title: "Voice Direction Pipeline",
+          summary: "Four steps from locked script to a mixed, localized voice track.",
+          type: "pipeline",
+          steps: [
+            { n: "01", title: "Lock the VO Script", desc: "Finalize every line — voice direction starts from a script that won't change." },
+            { n: "02", title: "Design or Choose a Voice", desc: "Pick a stock voice or design a custom one that matches the character and brand." },
+            { n: "03", title: "Direct the Performance", desc: "Set emotion, pace, and emphasis per line — don't accept the first take." },
+            { n: "04", title: "Generate & Dub", desc: "Render with v3 Alpha, then dub into other languages in the same voice." },
+          ],
+        },
+        {
+          n: "02",
+          title: "Voice Direction Prompt",
+          summary: "The formula for directing every VO line.",
+          type: "promptFormula",
+          formula: ["Line / VO Text", "Emotion", "Pace", "Emphasis", "Delivery Style", "Consistency Lock"],
+          exampleTitle: "Prompt Example",
+          exampleText: "Act as a professional voice director. For this VO line, specify the emotional tone, pacing (slow / medium / fast), which words to emphasize, and the overall delivery style (e.g. intimate, confident, playful). Line: \"One sip changes the whole mood.\" Emotion: tired fading into confident. Pace: slow start, quickening on the final word. Emphasis: \"changes\" and \"mood.\" Delivery: warm, intimate, close-mic morning voice. Consistency lock: same voice, same mic distance, and same energy arc across every line in this spot.",
+          negative: "",
+        },
+        {
+          n: "03",
+          title: "Localization Checklist",
+          summary: "Before you ship a dub, confirm every language pass still lands.",
+          type: "checklist",
+          headline: "A dub that doesn't match the picture isn't done.",
+          checks: [
+            "Does the timing still match the frame?",
+            "Is the emotional arc preserved in translation?",
+            "Does the voice still sound like the same character?",
+            "Are brand terms and taglines translated on-brand, not literally?",
+            "Is the mix level consistent across all language versions?",
+          ],
+        },
+      ],
+    },
+    challenges: [
+      {
+        kind: "open",
+        title: "Direct the VO for Every Line",
+        intro: "Take your locked script and write full voice-direction notes for each line — emotion, pace, and emphasis.",
+        prompt: "Act as a professional voice director. For each VO line in the script, specify: the emotional tone, pacing, which word(s) to emphasize, and the delivery style. Keep the same voice and energy arc consistent across every line.",
+        columns: ["Emotion", "Pace", "Emphasis", "Delivery Style"],
+        items: [
+          { label: "Line 1" },
+          { label: "Line 2" },
+          { label: "Line 3" },
+          { label: "Line 4" },
+          { label: "Line 5" },
+        ],
+      },
+      {
+        kind: "open",
+        title: "Localize the Spot",
+        intro: "Dub your VO into one additional language while keeping the same voice and emotional arc.",
+        prompt: "Act as a localization producer. Translate this VO script into [target language], preserving tone, emotional arc, and brand terms — do not translate literally. Then generate the dub in the same voice used for the original.",
+        items: [
+          { label: "Translated script keeps the emotional arc" },
+          { label: "Brand terms / tagline localized, not literal" },
+          { label: "Dub generated in the same voice" },
+          { label: "Timing still matches the picture" },
+        ],
+      },
+    ],
+  },
+
+  {
+    id: 5,
+    code: "Level 05",
+    name: "Full-Stack Production",
+    tag: "End-to-End Delivery",
+    rank: "Director",
+    mission:
+      "Bring music, SFX, upscaling, and finishing together — assemble every piece from every level into one delivery-ready film.",
+    tools: ["artlist", "magnifica", "arcana", "firefly-video"],
+    learning: [],
+    fullStackProduction: {
+      title: "Full-Stack Production",
+      intro: "Six steps from rough cut to a delivery-ready export.",
+      sections: [
+        {
+          n: "01",
+          title: "Full-Stack Pipeline",
+          summary: "Six steps from rough cut to delivery-ready export.",
+          type: "pipeline",
+          steps: [
+            { n: "01", title: "Assemble the Rough Cut", desc: "Lay every clip and VO line in sequence, in order, before touching finishing." },
+            { n: "02", title: "Score & Sound Design", desc: "Add music and SFX from Artlist to carry the emotional arc." },
+            { n: "03", title: "Upscale & Enhance", desc: "Bring every shot up to delivery resolution with Magnific." },
+            { n: "04", title: "Finishing Pass", desc: "Run color, grade, and polish through Arcana." },
+            { n: "05", title: "Fix or Extend Real Footage", desc: "Patch or extend any live-action clips inside Firefly Video." },
+            { n: "06", title: "Final QA & Export", desc: "Check against the delivery checklist, then export in spec." },
+          ],
+        },
+        {
+          n: "02",
+          title: "The Finishing Stack",
+          summary: "Four tools, four jobs — know which one earns its place.",
+          type: "styleGuide",
+          components: [
+            { n: "01", title: "Artlist", desc: "Licensed music, SFX, and footage — the audio and asset layer of the stack." },
+            { n: "02", title: "Magnific", desc: "Upscaling and detail enhancement, so footage holds up on the big screen." },
+            { n: "03", title: "Arcana", desc: "Creative finishing — the specialist pass once everything else is locked." },
+            { n: "04", title: "Firefly Video", desc: "Fix or extend a real-life clip inside your existing Premiere Pro timeline." },
+          ],
+          example: "Rough cut → score & SFX (Artlist) → upscale (Magnific) → finishing pass (Arcana) → patch real footage (Firefly Video) → export.",
+        },
+        {
+          n: "03",
+          title: "Final Delivery Checklist",
+          summary: "Nothing ships until every box is checked.",
+          type: "checklist",
+          headline: "A beautiful cut means nothing if it isn't delivery-ready.",
+          checks: [
+            "Correct resolution and aspect ratio for the platform?",
+            "Audio levels mixed and normalized?",
+            "Music and SFX licensed and cleared?",
+            "Captions/subtitles added where required?",
+            "Exported in the right format and naming convention?",
+            "Final brand check — logo, tagline, and CTA present?",
+          ],
+        },
+      ],
+    },
+    challenges: [
+      {
+        kind: "open",
+        title: "Assemble the Final Delivery",
+        intro: "Take your finished shots and audio through the full-stack pipeline to a delivery-ready export.",
+        prompt: "Act as a post-production supervisor. Walk through the full-stack pipeline for this spot: assemble the rough cut, add music and SFX, upscale every shot to delivery resolution, run the finishing pass, and confirm the final export meets the delivery checklist.",
+        items: [
+          { label: "Rough cut assembled in order" },
+          { label: "Music & SFX added" },
+          { label: "Every shot upscaled to delivery resolution" },
+          { label: "Finishing pass complete" },
+          { label: "Exported to the final delivery checklist" },
         ],
       },
     ],
