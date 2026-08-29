@@ -488,6 +488,35 @@
 .vc-pipe-step { padding: 18px; border-radius: 14px; background: rgba(255,255,255,.05); border: 1px solid var(--line); }
 .vc-pipe-step h4 { font-size: 14px; font-weight: 700; margin: 0; line-height: 1.35; }
 
+/* Level 3 — Repair Ladder: ascending staircase, cheap→expensive */
+.vc-ladder { margin-top: 6px; }
+.vc-ladder-head { display: flex; justify-content: space-between; font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; }
+.vc-ladder-head .hi { color: var(--gold); }
+.vc-ladder-row { display: grid; grid-template-columns: repeat(var(--n), 1fr); align-items: end; gap: 10px; }
+.vc-ladder-bar { padding: 12px 12px 10px; border-radius: 12px 12px 5px 5px; background: rgba(255,255,255,.06);
+  border: 1px solid var(--line); display: flex; flex-direction: column; justify-content: flex-start; transition: transform .2s; }
+.vc-ladder-bar:hover { transform: translateY(-2px); }
+.vc-ladder-bar.hot { background: var(--iri); border-color: transparent; box-shadow: 0 12px 30px rgba(255,46,63,.35); }
+.vc-ladder-n { font-family: 'Space Grotesk', sans-serif; font-size: 10.5px; font-weight: 700; opacity: .6; }
+.vc-ladder-bar h4 { font-size: 13px; font-weight: 800; letter-spacing: .01em; text-transform: uppercase; margin-top: 4px; line-height: 1.25; }
+.vc-ladder-descs { display: grid; grid-template-columns: repeat(var(--n), 1fr); gap: 10px; margin-top: 12px; }
+.vc-ladder-descs p { font-size: 12.5px; color: var(--muted2); line-height: 1.45; }
+.vc-ladder-note { margin-top: 20px; font-weight: 700; font-style: italic; font-size: 14.5px; color: var(--ink); }
+
+/* Level 3 — Frame Chaining: paired shot handoff */
+.vc-chain { margin-top: 6px; display: flex; flex-direction: column; gap: 10px; }
+.vc-chain-row { display: grid; grid-template-columns: 74px repeat(3, 1fr); align-items: center; gap: 12px; }
+.vc-chain-label { font-family: 'Space Grotesk', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.vc-chain-cell { padding: 14px 14px; border-radius: 10px; background: rgba(255,255,255,.06); border: 1px solid var(--line);
+  font-weight: 700; font-size: 13.5px; text-align: center; color: var(--muted2); }
+.vc-chain-cell.hot { background: var(--iri); color: #fff; border-color: transparent; text-transform: uppercase; box-shadow: 0 10px 26px rgba(255,46,63,.3); }
+.vc-chain-handoff { display: grid; grid-template-columns: 74px repeat(3, 1fr); }
+.vc-chain-handoff span { grid-column: 4; text-align: center; }
+.vc-chain-handoff { font-size: 11.5px; font-weight: 700; color: var(--gold); }
+.vc-chain-lines { margin-top: 10px; display: flex; flex-direction: column; gap: 8px; }
+.vc-chain-lines p { font-weight: 700; font-size: 15px; color: var(--ink); }
+
 .vc-sub-head { font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin: 22px 0 12px; font-weight: 600; }
 
 .vc-methods-table { display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }

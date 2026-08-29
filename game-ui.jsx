@@ -60,7 +60,7 @@ function MapView({ levels, platforms, labs, labChecks, best, rank, onEnter, onEn
   return (
     <main className="screen" key="map">
       <section className="map-hero">
-        <div className="pill anim a1"><span className="dot"></span> 5 levels · learn · tools · challenge</div>
+        <div className="pill anim a1"><span className="dot"></span> 6 levels · learn · tools · challenge</div>
         <h1 className="anim a2">The Director's<br /><span className="iri">Game</span></h1>
         <p className="map-sub anim a3">
           Climb from production assistant to director. Each level teaches one stage of the
@@ -75,7 +75,7 @@ function MapView({ levels, platforms, labs, labChecks, best, rank, onEnter, onEn
 
       {allDone && (
         <div className="final-banner anim a4">
-          <strong>That's a wrap, Director.</strong> All five levels cleared. Replay any challenge to chase three stars.
+          <strong>That's a wrap, Director.</strong> All six levels cleared. Replay any challenge to chase three stars.
         </div>
       )}
 
@@ -277,7 +277,9 @@ function LevelView({ level, platforms, best, onFinish, onBack }) {
             ))}
           </div>
           {level.scriptIntelligence && <VisualCraftingSection data={level.scriptIntelligence} />}
+          {level.briefStrategy && <VisualCraftingSection data={level.briefStrategy} />}
           {level.strategicViz && <VisualCraftingSection data={level.strategicViz} />}
+          {level.preVisualization && <VisualCraftingSection data={level.preVisualization} />}
           {level.visualCrafting && <VisualCraftingSection data={level.visualCrafting} />}
           {level.motionOrchestration && <VisualCraftingSection data={level.motionOrchestration} />}
           {level.voiceDirection && <VisualCraftingSection data={level.voiceDirection} />}
@@ -307,9 +309,9 @@ function LevelView({ level, platforms, best, onFinish, onBack }) {
       {hasChallenges && stage === "challenge" && !running && (
         <div className="ch-intro anim a4" key="chi">
           <span className="quiz-kicker">{level.code} · Challenge</span>
-          <h2>{multi ? "Two-stage challenge" : challenges[0].title}</h2>
+          <h2>{multi ? `${challenges.length}-stage challenge` : challenges[0].title}</h2>
           <p>{multi
-            ? "Two open tasks — apply the script-intelligence method, then write a full script from a live brief."
+            ? `${challenges.length} open tasks — work through each stage below, in order.`
             : challenges[0].intro}</p>
           {multi && (
             <div className="ch-stage-list">
@@ -606,6 +608,61 @@ function VcPanelContent({ sec }) {
           </div>
         )}
       </>
+    );
+  }
+  if (sec.type === "repairLadder") {
+    const n = sec.steps.length;
+    return (
+      <div className="vc-ladder">
+        <div className="vc-ladder-head">
+          <span>{sec.leftLabel || "Cheap · Fast"}</span>
+          <span className="hi">{sec.rightLabel || "Slow · Expensive"}</span>
+        </div>
+        <div className="vc-ladder-row" style={{ "--n": n }}>
+          {sec.steps.map((s, i) => (
+            <div
+              className={"vc-ladder-bar" + (i === n - 1 ? " hot" : "")}
+              key={s.n}
+              style={{ height: 60 + (i * (140 / (n - 1 || 1))) + "px" }}
+            >
+              <span className="vc-ladder-n">{s.n}</span>
+              <h4>{s.title}</h4>
+            </div>
+          ))}
+        </div>
+        <div className="vc-ladder-descs" style={{ "--n": n }}>
+          {sec.steps.map((s) => (
+            <p key={s.n}>{s.desc}</p>
+          ))}
+        </div>
+        {sec.exampleText && <p className="vc-ladder-note">{sec.exampleText}</p>}
+      </div>
+    );
+  }
+  if (sec.type === "frameChain") {
+    return (
+      <div className="vc-chain">
+        {sec.rows.map((row, ri) => (
+          <React.Fragment key={ri}>
+            <div className="vc-chain-row">
+              <span className="vc-chain-label">{row.label}</span>
+              {row.cells.map((c, ci) => (
+                <span className={"vc-chain-cell" + (c.hot ? " hot" : "")} key={ci}>{c.text}</span>
+              ))}
+            </div>
+            {row.handoffAfter && (
+              <div className="vc-chain-handoff">
+                <span>↓ {row.handoffAfter}</span>
+              </div>
+            )}
+          </React.Fragment>
+        ))}
+        {sec.lines && (
+          <div className="vc-chain-lines">
+            {sec.lines.map((l, i) => <p key={i}>{l}</p>)}
+          </div>
+        )}
+      </div>
     );
   }
   if (sec.type === "scriptSteps") {
