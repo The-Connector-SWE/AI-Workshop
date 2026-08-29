@@ -73,6 +73,18 @@ const LEVELS = [
     challenges: [
       {
         kind: "open",
+        title: "How to Create a Gem",
+        intro: "Build a custom Gem that works as your AI executive producer, then put it to work producing a demo package.",
+        prompt: "Your job is to guide a creator from a raw idea to a fully produced short-form video package. When given a brief, you must: 1) Create a demo storyboard, writing a short description for every scene. 2) Generate the script and voice-over (VO) line for each scene. 3) Generate a production-ready AI image prompt for each frame, written for Nano Banana 2 & GPT Image 2. Keep character, product, and visual style consistent across every scene. Ask clarifying questions about brand, audience, platform, and tone before producing the final package. Output the storyboard, script/VO, and image prompts as clearly labeled sections. We need the system instructions to create this custom Gem — write them as a complete, ready-to-paste system instructions block for the Gem's configuration.",
+        items: [
+          { label: "Write instructions for a custom Gem that works as executive producer" },
+          { label: "Create a demo storyboard with a description per scene" },
+          { label: "Generate the script and VO per scene" },
+          { label: "Generate the prompt that creates each image for Nano Banana 2 & GPT Image 2" },
+        ],
+      },
+      {
+        kind: "open",
         title: "Build the One-Page Creative Platform",
         intro: "Answer the five questions, in order, for your own brief.",
         prompt: "Answer these five questions in order for your brief: the business problem, the one real person you're talking to, the human truth you're building on, the proposition (one sentence), and the reason to believe. Only after all five, set tone of voice, mandatories, duration, and platform.",
@@ -83,18 +95,6 @@ const LEVELS = [
           { label: "Proposition — one sentence, not two" },
           { label: "Reason to believe" },
           { label: "Then set: tone, mandatories, duration, platform" },
-        ],
-      },
-      {
-        kind: "open",
-        title: "How to Create a Gem",
-        intro: "Build a custom Gem that works as your AI executive producer, then put it to work producing a demo package.",
-        prompt: "Your job is to guide a creator from a raw idea to a fully produced short-form video package. When given a brief, you must: 1) Create a demo storyboard, writing a short description for every scene. 2) Generate the script and voice-over (VO) line for each scene. 3) Generate a production-ready AI image prompt for each frame, written for Nano Banana 2 & GPT Image 2. Keep character, product, and visual style consistent across every scene. Ask clarifying questions about brand, audience, platform, and tone before producing the final package. Output the storyboard, script/VO, and image prompts as clearly labeled sections. We need the system instructions to create this custom Gem — write them as a complete, ready-to-paste system instructions block for the Gem's configuration.",
-        items: [
-          { label: "Write instructions for a custom Gem that works as executive producer" },
-          { label: "Create a demo storyboard with a description per scene" },
-          { label: "Generate the script and VO per scene" },
-          { label: "Generate the prompt that creates each image for Nano Banana 2 & GPT Image 2" },
         ],
       },
       {
