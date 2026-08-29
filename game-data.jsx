@@ -193,20 +193,6 @@ const LEVELS = [
           { label: "Frame 5" },
         ],
       },
-      {
-        kind: "open",
-        title: "Choose Your Five Axes",
-        intro: "For each frame in your storyboard, lock all five axis decisions before you render anything.",
-        prompt: "For each frame in the storyboard, decide: shot size, camera angle, camera movement, lens, and time treatment. Keep to one camera movement per shot — two movements in five seconds is chaos, both for the model and for the viewer.",
-        columns: ["Shot Size", "Camera Angle", "Camera Movement", "Lens", "Time"],
-        items: [
-          { label: "Frame 1" },
-          { label: "Frame 2" },
-          { label: "Frame 3" },
-          { label: "Frame 4" },
-          { label: "Frame 5" },
-        ],
-      },
     ],
   },
 
