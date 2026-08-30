@@ -304,20 +304,15 @@ body {
   width: auto;
   display: block;
   opacity: .9;
+  filter: brightness(0) invert(1);
 }
 
 .cert-org {
   font-family: 'Space Grotesk', sans-serif;
   font-size: 8pt;
-  letter-spacing: .12em;
+  letter-spacing: .3em;
   text-transform: uppercase;
   color: rgba(255,255,255,.38);
-  margin-bottom: 1.5mm;
-}
-.cert-org-sub {
-  font-size: 7pt;
-  letter-spacing: .2em;
-  color: rgba(255,255,255,.3);
   margin-bottom: 4.5mm;
 }
 
@@ -591,8 +586,7 @@ function certHTML(name, date) {
     <div class="cert-logo">
       <img class="logo-main" src="ai logo.png" alt="pod ai studio" />${partnerLogo}
     </div>
-    <div class="cert-org">Arab Academy for Science, Technology &amp; Maritime Transport</div>
-    <div class="cert-org cert-org-sub">Media Management Department</div>
+    <div class="cert-org">Pod AI Studio Talks 101</div>
     <div class="cert-heading">Certificate of Completion</div>
     <div class="cert-preamble">This is to certify that</div>
     <div class="cert-name">${esc(name)}</div>
