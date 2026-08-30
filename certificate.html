@@ -401,7 +401,7 @@ body {
 .cert-sigs {
   display: flex;
   justify-content: center;
-  gap: 20mm;
+  gap: 13mm;
 }
 .cert-sig { text-align: center; }
 
@@ -417,7 +417,7 @@ body {
 }
 
 .cert-sig-line {
-  width: 48mm;
+  width: 42mm;
   height: 1px;
   background: rgba(255,255,255,.2);
   margin: 0 auto 2.5mm;
@@ -596,12 +596,6 @@ function certHTML(name, date) {
     ${date ? `<div class="cert-date">${esc(date)}</div>` : ''}
     <div class="cert-sigs">
       <div class="cert-sig">
-        <div class="cert-sig-written">Dr. Heba Sadek</div>
-        <div class="cert-sig-line"></div>
-        <div class="cert-sig-name">Dr. Heba Sadek</div>
-        <div class="cert-sig-role">Head, Media Management Department</div>
-      </div>
-      <div class="cert-sig">
         <div class="cert-sig-written">Rana Naguib</div>
         <div class="cert-sig-line"></div>
         <div class="cert-sig-name">Rana Naguib</div>
@@ -612,6 +606,18 @@ function certHTML(name, date) {
         <div class="cert-sig-line"></div>
         <div class="cert-sig-name">Abdullah Ghanem</div>
         <div class="cert-sig-role">Podcast Producer &amp; Systems Builder</div>
+      </div>
+      <div class="cert-sig">
+        <div class="cert-sig-written">Dr. Heba Sadek</div>
+        <div class="cert-sig-line"></div>
+        <div class="cert-sig-name">Dr. Heba Sadek</div>
+        <div class="cert-sig-role">Head, Media Management Department</div>
+      </div>
+      <div class="cert-sig">
+        <div class="cert-sig-written">Prof.Dr. Ashraf Labib</div>
+        <div class="cert-sig-line"></div>
+        <div class="cert-sig-name">Prof.Dr. Ashraf Labib</div>
+        <div class="cert-sig-role">Dean of the College of Management &amp; Technology</div>
       </div>
     </div>
   </div>
