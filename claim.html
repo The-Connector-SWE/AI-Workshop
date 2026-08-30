@@ -57,7 +57,8 @@ body {
   backdrop-filter: blur(12px);
 }
 .logo-row img       { height: 28px; width: auto; display: block; }
-.logo-row .logo-partner { height: 44px; }
+.logo-row .logo-partner-wrap { height: 44px; display: flex; align-items: center; }
+.logo-row .logo-partner { height: 44px; width: auto; display: block; opacity: .9; }
 .logo-row .logo-sep { width: 1px; height: 24px; background: rgba(255,255,255,.2); flex: none; }
 
 /* ─── HERO ───────────────────────────────────────────────── */
@@ -272,15 +273,21 @@ function findMatches(query, names) {
 }
 
 /* ─── Certificate template ───────────────────────────────── */
+const PARTNER_LOGOS = [
+  { src: 'aast-logo.png', alt: 'Arab Academy for Science, Technology & Maritime Transport' },
+  { src: 'media-management-logo.png', alt: 'Media Management Department' },
+];
+const partnerLogoHTML = PARTNER_LOGOS
+  .map(p => `<span class="logo-sep"></span><span class="logo-partner-wrap"><img class="logo-partner" src="${p.src}" alt="${p.alt}" /></span>`)
+  .join('');
+
 function certHTML(name, date) {
   return `
 <div class="cert-page">
   <div class="cert-frame"></div>
   <div class="cert-inner">
     <div class="cert-logo">
-      <img class="logo-main" src="ai logo.png" alt="pod ai studio" />
-      <span class="logo-sep"></span>
-      <span class="logo-partner-wrap"><img class="logo-partner" src="eph-logo-white.png" alt="Enter Perform Hub" /></span>
+      <img class="logo-main" src="ai logo.png" alt="pod ai studio" />${partnerLogoHTML}
     </div>
     <div class="cert-org">POD AIStudio Talks</div>
     <div class="cert-heading">Certificate of Completion</div>
@@ -327,7 +334,7 @@ function renderInvalid() {
   document.getElementById('page').innerHTML = `
     <header class="site-header no-print">
       <div class="logo-row">
-        <span style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:#fff;letter-spacing:.01em;white-space:nowrap">pod <span style="color:#e30016">ai</span> studio</span>
+        <span style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:#fff;letter-spacing:.01em;white-space:nowrap">pod <span style="color:#e30016">ai</span> studio</span>${partnerLogoHTML}
       </div>
     </header>
     <div class="invalid-state">
@@ -347,9 +354,7 @@ function renderSearch(data) {
   root.innerHTML = `
     <header class="site-header no-print">
       <div class="logo-row">
-        <span style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:#fff;letter-spacing:.01em;white-space:nowrap">pod <span style="color:#e30016">ai</span> studio</span>
-        <span class="logo-sep"></span>
-        <img class="logo-partner" src="eph-logo-white.png" alt="Enter Perform Hub" />
+        <span style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:#fff;letter-spacing:.01em;white-space:nowrap">pod <span style="color:#e30016">ai</span> studio</span>${partnerLogoHTML}
       </div>
     </header>
 
