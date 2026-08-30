@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Certificate Generator · From Prompt to Production</title>
+<title>Certificate Generator · From Prompt to Video Production</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet" />
@@ -284,7 +284,7 @@ body {
   display: block;
 }
 .cert-logo .logo-main {
-  height: 49px;
+  height: 60px;
 }
 /* Divider between logos */
 .cert-logo .logo-sep {
@@ -295,12 +295,12 @@ body {
 }
 /* Second partner logo */
 .cert-logo .logo-partner-wrap {
-  height: 65px;
+  height: 60px;
   display: flex;
   align-items: center;
 }
 .cert-logo .logo-partner {
-  height: 65px;
+  height: 60px;
   width: auto;
   display: block;
   opacity: .9;
@@ -309,9 +309,15 @@ body {
 .cert-org {
   font-family: 'Space Grotesk', sans-serif;
   font-size: 8pt;
-  letter-spacing: .3em;
+  letter-spacing: .12em;
   text-transform: uppercase;
   color: rgba(255,255,255,.38);
+  margin-bottom: 1.5mm;
+}
+.cert-org-sub {
+  font-size: 7pt;
+  letter-spacing: .2em;
+  color: rgba(255,255,255,.3);
   margin-bottom: 4.5mm;
 }
 
@@ -492,12 +498,12 @@ body {
   </a>
 
   <h1>Certificate <span class="accent">Generator</span></h1>
-  <p class="lede">Type participant names below to generate print-ready A4 landscape certificates for <em>From Prompt to Production</em>. Certificates update live — hit Print or Save as PDF when ready.</p>
+  <p class="lede">Type participant names below to generate print-ready A4 landscape certificates for <em>From Prompt to Video Production</em>. Certificates update live — hit Print or Save as PDF when ready.</p>
 
   <div class="fields">
     <div class="field">
       <label>Workshop date</label>
-      <input type="text" id="dateInput" value="August 10, 11 &amp; 12, 2026" />
+      <input type="text" id="dateInput" value="August 29 &amp; 30, 2026" />
     </div>
     <div class="field">
       <label>Participant names</label>
@@ -570,7 +576,7 @@ function certHTML(name, date) {
   // filenames below in display order. Leave the array empty to
   // hide partner logos until ready.
   const PARTNER_LOGOS = [
-    { src: 'eph-logo-white.png', alt: 'Enter Perform Hub' },
+    { src: 'media-management-logo.png', alt: 'Media Management Department' },
   ];
   const partnerLogo = PARTNER_LOGOS
     .map(p => `<span class="logo-sep"></span><span class="logo-partner-wrap"><img class="logo-partner" src="${p.src}" alt="${p.alt}" /></span>`)
@@ -582,15 +588,16 @@ function certHTML(name, date) {
   <div class="cert-frame"></div>
   <div class="cert-inner">
     <div class="cert-logo">
-      <img class="logo-main" src="ai logo.png" alt="pod ai studio" />${partnerLogo}
+      <img class="logo-main" src="aast-logo.png" alt="Arab Academy for Science, Technology & Maritime Transport" />${partnerLogo}
     </div>
-    <div class="cert-org">POD AIStudio Talks</div>
+    <div class="cert-org">Arab Academy for Science, Technology &amp; Maritime Transport</div>
+    <div class="cert-org cert-org-sub">Media Management Department</div>
     <div class="cert-heading">Certificate of Completion</div>
     <div class="cert-preamble">This is to certify that</div>
     <div class="cert-name">${esc(name)}</div>
     <div class="cert-completed">has successfully completed</div>
-    <div class="cert-course">From Prompt to Production</div>
-    <div class="cert-subtitle">A 3-day hands-on intensive in generative AI media production</div>
+    <div class="cert-course">From Prompt to Video Production</div>
+    <div class="cert-subtitle">A 2-day hands-on intensive in generative AI video production</div>
     <div class="cert-rule"><span></span></div>
     ${date ? `<div class="cert-date">${esc(date)}</div>` : ''}
     <div class="cert-sigs">
