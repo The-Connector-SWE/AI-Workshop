@@ -112,6 +112,28 @@ const PLATFORMS = {
       "High-volume, quick turnarounds",
     ],
   },
+  "seedance-2.5": {
+    id: "seedance-2.5", name: "Seedance 2.5", vendor: "ByteDance", hue: "#5aa0ff",
+    tagline: "Sharper motion, faster turnarounds",
+    about: "The next generation of Seedance — faster rendering than 2.0, tighter multi-clip consistency and noticeably improved motion fidelity for image-to-video work.",
+    usage: [
+      "Faster renders for rapid iteration",
+      "Improved motion fidelity over 2.0",
+      "Strict consistency across multi-clip sequences",
+      "High-volume, quick turnarounds",
+    ],
+  },
+  "gemini-omni": {
+    id: "gemini-omni", name: "Gemini Omni", vendor: "Google", hue: "#9b8cff", url: "https://gemini.google.com",
+    tagline: "Unified multimodal generation",
+    about: "Google's omni-modal model for image-to-video — reasons over text, image and motion together in one pass, carrying Gemini's understanding straight into native video generation.",
+    usage: [
+      "Turn a locked frame into motion with native understanding",
+      "Reason over text + image + motion in one pass",
+      "Keep character and scene consistency from the source frame",
+      "Access via the Gemini app or AI Studio",
+    ],
+  },
   "firefly-video": {
     id: "firefly-video", name: "Firefly Video", vendor: "Adobe", hue: "#ff7a9c",
     tagline: "Fix & extend real footage",

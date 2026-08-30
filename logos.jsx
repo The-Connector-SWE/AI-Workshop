@@ -77,6 +77,30 @@ function PlatformLogo({ id, size = 32 }) {
         <path d="M16 9 L25 16 L16 23 Z" />
       </svg>
     ),
+    // Seedance 2.5 — same fast-forward mark, third chevron for the version bump
+    "seedance-2.5": (
+      <svg {...S}>
+        <path d="M3 9 L11 16 L3 23 Z" />
+        <path d="M12 9 L20 16 L12 23 Z" />
+        <path d="M21 9 L29 16 L21 23 Z" opacity="0.55" />
+      </svg>
+    ),
+    // Gemini Omni — sparkle with an orbit ring for "omni" multimodal reach
+    "gemini-omni": (
+      <svg width={size} height={size} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="lg-gemini-omni" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#F94046" />
+            <stop offset="30%" stopColor="#FF7A3D" />
+            <stop offset="55%" stopColor="#F6C945" />
+            <stop offset="72%" stopColor="#3EC373" />
+            <stop offset="100%" stopColor="#4285F4" />
+          </linearGradient>
+        </defs>
+        <ellipse cx="12" cy="12" rx="10.5" ry="5.5" fill="none" stroke="url(#lg-gemini-omni)" strokeWidth="1.3" opacity="0.6" />
+        <path fill="url(#lg-gemini-omni)" d="M12 4c0 4.418 3.582 8 8 8c-4.418 0-8 3.582-8 8c0-4.418-3.582-8-8-8c4.418 0 8-3.582 8-8Z" />
+      </svg>
+    ),
     // Adobe Firefly — flame
     firefly: (
       <svg {...S}>

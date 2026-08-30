@@ -412,7 +412,7 @@ const LEVELS = [
     rank: "Motion Director",
     mission:
       "Turning still frames into shots — with intent, not with luck.",
-    tools: ["kling", "veo", "seedance", "firefly"],
+    tools: ["kling", "veo", "seedance", "seedance-2.5", "gemini-omni", "firefly"],
     learning: [],
     motionOrchestration: {
       title: "Motion Orchestration",
