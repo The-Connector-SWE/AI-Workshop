@@ -284,7 +284,7 @@ body {
   display: block;
 }
 .cert-logo .logo-main {
-  height: 60px;
+  height: 49px;
 }
 /* Divider between logos */
 .cert-logo .logo-sep {
@@ -576,6 +576,7 @@ function certHTML(name, date) {
   // filenames below in display order. Leave the array empty to
   // hide partner logos until ready.
   const PARTNER_LOGOS = [
+    { src: 'aast-logo.png', alt: 'Arab Academy for Science, Technology & Maritime Transport' },
     { src: 'media-management-logo.png', alt: 'Media Management Department' },
   ];
   const partnerLogo = PARTNER_LOGOS
@@ -588,7 +589,7 @@ function certHTML(name, date) {
   <div class="cert-frame"></div>
   <div class="cert-inner">
     <div class="cert-logo">
-      <img class="logo-main" src="aast-logo.png" alt="Arab Academy for Science, Technology & Maritime Transport" />${partnerLogo}
+      <img class="logo-main" src="ai logo.png" alt="pod ai studio" />${partnerLogo}
     </div>
     <div class="cert-org">Arab Academy for Science, Technology &amp; Maritime Transport</div>
     <div class="cert-org cert-org-sub">Media Management Department</div>
@@ -601,6 +602,12 @@ function certHTML(name, date) {
     <div class="cert-rule"><span></span></div>
     ${date ? `<div class="cert-date">${esc(date)}</div>` : ''}
     <div class="cert-sigs">
+      <div class="cert-sig">
+        <div class="cert-sig-written">Dr. Heba Sadek</div>
+        <div class="cert-sig-line"></div>
+        <div class="cert-sig-name">Dr. Heba Sadek</div>
+        <div class="cert-sig-role">Head, Media Management Department</div>
+      </div>
       <div class="cert-sig">
         <div class="cert-sig-written">Rana Naguib</div>
         <div class="cert-sig-line"></div>
