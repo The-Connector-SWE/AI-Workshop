@@ -17,7 +17,14 @@ Open `template-q4-26/index.html` (served from the repo root, e.g. `python3 -m ht
 
 ## 3D world
 
-`world3d.js` (Three.js r149) draws the Mission Map as six floating film-set islands with a director character the learner can customise (skin tone, jacket). The same character reacts in Shot Match and celebrates on the rank-up screen. Browsers without WebGL fall back to the flat layout.
+`world3d.js` (Three.js r149) adds a 3D layer across the app. Browsers without WebGL fall back to the flat layout, and motion calms down under reduced-motion settings.
+
+- **Character creator** — on first visit learners name their director and pick male or female, skin tone and jacket. Editable any time from the map.
+- **Mission Map** — six floating film-set islands; the named director walks to the selected level.
+- **Hero, lesson guide, challenges** — the director waves, cheers when a section or deliverable is done, and celebrates when a challenge is complete.
+- **Camera movements** — a 3D film set whose virtual camera performs each move (push-in, orbit, tracking…), alongside the real-frame version.
+- **Shot Match / rank up** — the director reacts to answers and celebrates new ranks.
+- **Toolkit** — each tool shows its set piece (script, frames, camera, microphone, director's chair) on a turntable.
 
 ## Where the content lives
 

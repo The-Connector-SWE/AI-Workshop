@@ -114,7 +114,9 @@ function CopyBox({ title, text, negative }) {
 const has3D = () => !!(window.World3D && window.World3D.supported);
 const SKINS = ["#f1c7a5", "#d9a27c", "#a86f4b", "#6b4430"];
 const JACKETS = ["#ec1c24", "#f2f2f2", "#2e7fc2", "#1f9e5c", "#1e1e1e"];
-const avatarOf = (s) => ({ skin: SKINS[1], jacket: JACKETS[0], ...(s.avatar || {}) });
+const avatarOf = (s) => ({ skin: SKINS[1], jacket: JACKETS[0], body: "male", name: "", ...(s.avatar || {}) });
+const AvatarCtx = React.createContext({ skin: SKINS[1], jacket: JACKETS[0], body: "male", name: "" });
+const directorName = (s) => (avatarOf(s).name || "Director").trim();
 
 function MapWorld({ statuses, sel, onSelect, avatar }) {
   const el = useRef(), w = useRef(), cb = useRef(onSelect);
@@ -129,36 +131,84 @@ function MapWorld({ statuses, sel, onSelect, avatar }) {
   }, []);
   useEffect(() => { w.current && w.current.select(sel); }, [sel]);
   useEffect(() => { w.current && w.current.setStatuses(statuses); }, [statuses.join()]);
-  useEffect(() => { w.current && w.current.setAvatar(avatar); }, [avatar.skin, avatar.jacket]);
+  useEffect(() => { w.current && w.current.setAvatar(avatar); }, [avatar.skin, avatar.jacket, avatar.body, avatar.name]);
   return <div ref={el} style={{ position: "absolute", inset: 0 }} aria-hidden="true" />;
 }
 
-function SoloDirector({ avatar, celebrate, reaction, height = 300 }) {
+function SoloDirector({ avatar, celebrate, wave, turntable, distance, reaction, height = 300 }) {
   const el = useRef(), w = useRef();
   useEffect(() => {
     if (!has3D()) return;
-    w.current = window.World3D.createSolo(el.current, { avatar, celebrate });
+    w.current = window.World3D.createSolo(el.current, { avatar, celebrate, wave, turntable, distance });
     return () => w.current && w.current.dispose();
   }, []);
   useEffect(() => { if (w.current && reaction) w.current.react(reaction.kind); }, [reaction && reaction.n]);
+  useEffect(() => { w.current && w.current.setAvatar(avatar); }, [avatar.skin, avatar.jacket, avatar.body]);
   if (!has3D()) return null;
   return <div ref={el} style={{ width: "100%", height }} role="img" aria-label="Your director character" />;
 }
 
-function AvatarPicker({ avatar, onChange }) {
-  const Sw = ({ c, on, onClick, label }) => (
-    <button type="button" onClick={onClick} aria-label={label} aria-pressed={on}
-      style={{ width: 28, height: 28, borderRadius: "50%", background: c, cursor: "pointer", border: on ? "2px solid #fff" : "1px solid rgba(255,255,255,.25)", boxShadow: on ? "var(--glow-red)" : "none", padding: 0 }} />
-  );
+function CameraSet3D({ move, run }) {
+  const el = useRef(), w = useRef();
+  const avatar = React.useContext(AvatarCtx);
+  useEffect(() => {
+    w.current = window.World3D.createCameraSet(el.current, { avatar, move });
+    return () => w.current && w.current.dispose();
+  }, [avatar.body, avatar.skin, avatar.jacket]);
+  useEffect(() => { w.current && w.current.play(move); }, [move, run]);
+  return <div ref={el} style={{ position: "absolute", inset: 0 }} role="img" aria-label={`${move} performed on a 3D film set`} />;
+}
+
+function Swatches({ label, list, value, onPick }) {
   return (
-    <div className="row" style={{ gap: "10px 18px" }}>
-      <span className="mono" style={{ color: "#fff" }}>YOUR DIRECTOR</span>
-      <span className="row" role="group" aria-label="Skin tone" style={{ gap: 6 }}>
-        {SKINS.map((c, i) => <Sw key={c} c={c} on={avatar.skin === c} label={`Skin tone ${i + 1}`} onClick={() => onChange({ ...avatar, skin: c })} />)}
-      </span>
-      <span className="row" role="group" aria-label="Jacket colour" style={{ gap: 6 }}>
-        {JACKETS.map((c, i) => <Sw key={c} c={c} on={avatar.jacket === c} label={`Jacket colour ${i + 1}`} onClick={() => onChange({ ...avatar, jacket: c })} />)}
-      </span>
+    <div className="stack" style={{ gap: 10 }}>
+      <span className="label">{label}</span>
+      <div className="row" role="group" aria-label={label} style={{ gap: 8 }}>
+        {list.map((c, i) => (
+          <button key={c} type="button" onClick={() => onPick(c)} aria-label={`${label} ${i + 1}`} aria-pressed={value === c}
+            style={{ width: 36, height: 36, borderRadius: "50%", background: c, cursor: "pointer", padding: 0, border: value === c ? "2px solid #fff" : "1px solid rgba(255,255,255,.25)", boxShadow: value === c ? "var(--glow-red)" : "none" }} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function CharacterCreator({ initial, onSave, onClose, first }) {
+  const [a, setA] = useState(initial);
+  const input = useRef();
+  useEffect(() => { input.current && input.current.focus(); }, []);
+  const ok = a.name.trim().length > 0;
+  const save = (e) => { e.preventDefault(); if (ok) onSave({ ...a, name: a.name.trim() }); };
+  return (
+    <div className="lightbox" role="dialog" aria-modal="true" aria-labelledby="cc-title" style={{ alignItems: "flex-start", overflowY: "auto" }}>
+      <form onSubmit={save} className="card card-xl row" style={{ width: "min(100%, 980px)", gap: 32, alignItems: "stretch", margin: "auto" }}>
+        <div style={{ flex: "1 1 320px", minHeight: 380, borderRadius: "var(--r-lg)", overflow: "hidden", background: "radial-gradient(ellipse at 50% 40%, #1a1112 0%, #0a0a0a 75%)", position: "relative" }}>
+          <SoloDirector avatar={a} turntable wave distance={5.2} height={420} />
+          <span className="mono" style={{ position: "absolute", left: 16, bottom: 14 }}>DRAG TO TURN</span>
+        </div>
+        <div className="stack" style={{ flex: "1 1 340px", gap: 22 }}>
+          <span className="mono">{first ? "STEP 00 / CASTING" : "EDIT YOUR DIRECTOR"}</span>
+          <h2 id="cc-title" className="kicker-title h-title" style={{ margin: 0 }}><span className="kicker">Create your</span><span>Director</span></h2>
+          <div className="stack" style={{ gap: 8 }}>
+            <label htmlFor="cc-name" className="label">Director name</label>
+            <input id="cc-name" ref={input} className="field" type="text" maxLength={20} placeholder="e.g. Sara" value={a.name} onChange={(e) => setA({ ...a, name: e.target.value })} />
+          </div>
+          <div className="stack" style={{ gap: 10 }}>
+            <span className="label">Character</span>
+            <div className="row" role="group" aria-label="Character" style={{ gap: 8 }}>
+              {[["male", "Male"], ["female", "Female"]].map(([v, l]) => (
+                <button key={v} type="button" className="pill" aria-pressed={a.body === v} onClick={() => setA({ ...a, body: v })} style={{ minWidth: 110, justifyContent: "center" }}>{l.toUpperCase()}</button>
+              ))}
+            </div>
+          </div>
+          <Swatches label="Skin tone" list={SKINS} value={a.skin} onPick={(c) => setA({ ...a, skin: c })} />
+          <Swatches label="Jacket" list={JACKETS} value={a.jacket} onPick={(c) => setA({ ...a, jacket: c })} />
+          <div className="row" style={{ gap: 12, paddingTop: 8, marginTop: "auto" }}>
+            <button type="submit" className="btn btn-primary" disabled={!ok}>{first ? "Start directing" : "Save director"} <Arrow /></button>
+            {!first ? <button type="button" className="btn btn-ghost" onClick={onClose}>Cancel</button> : null}
+          </div>
+        </div>
+      </form>
     </div>
   );
 }
@@ -179,6 +229,12 @@ function TopBar({ s, route }) {
           <a href="#/toolkit" aria-current={at === "toolkit" ? "page" : undefined}>TOOLKIT</a>
           <a href="#/quiz" aria-current={at === "quiz" ? "page" : undefined}>SHOT MATCH</a>
         </nav>
+        {avatarOf(s).name ? (
+          <span className="chip-xp" title="Your director">
+            <span aria-hidden="true" style={{ width: 18, height: 18, borderRadius: "50%", background: avatarOf(s).jacket, border: `3px solid ${avatarOf(s).skin}` }} />
+            {directorName(s)} · {RANKS[clearedCount(s)]}
+          </span>
+        ) : null}
         <span className="chip-xp"><span className="dot" aria-hidden="true" />{xpOf(s).toLocaleString("en-US")} XP</span>
       </div>
     </header>
@@ -205,6 +261,7 @@ function MapScreen({ s, setS }) {
   const statuses = LEVELS.map((l, i) => (s.cleared[l.id] ? "cleared" : i > 0 && !s.cleared[LEVELS[i - 1].id] ? "locked" : "open"));
   const current = Math.min(LEVELS.findIndex((l) => !s.cleared[l.id]) === -1 ? LEVELS.length - 1 : LEVELS.findIndex((l) => !s.cleared[l.id]), LEVELS.length - 1);
   const [sel, setSel] = useState(current);
+  const [editing, setEditing] = useState(!avatar.name);
   const lv = LEVELS[sel];
   const locked = sel > 0 && !s.cleared[LEVELS[sel - 1].id];
   const items = challengesOf(lv).reduce((n, c) => n + (c.items ? c.items.length : 0), 0);
@@ -216,12 +273,16 @@ function MapScreen({ s, setS }) {
       <span className="ring" style={{ top: -20, right: 20, width: 280, height: 280, borderColor: "rgba(236,28,36,.28)" }} />
 
       <main className="wrap stack" style={{ position: "relative", gap: 72, padding: "72px 32px 96px" }}>
-        <section className="grid-auto" style={{ "--min": "420px", "--gap": "40px", alignItems: "end" }}>
+        {editing ? (
+          <CharacterCreator first={!avatar.name} initial={avatar} onClose={() => setEditing(false)}
+            onSave={(a) => { setS({ ...s, avatar: a }); setEditing(false); }} />
+        ) : null}
+        <section className="grid-auto" style={{ "--min": "320px", "--gap": "32px", alignItems: "end" }}>
           <div className="stack reveal" style={{ gap: 24 }}>
             <span className="mono row" style={{ gap: 12, letterSpacing: ".06em" }}>
-              <span className="ring-dot" style={{ color: "var(--pm-red)" }} aria-hidden="true" />SYS / MISSION CONTROL / AI FILMMAKING TRACK
+              <span className="ring-dot" style={{ color: "var(--pm-red)" }} aria-hidden="true" />SYS / MISSION CONTROL / {avatar.name ? `DIRECTOR ${avatar.name.toUpperCase()}` : "AI FILMMAKING TRACK"}
             </span>
-            <KickerTitle kicker="The" size="h-display">Director's Game</KickerTitle>
+            <KickerTitle kicker={avatar.name ? `Welcome back, ${avatar.name}` : "The"} size="h-display">Director's Game</KickerTitle>
             <p className="lead" style={{ maxWidth: 560 }}>
               {LEVELS.length} missions take you from a blank brief to a finished cinematic cut. Clear each one to earn your next rank.
             </p>
@@ -230,6 +291,13 @@ function MapScreen({ s, setS }) {
               <a className="btn btn-ghost" href="#/quiz">Quick challenge</a>
             </div>
           </div>
+
+          {has3D() ? (
+            <div className="stack" style={{ alignItems: "center", gap: 8 }}>
+              <SoloDirector key={avatar.name} avatar={avatar} wave height={360} distance={5} />
+              <button type="button" className="btn btn-ghost btn-sm" onClick={() => setEditing(true)}>Edit {directorName(s)}</button>
+            </div>
+          ) : null}
 
           <div className="card stack" style={{ gap: 20 }}>
             <div className="row" style={{ justifyContent: "space-between", gap: 12 }}>
@@ -268,7 +336,10 @@ function MapScreen({ s, setS }) {
             <div className="reveal" style={{ position: "relative", height: "clamp(380px, 46vw, 560px)", borderRadius: "var(--r-xl)", overflow: "hidden", border: "1px solid var(--border-hairline)", background: "radial-gradient(ellipse at 50% 35%, #1a1112 0%, #0a0a0a 70%)" }}>
               <MapWorld statuses={statuses} sel={sel} onSelect={setSel} avatar={avatar} />
               <div style={{ position: "absolute", left: 16, right: 16, bottom: 16, display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center", gap: 12, padding: "12px 16px", borderRadius: 16, background: "rgba(20,20,20,.82)", backdropFilter: "var(--blur-glass)", WebkitBackdropFilter: "var(--blur-glass)", border: "1px solid rgba(255,255,255,.08)" }}>
-                <AvatarPicker avatar={avatar} onChange={(a) => setS({ ...s, avatar: a })} />
+                <span className="row" style={{ gap: 12 }}>
+                  <span className="mono" style={{ color: "#fff" }}>{directorName(s).toUpperCase()} · {RANKS[cleared].toUpperCase()}</span>
+                  <button type="button" className="btn btn-ghost btn-sm" onClick={() => setEditing(true)}>Edit director</button>
+                </span>
                 <a className="btn btn-primary btn-sm" href={`#/level/${lv.id}`}>{locked ? "Preview" : "Enter"} {lv.code} <Arrow /></a>
               </div>
             </div>
@@ -413,15 +484,30 @@ function CameraSimulator({ rows }) {
   };
   useEffect(() => { play(0); return () => clearTimeout(t.current); }, []);
   const r = moves[i], m = TQ.MOVES[r.move];
+  const [mode, setMode] = useState(has3D() ? "set" : "frame");
   return (
     <div className="card card-xl row" style={{ gap: 28, alignItems: "flex-start", padding: 24 }}>
-      <div className="stack" style={{ flex: "0 1 300px", gap: 12, margin: "0 auto" }}>
+      <div className="stack" style={{ flex: mode === "set" ? "1 1 420px" : "0 1 300px", gap: 12, margin: "0 auto" }}>
+        {has3D() ? (
+          <div className="row" role="group" aria-label="View" style={{ gap: 6 }}>
+            <button type="button" className="pill" aria-pressed={mode === "set"} onClick={() => { setMode("set"); setRun((n) => n + 1); }}>3D SET</button>
+            <button type="button" className="pill" aria-pressed={mode === "frame"} onClick={() => { setMode("frame"); play(i); }}>REAL FRAME</button>
+          </div>
+        ) : null}
+        {mode === "set" ? (
+          <div className="viewfinder" style={{ maxWidth: "none", aspectRatio: "16 / 10" }}>
+            <CameraSet3D move={r.move} run={run} />
+            <span className="corners white" aria-hidden="true"><i /><i /><i /><i /></span>
+            <span className="rec"><span className="dot" aria-hidden="true" />{r.move.toUpperCase()} · 3D SET</span>
+          </div>
+        ) : (
         <div className="viewfinder">
           <img key={run} src={TQ.F(m.img)} alt={`${r.move} demonstrated on storyboard frame ${m.img}`} className={m.shake && phase === "end" ? "shake" : ""}
             style={{ transformOrigin: m.origin, transform: phase === "start" ? m.from : m.to, transition: phase === "start" ? "none" : "transform 2600ms var(--ease-in-out)" }} />
           <span className="corners white" aria-hidden="true"><i /><i /><i /><i /></span>
           <span className="rec"><span className="dot" aria-hidden="true" />{r.move.toUpperCase()} · 00:0{phase === "end" ? 3 : 0}</span>
         </div>
+        )}
         <button type="button" className="btn btn-primary" onClick={() => play(i)}>
           <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l12-7.5z" /></svg> Play move
         </button>
@@ -673,7 +759,10 @@ function LessonScreen({ lv, s, setS }) {
   const last = at === secs.length - 1;
   const chs = challengesOf(lv);
 
+  const avatar = avatarOf(s);
+  const [reaction, setReaction] = useState(null);
   const markDone = () => {
+    setReaction({ kind: "cheer", n: Date.now() });
     const nd = done.includes(at) ? done : [...done, at];
     const next = { ...s, done: { ...s.done, [lv.id]: nd } };
     if (!chs.length && nd.length === secs.length) {
@@ -705,6 +794,16 @@ function LessonScreen({ lv, s, setS }) {
 
       <main className="wrap split" style={{ padding: "40px 32px 96px" }}>
         <nav className="side stack" aria-label="Lesson sections" style={{ gap: 8 }}>
+          {has3D() ? (
+            <div className="card row" style={{ padding: 0, overflow: "hidden", flexWrap: "nowrap", alignItems: "stretch", marginBottom: 8, background: "radial-gradient(ellipse at 30% 40%, #1a1112 0%, #161616 75%)" }}>
+              <div style={{ width: 120, flex: "0 0 auto" }}><SoloDirector avatar={avatar} reaction={reaction} wave height={170} distance={4.6} /></div>
+              <div className="stack" style={{ gap: 4, padding: "16px 16px 16px 0", justifyContent: "center" }}>
+                <span className="sublabel">Your guide</span>
+                <span style={{ color: "#fff", fontSize: 15, lineHeight: 1.35 }}>{done.length === secs.length ? `All done, ${directorName(s)}.` : done.length ? `${done.length} down, ${secs.length - done.length} to go.` : `Let's go, ${directorName(s)}.`}</span>
+                <span style={{ fontSize: 13, color: "var(--text-muted)" }}>Mark each section done to earn XP.</span>
+              </div>
+            </div>
+          ) : null}
           <span className="sublabel" style={{ color: "var(--text-muted)", padding: "0 4px 8px" }}>Sections</span>
           {secs.map((x, i) => {
             const isDone = done.includes(i);
@@ -797,6 +896,12 @@ function ChallengeScreen({ lv, chIdx, s, setS }) {
   const full = (i) => filled(i) === (cols ? cols.length : 1);
   const complete = items.filter((_, i) => full(i)).length;
   const allDone = items.length > 0 && complete === items.length;
+  const [reaction, setReaction] = useState(null);
+  const prevComplete = useRef(complete);
+  useEffect(() => {
+    if (complete > prevComplete.current) setReaction({ kind: complete === items.length ? "celebrate" : "cheer", n: Date.now() });
+    prevComplete.current = complete;
+  }, [complete]);
 
   const submit = () => {
     const chDone = { ...s.chDone, [key]: true };
@@ -825,6 +930,12 @@ function ChallengeScreen({ lv, chIdx, s, setS }) {
             {ch.brief ? <div className="card stack" style={{ gap: 8 }}><span className="sublabel">The brief</span><span style={{ color: "#fff" }}>{ch.brief}</span></div> : null}
             {ch.goal ? <span className="mono">GOAL / {ch.goal}</span> : null}
           </div>
+          {has3D() ? (
+            <div className="card stack" style={{ flex: "0 1 200px", padding: 0, overflow: "hidden", alignItems: "center", background: "radial-gradient(ellipse at 50% 40%, #1a1112 0%, #161616 75%)" }}>
+              <SoloDirector avatar={avatarOf(s)} reaction={reaction} height={200} distance={5} />
+              <span className="mono" style={{ padding: "0 12px 14px", textAlign: "center" }}>{allDone ? "READY TO SUBMIT" : `${complete}/${items.length} LOCKED`}</span>
+            </div>
+          ) : null}
           {ch.prompt ? <div className="side" style={{ flex: "1 1 360px" }}><CopyBox title="Prompt assist" text={ch.prompt} /></div> : null}
         </div>
 
@@ -981,7 +1092,7 @@ function QuizScreen({ s, setS }) {
             {answered ? (
               <div className="card row reveal" style={{ justifyContent: "space-between", gap: 20, background: correct ? "var(--status-success-tint)" : "var(--status-error-tint)", borderColor: correct ? "rgba(52,199,123,.4)" : "rgba(236,28,36,.4)" }}>
                 <div className="stack" style={{ gap: 4, flex: "1 1 360px" }}>
-                  <span className="label" style={{ color: correct ? "var(--status-success)" : "var(--pm-red-300)" }}>{correct ? "On target" : `Not quite — it's ${q.answer}`}</span>
+                  <span className="label" style={{ color: correct ? "var(--status-success)" : "var(--pm-red-300)" }}>{correct ? `On target, ${directorName(s)}` : `Not quite — it's ${q.answer}`}</span>
                   <span style={{ color: "#fff" }}>{q.why}</span>
                 </div>
                 <button type="button" className="btn btn-primary" onClick={next}>{lastRound ? "See results" : "Next round"} <Arrow /></button>
@@ -1011,7 +1122,7 @@ function RankUpScreen({ lv, s }) {
   const next = LEVELS[idx + 1];
   const [shared, setShared] = useState(false);
   const share = () => {
-    const text = `I just earned the ${lv.rank} rank in The Director's Game.`;
+    const text = `${directorName(s)} just earned the ${lv.rank} rank in The Director's Game.`;
     try { navigator.clipboard.writeText(text); } catch (e) {}
     setShared(true);
   };
@@ -1032,7 +1143,7 @@ function RankUpScreen({ lv, s }) {
             <span style={{ position: "relative", color: "#fff", fontFamily: "var(--font-mono)", fontSize: 22 }}>{pad(idx + 1)}</span>
           </div>
           )}
-          <KickerTitle kicker="You are now a" size="h-display">{lv.rank}</KickerTitle>
+          <KickerTitle kicker={`${directorName(s)}, you are now a`} size="h-display">{lv.rank}</KickerTitle>
         </div>
         <div className="grid-auto reveal" style={{ "--min": "200px", "--gap": "16px", width: "100%", animationDelay: "200ms" }}>
           {[["+500", "XP earned"], [`${clearedCount(s)}/${LEVELS.length}`, "Levels cleared"], [xpOf(s).toLocaleString("en-US"), "Total XP"]].map(([v, k]) => (
@@ -1139,6 +1250,25 @@ function ToolOutput({ id }) {
   );
 }
 
+const TOOL_PROP = {
+  gemini: 0, chatgpt: 0,
+  firefly: 2, "nano-banana": 2, "gpt-image": 2,
+  kling: 3, veo: 3, seedance: 3, "seedance-2.5": 3, "gemini-omni": 3, "firefly-video": 3,
+  elevenlabs: 4, "firefly-audio": 4, artlist: 4,
+  canva: 5, "firefly-timeline": 5, capcut: 5, premiere: 5, magnifica: 2, arcana: 2,
+};
+function PropTurntable({ index }) {
+  const el = useRef(), w = useRef();
+  useEffect(() => {
+    if (!has3D()) return;
+    w.current = window.World3D.createProp(el.current, { prop: index });
+    return () => w.current && w.current.dispose();
+  }, []);
+  useEffect(() => { w.current && w.current.setProp(index); }, [index]);
+  if (!has3D()) return null;
+  return <div ref={el} style={{ width: "100%", height: 220 }} aria-hidden="true" />;
+}
+
 function ToolkitScreen({ initial }) {
   const ids = [...new Set(LEVELS.flatMap((l) => l.tools))].filter((t) => PLATFORMS[t]);
   const levelsOf = (t) => LEVELS.filter((l) => l.tools.includes(t)).map((l) => l.id);
@@ -1181,6 +1311,11 @@ function ToolkitScreen({ initial }) {
             <ToolOutput id={tool} />
           </div>
           <div className="stack" style={{ flex: "1 1 320px", gap: 18 }}>
+            {has3D() ? (
+              <div style={{ borderRadius: "var(--r-lg)", overflow: "hidden", background: "radial-gradient(ellipse at 50% 45%, #1a1112 0%, #111 75%)", border: "1px solid var(--border-hairline)" }}>
+                <PropTurntable index={TOOL_PROP[tool] ?? 3} />
+              </div>
+            ) : null}
             <div className="row" style={{ gap: 16, flexWrap: "nowrap" }}>
               <Glyph id={tool} size={72} />
               <div className="stack" style={{ gap: 2 }}>
@@ -1223,11 +1358,11 @@ function App() {
   else if (view === "toolkit") screen = <ToolkitScreen key={a || "all"} initial={a} />;
   else screen = <MapScreen s={s} setS={setS} />;
   return (
-    <>
+    <AvatarCtx.Provider value={avatarOf(s)}>
       <a href="#main" className="sr-only">Skip to content</a>
       <TopBar s={s} route={route} />
       <div id="main">{screen}</div>
-    </>
+    </AvatarCtx.Provider>
   );
 }
 
