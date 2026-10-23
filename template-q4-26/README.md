@@ -15,6 +15,10 @@ Open `template-q4-26/index.html` (served from the repo root, e.g. `python3 -m ht
 | Rank up — level cleared | `#/rankup/<id>` |
 | Toolkit — every tool, screenshot slot, example output | `#/toolkit` or `#/toolkit/<tool-id>` |
 
+## 3D world
+
+`world3d.js` (Three.js r149) draws the Mission Map as six floating film-set islands with a director character the learner can customise (skin tone, jacket). The same character reacts in Shot Match and celebrates on the rank-up screen. Browsers without WebGL fall back to the flat layout.
+
 ## Where the content lives
 
 - Lessons, challenges, ranks: `../game-data.jsx` (shared with the main game — edit there).

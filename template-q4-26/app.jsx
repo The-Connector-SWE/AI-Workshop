@@ -109,6 +109,60 @@ function CopyBox({ title, text, negative }) {
   );
 }
 
+/* ---------------- 3D ---------------- */
+
+const has3D = () => !!(window.World3D && window.World3D.supported);
+const SKINS = ["#f1c7a5", "#d9a27c", "#a86f4b", "#6b4430"];
+const JACKETS = ["#ec1c24", "#f2f2f2", "#2e7fc2", "#1f9e5c", "#1e1e1e"];
+const avatarOf = (s) => ({ skin: SKINS[1], jacket: JACKETS[0], ...(s.avatar || {}) });
+
+function MapWorld({ statuses, sel, onSelect, avatar }) {
+  const el = useRef(), w = useRef(), cb = useRef(onSelect);
+  cb.current = onSelect;
+  useEffect(() => {
+    if (!has3D()) return;
+    w.current = window.World3D.createMap(el.current, {
+      levels: LEVELS.map((l, i) => ({ code: l.code.toUpperCase(), name: l.name, status: statuses[i] })),
+      selected: sel, avatar, onSelect: (i) => cb.current(i),
+    });
+    return () => w.current && w.current.dispose();
+  }, []);
+  useEffect(() => { w.current && w.current.select(sel); }, [sel]);
+  useEffect(() => { w.current && w.current.setStatuses(statuses); }, [statuses.join()]);
+  useEffect(() => { w.current && w.current.setAvatar(avatar); }, [avatar.skin, avatar.jacket]);
+  return <div ref={el} style={{ position: "absolute", inset: 0 }} aria-hidden="true" />;
+}
+
+function SoloDirector({ avatar, celebrate, reaction, height = 300 }) {
+  const el = useRef(), w = useRef();
+  useEffect(() => {
+    if (!has3D()) return;
+    w.current = window.World3D.createSolo(el.current, { avatar, celebrate });
+    return () => w.current && w.current.dispose();
+  }, []);
+  useEffect(() => { if (w.current && reaction) w.current.react(reaction.kind); }, [reaction && reaction.n]);
+  if (!has3D()) return null;
+  return <div ref={el} style={{ width: "100%", height }} role="img" aria-label="Your director character" />;
+}
+
+function AvatarPicker({ avatar, onChange }) {
+  const Sw = ({ c, on, onClick, label }) => (
+    <button type="button" onClick={onClick} aria-label={label} aria-pressed={on}
+      style={{ width: 28, height: 28, borderRadius: "50%", background: c, cursor: "pointer", border: on ? "2px solid #fff" : "1px solid rgba(255,255,255,.25)", boxShadow: on ? "var(--glow-red)" : "none", padding: 0 }} />
+  );
+  return (
+    <div className="row" style={{ gap: "10px 18px" }}>
+      <span className="mono" style={{ color: "#fff" }}>YOUR DIRECTOR</span>
+      <span className="row" role="group" aria-label="Skin tone" style={{ gap: 6 }}>
+        {SKINS.map((c, i) => <Sw key={c} c={c} on={avatar.skin === c} label={`Skin tone ${i + 1}`} onClick={() => onChange({ ...avatar, skin: c })} />)}
+      </span>
+      <span className="row" role="group" aria-label="Jacket colour" style={{ gap: 6 }}>
+        {JACKETS.map((c, i) => <Sw key={c} c={c} on={avatar.jacket === c} label={`Jacket colour ${i + 1}`} onClick={() => onChange({ ...avatar, jacket: c })} />)}
+      </span>
+    </div>
+  );
+}
+
 /* ---------------- shell ---------------- */
 
 function TopBar({ s, route }) {
@@ -145,8 +199,10 @@ function ProgressRing({ pct, size = 80 }) {
   );
 }
 
-function MapScreen({ s }) {
+function MapScreen({ s, setS }) {
   const cleared = clearedCount(s);
+  const avatar = avatarOf(s);
+  const statuses = LEVELS.map((l, i) => (s.cleared[l.id] ? "cleared" : i > 0 && !s.cleared[LEVELS[i - 1].id] ? "locked" : "open"));
   const current = Math.min(LEVELS.findIndex((l) => !s.cleared[l.id]) === -1 ? LEVELS.length - 1 : LEVELS.findIndex((l) => !s.cleared[l.id]), LEVELS.length - 1);
   const [sel, setSel] = useState(current);
   const lv = LEVELS[sel];
@@ -205,8 +261,18 @@ function MapScreen({ s }) {
         <section aria-labelledby="map-h" className="stack" style={{ gap: 28 }}>
           <div className="row" style={{ justifyContent: "space-between", alignItems: "end", gap: 12 }}>
             <KickerTitle kicker="Your" size="h-title" as="h2" id="map-h">Mission Map</KickerTitle>
-            <span className="mono">Select a level to inspect it</span>
+            <span className="mono">{has3D() ? "Click an island — your director walks there" : "Select a level to inspect it"}</span>
           </div>
+
+          {has3D() ? (
+            <div className="reveal" style={{ position: "relative", height: "clamp(380px, 46vw, 560px)", borderRadius: "var(--r-xl)", overflow: "hidden", border: "1px solid var(--border-hairline)", background: "radial-gradient(ellipse at 50% 35%, #1a1112 0%, #0a0a0a 70%)" }}>
+              <MapWorld statuses={statuses} sel={sel} onSelect={setSel} avatar={avatar} />
+              <div style={{ position: "absolute", left: 16, right: 16, bottom: 16, display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center", gap: 12, padding: "12px 16px", borderRadius: 16, background: "rgba(20,20,20,.82)", backdropFilter: "var(--blur-glass)", WebkitBackdropFilter: "var(--blur-glass)", border: "1px solid rgba(255,255,255,.08)" }}>
+                <AvatarPicker avatar={avatar} onChange={(a) => setS({ ...s, avatar: a })} />
+                <a className="btn btn-primary btn-sm" href={`#/level/${lv.id}`}>{locked ? "Preview" : "Enter"} {lv.code} <Arrow /></a>
+              </div>
+            </div>
+          ) : null}
 
           <div className="grid-auto" style={{ "--min": "300px", "--gap": "20px" }}>
             {LEVELS.map((l, i) => {
@@ -841,7 +907,13 @@ function QuizScreen({ s, setS }) {
   const correct = answered && q.opts[picked] === q.answer;
   const lastRound = round === Q.length - 1;
 
-  const pick = (i) => { if (!answered) { setPicked(i); setResults([...results, q.opts[i] === q.answer]); } };
+  const [reaction, setReaction] = useState(null);
+  const pick = (i) => {
+    if (answered) return;
+    const ok = q.opts[i] === q.answer;
+    setPicked(i); setResults([...results, ok]);
+    setReaction({ kind: ok ? "cheer" : "no", n: Date.now() });
+  };
   const next = () => {
     if (lastRound) {
       setFinished(true);
@@ -852,7 +924,6 @@ function QuizScreen({ s, setS }) {
 
   return (
     <div className="page">
-      <span className="arc" style={{ bottom: -520, left: -460, width: 820, height: 820, opacity: .9 }} />
       <div className="wrap row" style={{ position: "relative", gap: "12px 24px", paddingTop: 20 }}>
         <div className="stack" style={{ flex: "1 1 200px" }}>
           <span className="mono">KNOWLEDGE CHECK</span>
@@ -884,7 +955,13 @@ function QuizScreen({ s, setS }) {
               </div>
             </div>
 
-            <div role="group" aria-label="Choose the shot" className="grid-auto" style={{ "--min": "380px", "--gap": "14px" }}>
+            <div className="row" style={{ gap: 16, alignItems: "stretch" }}>
+              {has3D() ? (
+                <div className="card" style={{ flex: "0 1 200px", margin: "0 auto", padding: 0, overflow: "hidden", background: "radial-gradient(ellipse at 50% 40%, #1a1112 0%, #111 75%)" }}>
+                  <SoloDirector avatar={avatarOf(s)} reaction={reaction} height={190} />
+                </div>
+              ) : null}
+            <div role="group" aria-label="Choose the shot" className="grid-auto" style={{ "--min": "300px", "--gap": "14px", flex: "999 1 480px" }}>
               {q.opts.map((o, i) => {
                 const isAns = o === q.answer, isPick = i === picked;
                 const st = !answered ? {} : isAns
@@ -898,6 +975,7 @@ function QuizScreen({ s, setS }) {
                   </button>
                 );
               })}
+            </div>
             </div>
 
             {answered ? (
@@ -944,12 +1022,16 @@ function RankUpScreen({ lv, s }) {
       <main className="wrap stack" style={{ position: "relative", maxWidth: 960, alignItems: "center", textAlign: "center", gap: 48, padding: "96px 32px" }}>
         <div className="stack reveal" style={{ alignItems: "center", gap: 28 }}>
           <span className="mono" style={{ color: "var(--pm-red-300)", letterSpacing: ".06em" }}>{lv.code.toUpperCase()} CLEARED / {lv.name.toUpperCase()}</span>
+          {has3D() ? (
+            <div style={{ width: "min(100%, 420px)" }}><SoloDirector avatar={avatarOf(s)} celebrate height={340} /></div>
+          ) : (
           <div role="img" aria-label={`${lv.rank} rank badge`} style={{ position: "relative", width: 220, height: 220, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "var(--glow-red-strong)" }}>
             <span style={{ position: "absolute", inset: 0, borderRadius: "50%", border: "16px solid #ec1c24" }} />
             <span style={{ position: "absolute", inset: 38, borderRadius: "50%", border: "12px solid #ec1c24" }} />
             <span style={{ position: "absolute", inset: 72, borderRadius: "50%", background: "#ec1c24" }} />
             <span style={{ position: "relative", color: "#fff", fontFamily: "var(--font-mono)", fontSize: 22 }}>{pad(idx + 1)}</span>
           </div>
+          )}
           <KickerTitle kicker="You are now a" size="h-display">{lv.rank}</KickerTitle>
         </div>
         <div className="grid-auto reveal" style={{ "--min": "200px", "--gap": "16px", width: "100%", animationDelay: "200ms" }}>
@@ -1139,7 +1221,7 @@ function App() {
   else if (view === "rankup" && lv) screen = <RankUpScreen lv={lv} s={s} />;
   else if (view === "quiz") screen = <QuizScreen s={s} setS={setS} />;
   else if (view === "toolkit") screen = <ToolkitScreen key={a || "all"} initial={a} />;
-  else screen = <MapScreen s={s} />;
+  else screen = <MapScreen s={s} setS={setS} />;
   return (
     <>
       <a href="#main" className="sr-only">Skip to content</a>
