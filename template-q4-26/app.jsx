@@ -14,7 +14,7 @@ function loadStore() {
   try { return JSON.parse(localStorage.getItem(STORE_KEY)) || {}; } catch (e) { return {}; }
 }
 function useStore() {
-  const [s, setS] = useState(() => ({ done: {}, answers: {}, chDone: {}, cleared: {}, pos: {}, days: [], labs: {}, lang: "en", ...loadStore() }));
+  const [s, setS] = useState(() => ({ done: {}, cleared: {}, pos: {}, days: [], labs: {}, apply: {}, stepDone: {}, missionDone: {}, review: {}, lang: "en", ...loadStore() }));
   useEffect(() => { try { localStorage.setItem(STORE_KEY, JSON.stringify(s)); } catch (e) {} }, [s]);
   return [s, setS];
 }
@@ -38,20 +38,22 @@ const sectionsOf = (lv) => {
   const k = Object.keys(lv).find((key) => lv[key] && Array.isArray(lv[key].sections));
   return k ? lv[k] : { title: lv.name, sections: [] };
 };
-const challengesOf = (lv) => lv.challenges || [];
+const missionOf = (lv) => (window.TQ_MISSIONS || {})[lv.id] || null;
+const missionDone = (lv, s) => !!(s.missionDone || {})[lv.id];
 const levelIndex = (id) => LEVELS.findIndex((l) => String(l.id) === String(id));
 
 function levelProgress(lv, s) {
   const secs = sectionsOf(lv).sections.length;
-  const chs = challengesOf(lv).length;
-  const total = secs + chs || 1;
-  const d = (s.done[lv.id] || []).length + challengesOf(lv).filter((_, i) => s.chDone[`${lv.id}-${i}`]).length;
+  const ms = missionOf(lv) ? 1 : 0;
+  const total = secs + ms || 1;
+  const d = (s.done[lv.id] || []).length + (ms && missionDone(lv, s) ? 1 : 0);
   return s.cleared[lv.id] ? 100 : Math.round((d / total) * 100);
 }
 function xpOf(s) {
   const sections = Object.values(s.done).reduce((n, a) => n + a.length, 0);
-  const chs = Object.keys(s.chDone).length;
-  return Object.keys(s.cleared).length * 500 + sections * 25 + chs * 100 + Object.values(s.labs || {}).filter(Boolean).length * 50;
+  const missions = Object.values(s.missionDone || {}).filter(Boolean).length;
+  const steps = Object.values(s.stepDone || {}).filter(Boolean).length;
+  return Object.keys(s.cleared).length * 500 + sections * 25 + missions * 300 + steps * 40 + Object.values(s.labs || {}).filter(Boolean).length * 50;
 }
 const clearedCount = (s) => LEVELS.filter((l) => s.cleared[l.id]).length;
 // Instructor mode opens every level; otherwise a level opens when the one before it is cleared.
@@ -62,8 +64,8 @@ const wordsIn = (o) => typeof o === "string" ? o.split(/\s+/).length
   : Array.isArray(o) ? o.reduce((n, x) => n + wordsIn(x), 0)
   : o && typeof o === "object" ? Object.values(o).reduce((n, x) => n + wordsIn(x), 0) : 0;
 const sectionMinutes = (sec) => Math.max(2, Math.round(wordsIn(sec) / 160) + (["cameraTable", "scriptSteps", "checklist", "frameChain"].includes(sec.type) ? 2 : 1));
-const challengeMinutes = (c) => 10 + (c.items || []).length * 4;
-const levelMinutes = (lv) => sectionsOf(lv).sections.reduce((n, x) => n + sectionMinutes(x), 0) + challengesOf(lv).reduce((n, c) => n + challengeMinutes(c), 0);
+const missionMinutes = (lv) => (missionOf(lv) ? missionOf(lv).steps.length * 15 + 5 : 0);
+const levelMinutes = (lv) => sectionsOf(lv).sections.reduce((n, x) => n + sectionMinutes(x), 0) + missionMinutes(lv);
 const fmtMin = (m) => (m < 60 ? `~${m} min` : `~${Math.floor(m / 60)} h ${m % 60 ? `${m % 60} min` : ""}`.trim());
 
 // Daily streak from the list of days the learner opened the course.
@@ -105,9 +107,10 @@ const MediaDB = (() => {
   };
 })();
 
-// Images are downscaled to 1280px JPEG; clips are stored as-is (up to 60 MB).
+// Images are downscaled to 1280px JPEG; clips, audio and PDFs are stored as-is (up to 60 MB).
 function readMedia(file) {
-  if (file.type.startsWith("video/")) return Promise.resolve(file.size <= 60e6 ? { kind: "video", data: file } : null);
+  const kind = file.type.startsWith("video/") ? "video" : file.type.startsWith("audio/") ? "audio" : file.type === "application/pdf" ? "file" : null;
+  if (kind) return Promise.resolve(file.size <= 60e6 ? { kind, data: file } : null);
   if (!file.type.startsWith("image/")) return Promise.resolve(null);
   return new Promise((res) => {
     const img = new Image(), url = URL.createObjectURL(file);
@@ -139,7 +142,7 @@ function useMedia() {
 function MediaThumb({ m, size = 96, onRemove }) {
   const [url, setUrl] = useState(m.kind === "image" ? m.data : null);
   useEffect(() => {
-    if (m.kind !== "video") return;
+    if (m.kind === "image") return;
     const u = URL.createObjectURL(m.data); setUrl(u);
     return () => URL.revokeObjectURL(u);
   }, [m.id]);
@@ -147,7 +150,17 @@ function MediaThumb({ m, size = 96, onRemove }) {
     <div style={{ position: "relative", width: size, flex: "0 0 auto" }}>
       {m.kind === "video"
         ? <video src={url || undefined} muted playsInline controls style={{ width: size, height: size * 1.4, objectFit: "cover", borderRadius: 8, background: "#000", border: "1px solid var(--border-hairline)" }} />
-        : <img src={url} alt={m.name || ""} style={{ width: size, height: size * 1.4, objectFit: "cover", borderRadius: 8, border: "1px solid var(--border-hairline)", display: "block" }} />}
+        : m.kind === "image"
+        ? <img src={url} alt={m.name || ""} style={{ width: size, height: size * 1.4, objectFit: "cover", borderRadius: 8, border: "1px solid var(--border-hairline)", display: "block" }} />
+        : (
+          <div className="stack" style={{ width: size, height: size * 1.4, borderRadius: 8, border: "1px solid var(--border-hairline)", background: "var(--surface-card)", alignItems: "center", justifyContent: "center", gap: 8, padding: 8, boxSizing: "border-box" }}>
+            <svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--pm-red-300)" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+              {m.kind === "audio" ? <><path d="M9 18V5l12-2v13" /><circle cx="6" cy="18" r="3" /><circle cx="18" cy="16" r="3" /></> : <><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" /><path d="M14 3v6h6" /></>}
+            </svg>
+            <span className="mono" style={{ fontSize: 10, textAlign: "center", wordBreak: "break-all", lineHeight: 1.3 }}>{(m.name || "").slice(0, 28)}</span>
+            {m.kind === "audio" && url ? <audio src={url} controls style={{ width: size - 12, height: 28 }} /> : null}
+          </div>
+        )}
       {onRemove ? (
         <button type="button" onClick={onRemove} aria-label={`${t("Remove")} ${m.name || ""}`}
           style={{ position: "absolute", top: 4, right: 4, width: 28, height: 28, borderRadius: "50%", border: 0, background: "rgba(10,10,10,.85)", color: "#fff", cursor: "pointer", fontSize: 16, lineHeight: "28px", padding: 0 }}>×</button>
@@ -156,7 +169,7 @@ function MediaThumb({ m, size = 96, onRemove }) {
   );
 }
 
-function AttachMedia({ refKey, level, item, media }) {
+function AttachMedia({ refKey, level, item, media, accept = "image/*,video/*" }) {
   const mine = media.filter((m) => m.key === refKey && m.item === item);
   const inputId = `att-${refKey}-${item}`;
   const onFiles = async (e) => {
@@ -178,7 +191,7 @@ function AttachMedia({ refKey, level, item, media }) {
         <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><path d="m17 8-5-5-5 5" /><path d="M12 3v12" /></svg>
         {t("Attach image or clip")}
       </label>
-      <input id={inputId} type="file" accept="image/*,video/*" multiple onChange={onFiles} className="sr-only" />
+      <input id={inputId} type="file" accept={accept} multiple onChange={onFiles} className="sr-only" />
     </div>
   );
 }
@@ -485,7 +498,7 @@ function MapScreen({ s, setS }) {
   const narrow = useNarrow();
   const lv = LEVELS[sel];
   const locked = isLocked(sel, s);
-  const items = challengesOf(lv).reduce((n, c) => n + (c.items ? c.items.length : 0), 0);
+  const mission = missionOf(lv);
 
   return (
     <div className="page">
@@ -605,7 +618,7 @@ function MapScreen({ s, setS }) {
               <h3 className="h-sub" style={{ fontSize: 40 }}>{lv.name}</h3>
               <p style={{ margin: 0 }}>{lv.mission}</p>
               <div className="row" style={{ gap: 28, paddingTop: 8 }}>
-                {[[sectionsOf(lv).sections.length, "Lessons"], [challengesOf(lv).length, "Challenges"], [items, "Deliverables"], [fmtMin(levelMinutes(lv)), "Time"]].map(([v, k]) => (
+                {[[sectionsOf(lv).sections.length, "Lessons"], [mission ? mission.steps.length : 0, "Mission steps"], [fmtMin(levelMinutes(lv)), "Time"]].map(([v, k]) => (
                   <div key={k} className="stack">
                     <span style={{ fontFamily: "var(--font-mono)", fontSize: 30, color: "#fff", lineHeight: 1.2 }}>{v}</span>
                     <span style={{ fontSize: 11, letterSpacing: ".16em", color: "var(--text-muted)", textTransform: "uppercase" }}>{t(k)}</span>
@@ -620,21 +633,28 @@ function MapScreen({ s, setS }) {
               </div>
             </div>
             <div className="stack" style={{ gap: 12 }}>
-              <span className="label">{t("Mission challenges")}</span>
-              {challengesOf(lv).length ? (
-                <ol className="stack" style={{ listStyle: "none", margin: 0, padding: 0, gap: 10 }}>
-                  {challengesOf(lv).map((c, j) => (
-                    <li key={j}>
-                      <a href={`#/level/${lv.id}/challenge/${j}`} className="tile" style={{ flexDirection: "row", alignItems: "center", gap: 16, padding: "14px 18px", borderRadius: 12, background: "var(--surface-card)" }}>
-                        <span className={`icon-tile ${s.chDone[`${lv.id}-${j}`] ? "" : ""}`} style={s.chDone[`${lv.id}-${j}`] ? { background: "var(--status-success-solid)" } : null}>
-                          {s.chDone[`${lv.id}-${j}`] ? <Check /> : pad(j + 1)}
-                        </span>
-                        <span style={{ flex: "1 1 auto", color: "#fff" }}>{c.title}</span>
-                        <span className="mono">{(c.items || []).length} {t("tasks")}</span>
-                      </a>
-                    </li>
-                  ))}
-                </ol>
+              <span className="label">{t("Apply it")}</span>
+              {mission ? (
+                <>
+                  <a href={`#/level/${lv.id}/apply`} className="tile" style={{ padding: "18px 20px", gap: 6, background: "var(--surface-card)", textDecoration: "none" }}>
+                    <span className="sublabel">{missionDone(lv, s) ? t("Mission complete") : t("Your mission")}</span>
+                    <span style={{ color: "#fff", fontSize: 20, lineHeight: 1.25 }}>{mission.title}</span>
+                    <span style={{ fontSize: 14, color: "var(--text-muted)" }}>{mission.deliverable}</span>
+                  </a>
+                  <ol className="stack" style={{ listStyle: "none", margin: 0, padding: 0, gap: 8 }}>
+                    {mission.steps.map((st, j) => {
+                      const ok = !!(s.stepDone || {})[`${lv.id}.${st.id}`];
+                      return (
+                        <li key={st.id}>
+                          <a href={`#/level/${lv.id}/apply/${j}`} className="row" style={{ gap: 12, flexWrap: "nowrap", textDecoration: "none", color: "#fff", fontSize: 15 }}>
+                            <span className="icon-tile" style={{ width: 32, height: 32, borderRadius: 8, fontSize: 12, ...(ok ? { background: "var(--status-success-solid)" } : { background: "var(--surface-raised)", border: "1px solid var(--border-hairline)" }) }}>{ok ? <Check size={14} /> : pad(j + 1)}</span>
+                            {st.title}
+                          </a>
+                        </li>
+                      );
+                    })}
+                  </ol>
+                </>
               ) : (
                 <p style={{ margin: 0, color: "var(--text-muted)" }}>{t("This mission is cleared by completing its lessons.")}</p>
               )}
@@ -980,7 +1000,7 @@ function LessonScreen({ lv, s, setS }) {
   const sec = secs[at];
   const idx = levelIndex(lv.id);
   const last = at === secs.length - 1;
-  const chs = challengesOf(lv);
+  const mission = missionOf(lv);
 
   const avatar = avatarOf(s);
   const [reaction, setReaction] = useState(null);
@@ -988,13 +1008,13 @@ function LessonScreen({ lv, s, setS }) {
     setReaction({ kind: "cheer", n: Date.now() });
     const nd = done.includes(at) ? done : [...done, at];
     const next = { ...s, done: { ...s.done, [lv.id]: nd } };
-    if (!chs.length && nd.length === secs.length) {
+    if (!mission && nd.length === secs.length) {
       next.cleared = { ...s.cleared, [lv.id]: true };
       setS(next);
       go(`rankup/${lv.id}`);
       return;
     }
-    if (last) { setS(next); if (chs.length) go(`level/${lv.id}/challenge/0`); }
+    if (last) { setS(next); if (mission) go(`level/${lv.id}/apply`); }
     else { setS({ ...next, pos: { ...(s.pos || {}), [lv.id]: at + 1 } }); setAtRaw(at + 1); window.scrollTo(0, 0); }
   };
 
@@ -1043,16 +1063,15 @@ function LessonScreen({ lv, s, setS }) {
             );
           })}
 
-          {chs.length ? (
-            <div className="card stack" style={{ gap: 10, padding: 16, marginTop: 12 }}>
-              <span className="sublabel" style={{ color: "var(--text-muted)" }}>Challenges</span>
-              {chs.map((c, j) => (
-                <a key={j} href={`#/level/${lv.id}/challenge/${j}`} className="row" style={{ gap: 10, color: "#fff", textDecoration: "none", fontSize: 15, flexWrap: "nowrap" }}>
-                  <span className="icon-tile" style={{ width: 28, height: 28, borderRadius: 8, fontSize: 12, ...(s.chDone[`${lv.id}-${j}`] ? { background: "var(--status-success-solid)" } : {}) }}>{s.chDone[`${lv.id}-${j}`] ? <Check size={14} /> : j + 1}</span>
-                  {c.title}
-                </a>
-              ))}
-            </div>
+          {mission ? (
+            <a href={`#/level/${lv.id}/apply`} className="tile" style={{ gap: 8, padding: 16, marginTop: 12, textDecoration: "none" }}>
+              <span className="sublabel">{t("Apply it")}</span>
+              <span style={{ color: "#fff", fontSize: 15, lineHeight: 1.35 }}>{mission.title}</span>
+              <span className="row" style={{ gap: 10 }}>
+                <span className="progress"><i style={{ width: `${(mission.steps.filter((st) => (s.stepDone || {})[`${lv.id}.${st.id}`]).length / mission.steps.length) * 100}%` }} /></span>
+                <span className="mono" style={{ color: "#fff" }}>{mission.steps.filter((st) => (s.stepDone || {})[`${lv.id}.${st.id}`]).length}/{mission.steps.length}</span>
+              </span>
+            </a>
           ) : null}
 
 
@@ -1085,7 +1104,7 @@ function LessonScreen({ lv, s, setS }) {
             <button type="button" className="btn btn-ghost" disabled={at === 0} onClick={() => setAt(Math.max(0, at - 1))}>{t("Previous")}</button>
             {secs.length ? (
               <button type="button" className="btn btn-primary" onClick={markDone}>
-                {last ? (chs.length ? t("Complete lesson · start challenges") : t("Complete & clear level")) : t("Mark done & continue")} <Arrow />
+                {last ? (mission ? t("Complete lesson · apply it") : t("Complete & clear level")) : t("Mark done & continue")} <Arrow />
               </button>
             ) : null}
           </div>
@@ -1098,128 +1117,371 @@ function LessonScreen({ lv, s, setS }) {
   );
 }
 
-/* ---------------- 03 · Challenge workspace ---------------- */
+/* ---------------- 03 · Apply the level (mission) ---------------- */
 
-function ChallengeScreen({ lv, chIdx, s, setS }) {
-  const chs = challengesOf(lv);
-  const ch = chs[chIdx];
-  const key = `${lv.id}-${chIdx}`;
-  const ans = s.answers[key] || {};
-  const cols = ch.columns && ch.columns.length ? ch.columns : null;
-  const items = ch.items || [];
-  const [at, setAt] = useState(0);
-
-  const val = (i, c) => ans[`${i}|${c}`] || "";
-  const setVal = (i, c, v) => setS((p) => ({ ...p, answers: { ...p.answers, [key]: { ...(p.answers[key] || {}), [`${i}|${c}`]: v } } }));
-  const media = useMedia();
-  const attached = (i) => media.some((m) => m.key === key && m.item === i);
-  const filled = (i) => cols ? cols.filter((c) => val(i, c).trim()).length : (val(i, "text").trim() || attached(i) ? 1 : 0);
-  const full = (i) => filled(i) === (cols ? cols.length : 1);
-  const complete = items.filter((_, i) => full(i)).length;
-  const allDone = items.length > 0 && complete === items.length;
-  const [reaction, setReaction] = useState(null);
-  const prevComplete = useRef(complete);
-  useEffect(() => {
-    if (complete > prevComplete.current) setReaction({ kind: complete === items.length ? "celebrate" : "cheer", n: Date.now() });
-    prevComplete.current = complete;
-  }, [complete]);
-
-  const submit = () => {
-    const chDone = { ...s.chDone, [key]: true };
-    const all = chs.every((_, j) => chDone[`${lv.id}-${j}`]);
-    setS({ ...s, chDone, cleared: all ? { ...s.cleared, [lv.id]: true } : s.cleared });
-    go(all ? `rankup/${lv.id}` : chIdx + 1 < chs.length ? `level/${lv.id}/challenge/${chIdx + 1}` : `level/${lv.id}`);
+// Reads a learner's mission outputs. Paths look like "1.project.brand" or "2.board".
+function missionCtx(apply) {
+  const A = apply || {};
+  const raw = (path) => {
+    const [l, step, key] = path.split(".");
+    const v = (A[l] || {})[step];
+    return key ? (v || {})[key] : v;
   };
+  return {
+    get: (path) => {
+      const v = raw(path);
+      return Array.isArray(v) ? v.join(", ") : v == null ? "" : String(v);
+    },
+    rows: (path) => {
+      const v = raw(path);
+      return Array.isArray(v) ? v.filter((r) => r && Object.values(r).some((x) => String(x || "").trim())) : [];
+    },
+  };
+}
+const filledStr = (v) => (Array.isArray(v) ? v.length > 0 : String(v || "").trim().length > 0);
+const isEmptyVal = (v) => v == null ? true
+  : Array.isArray(v) ? !v.some((r) => r && Object.values(r).some(filledStr))
+  : typeof v === "object" ? !Object.values(v).some(filledStr) : !filledStr(v);
+const LONG_COL = /visual|description|direction|line|action|motion/i;
+
+// Rows a table step starts from: saved rows, else the seed (pulled from earlier work), else blanks.
+function tableRows(step, value, ctx) {
+  if (Array.isArray(value) && value.length) return value;
+  const seeded = step.output.seed ? step.output.seed(ctx) : [];
+  if (seeded.length) return seeded;
+  return Array.from({ length: step.output.rows || 3 }, () => Object.fromEntries(step.output.columns.map((c) => [c, ""])));
+}
+
+function stepComplete(lvId, step, value, ctx, media) {
+  const o = step.output;
+  const files = (item) => media.filter((m) => m.key === `apply-${lvId}-${step.id}` && (item === undefined || m.item === item));
+  switch (o.type) {
+    case "fields": {
+      const all = o.fields.every((f) => filledStr((value || {})[f.key]));
+      if (o.requireAttach) return all && files().length > 0;
+      return all || (o.attach && o.fields.length === 1 && files().length > 0);
+    }
+    case "table": {
+      const rows = tableRows(step, value, ctx);
+      return rows.length > 0 && rows.every((r) => o.columns.every((c) => filledStr(r[c])));
+    }
+    case "frames": {
+      const base = ctx.rows(o.from);
+      if (!base.length) return false;
+      return base.every((_, i) => o.noAttach ? (o.columns || []).every((c) => filledStr(((value || [])[i] || {})[c])) : files(i).length > 0);
+    }
+    case "media":
+      return files().length >= (o.min || 1);
+    case "checks":
+      return o.items.every((_, i) => (value || {})[i]);
+    default:
+      return false;
+  }
+}
+
+function Chips({ options, value, multi, onChange, label }) {
+  const on = (o) => (multi ? (value || []).includes(o) : value === o);
+  const pick = (o) => onChange(multi ? (on(o) ? (value || []).filter((x) => x !== o) : [...(value || []), o]) : o);
+  return (
+    <div className="row" role="group" aria-label={label} style={{ gap: 6 }}>
+      {options.map((o) => <button key={o} type="button" className="pill" aria-pressed={on(o)} onClick={() => pick(o)}>{o}</button>)}
+    </div>
+  );
+}
+
+function FieldsOut({ step, value, set }) {
+  const v = value || {};
+  return (
+    <div className="grid-auto" style={{ "--min": "260px", "--gap": "16px" }}>
+      {step.output.fields.map((f) => {
+        const id = `mf-${step.id}-${f.key}`;
+        return (
+          <div key={f.key} className="stack" style={{ gap: 8, gridColumn: f.long || f.chips ? "1 / -1" : undefined }}>
+            <label htmlFor={f.chips ? undefined : id} className="label">{f.label}</label>
+            {f.chips
+              ? <Chips label={f.label} options={f.chips} multi={f.multi} value={v[f.key]} onChange={(x) => set({ ...v, [f.key]: x })} />
+              : f.long
+              ? <textarea id={id} className="field" rows={3} placeholder={f.hint} value={v[f.key] || ""} onChange={(e) => set({ ...v, [f.key]: e.target.value })} />
+              : <input id={id} className="field" type="text" placeholder={f.hint} value={v[f.key] || ""} onChange={(e) => set({ ...v, [f.key]: e.target.value })} />}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function RowEditor({ idx, cols, chips, row, onChange, onRemove, children, title }) {
+  return (
+    <div className="card stack" style={{ gap: 14, padding: 20, background: "var(--surface-card)" }}>
+      <div className="row" style={{ justifyContent: "space-between", gap: 8 }}>
+        <span className="label">{title || `Frame ${pad(idx + 1)}`}</span>
+        {onRemove ? <button type="button" className="btn btn-ghost btn-sm" onClick={onRemove} aria-label={`${t("Remove")} ${title || `frame ${idx + 1}`}`}>{t("Remove")}</button> : null}
+      </div>
+      <div className="grid-auto" style={{ "--min": "180px", "--gap": "12px" }}>
+        {cols.map((c) => {
+          const id = `mr-${idx}-${c}`.replace(/\W+/g, "-");
+          const long = LONG_COL.test(c);
+          return (
+            <div key={c} className="stack" style={{ gap: 6, gridColumn: long ? "1 / -1" : undefined }}>
+              <label htmlFor={id} className="mono">{c.toUpperCase()}</label>
+              {chips && chips[c]
+                ? (
+                  <select id={id} className="field" value={row[c] || ""} onChange={(e) => onChange({ ...row, [c]: e.target.value })}>
+                    <option value="">—</option>
+                    {chips[c].map((o) => <option key={o} value={o}>{o}</option>)}
+                  </select>
+                )
+                : long
+                ? <textarea id={id} className="field" rows={2} value={row[c] || ""} onChange={(e) => onChange({ ...row, [c]: e.target.value })} />
+                : <input id={id} className="field" type="text" value={row[c] || ""} onChange={(e) => onChange({ ...row, [c]: e.target.value })} />}
+            </div>
+          );
+        })}
+      </div>
+      {children}
+    </div>
+  );
+}
+
+function TableOut({ step, value, set, ctx }) {
+  const o = step.output;
+  const rows = tableRows(step, value, ctx);
+  const put = (i, r) => set(rows.map((x, k) => (k === i ? r : x)));
+  return (
+    <div className="stack" style={{ gap: 12 }}>
+      {rows.map((r, i) => (
+        <RowEditor key={i} idx={i} cols={o.columns} chips={o.chips} row={r} onChange={(nr) => put(i, nr)}
+          title={o.columns[0] === "Line" ? `Line ${pad(i + 1)}` : undefined}
+          onRemove={rows.length > 1 ? () => set(rows.filter((_, k) => k !== i)) : null} />
+      ))}
+      <button type="button" className="btn btn-ghost btn-sm" style={{ alignSelf: "flex-start" }} onClick={() => set([...rows, Object.fromEntries(o.columns.map((c) => [c, ""]))])}>+ {t("Add row")}</button>
+    </div>
+  );
+}
+
+function FramesOut({ lv, step, value, set, ctx, mission, media }) {
+  const o = step.output;
+  const base = ctx.rows(o.from);
+  const extra = Array.isArray(value) ? value : [];
+  const promptStep = o.promptFrom ? mission.steps.find((x) => x.id === o.promptFrom) : step;
+  const promptExtra = o.promptFrom ? ((ctx.raw && ctx.raw(`${lv.id}.${o.promptFrom}`)) || []) : extra;
+  return (
+    <div className="stack" style={{ gap: 12 }}>
+      {base.map((r, i) => {
+        const row = { ...r, ...(promptExtra[i] || {}) };
+        const prompt = promptStep && promptStep.output.prompt ? promptStep.output.prompt(ctx, row, i) : null;
+        return (
+          <RowEditor key={i} idx={i} cols={o.columns || []} row={extra[i] || {}} onChange={(nr) => { const next = base.map((_, k) => extra[k] || {}); next[i] = nr; set(next); }}>
+            <p style={{ margin: 0, fontSize: 14, color: "var(--text-muted)" }}>{r["Visual Description"] || ""}{r["Shot Type"] ? ` · ${r["Shot Type"]}` : ""}{r["Camera Movement"] ? ` · ${r["Camera Movement"]}` : ""}</p>
+            {prompt ? <CopyBox title={`${t("Prompt")} · Frame ${pad(i + 1)}`} text={prompt} /> : null}
+            {!o.noAttach ? <AttachMedia refKey={`apply-${lv.id}-${step.id}`} level={lv.id} item={i} media={media} accept={o.accept || "image/*"} /> : null}
+          </RowEditor>
+        );
+      })}
+    </div>
+  );
+}
+
+function ChecksOut({ step, value, set }) {
+  const v = value || {};
+  return (
+    <div className="stack" style={{ gap: 8 }}>
+      {step.output.items.map((x, i) => (
+        <label key={i} className="check">
+          <input type="checkbox" checked={!!v[i]} onChange={(e) => set({ ...v, [i]: e.target.checked })} />
+          <span>{x}</span>
+        </label>
+      ))}
+    </div>
+  );
+}
+
+function CarryPanel({ ctx, path, cols, onExample }) {
+  const [l] = path.split(".");
+  const rows = ctx.rows(path);
+  if (!rows.length) {
+    return (
+      <div className="inset row" style={{ padding: 16, gap: 12, justifyContent: "space-between" }}>
+        <span style={{ fontSize: 15 }}>{t("This step builds on your Level")} {pad(l)} {t("work, which is still empty.")}</span>
+        <span className="row" style={{ gap: 8 }}>
+          <a className="btn btn-ghost btn-sm" href={`#/level/${l}/apply`}>{t("Go to Level")} {pad(l)}</a>
+          <button type="button" className="btn btn-primary btn-sm" onClick={onExample}>{t("Use the MAZAJ example")}</button>
+        </span>
+      </div>
+    );
+  }
+  return (
+    <details className="inset" style={{ padding: "12px 16px" }}>
+      <summary className="mono" style={{ cursor: "pointer", color: "#fff" }}>{t("Your Level")} {pad(l)} {t("work")} · {rows.length}</summary>
+      <div className="table-box" style={{ marginTop: 12 }}>
+        <table className="table" style={{ fontSize: 14 }}>
+          <thead><tr>{cols.map((c) => <th key={c}>{c}</th>)}</tr></thead>
+          <tbody>{rows.map((r, i) => <tr key={i}>{cols.map((c) => <td key={c}>{r[c] || "—"}</td>)}</tr>)}</tbody>
+        </table>
+      </div>
+    </details>
+  );
+}
+
+function MissionScreen({ lv, stepIdx, s, setS }) {
+  const mission = missionOf(lv);
+  const media = useMedia();
+  const A = s.apply || {};
+  const ctx = missionCtx(A);
+  ctx.raw = (path) => { const [l, step] = path.split("."); return (A[l] || {})[step]; };
+  const steps = mission.steps;
+  const reviewIdx = steps.length;
+  const [at, setAtRaw] = useState(() => Math.min(stepIdx != null && !isNaN(stepIdx) ? stepIdx : (s.pos || {})[`apply-${lv.id}`] || 0, reviewIdx));
+  const setAt = (i) => { setAtRaw(i); window.scrollTo(0, 0); setS((p) => ({ ...p, pos: { ...(p.pos || {}), [`apply-${lv.id}`]: i } })); };
+  const [reaction, setReaction] = useState(null);
+
+  const complete = steps.map((st) => stepComplete(lv.id, st, (A[lv.id] || {})[st.id], ctx, media));
+  const doneCount = complete.filter(Boolean).length;
+  const review = (s.review || {})[lv.id] || {};
+  const reviewOk = mission.review.every((_, i) => review[i]);
+  const ready = doneCount === steps.length && reviewOk;
+
+  // record completed steps (XP) and cheer when a step turns complete
+  const prev = useRef(doneCount);
+  useEffect(() => {
+    const sd = { ...(s.stepDone || {}) };
+    let changed = false;
+    steps.forEach((st, i) => { const k = `${lv.id}.${st.id}`; if (!!sd[k] !== complete[i]) { sd[k] = complete[i]; changed = true; } });
+    if (changed) setS((p) => ({ ...p, stepDone: sd }));
+    if (doneCount > prev.current) setReaction({ kind: doneCount === steps.length ? "celebrate" : "cheer", n: Date.now() });
+    prev.current = doneCount;
+  }, [complete.join()]);
+
+  const setStep = (id, v) => setS((p) => ({ ...p, apply: { ...(p.apply || {}), [lv.id]: { ...((p.apply || {})[lv.id] || {}), [id]: v } } }));
+  const useExample = () => {
+    const EX = window.TQ_EXAMPLE;
+    setS((p) => ({ ...p, apply: { ...(p.apply || {}), 1: { ...((p.apply || {})[1] || {}), project: EX.project, platform: EX.platform, script: EX.script } } }));
+  };
+  const wrap = () => {
+    setS({ ...s, missionDone: { ...(s.missionDone || {}), [lv.id]: true }, cleared: { ...s.cleared, [lv.id]: true } });
+    go(`rankup/${lv.id}`);
+  };
+  const project = ctx.get("1.project.brand");
+  const st = steps[at];
 
   return (
     <div className="page">
       <div className="wrap row" style={{ gap: "12px 24px", paddingTop: 20 }}>
-        <a className="btn btn-ghost btn-sm" href={`#/level/${lv.id}`}><Back /> Lesson</a>
-        <div className="stack" style={{ flex: "1 1 240px" }}>
-          <span className="mono">{lv.code.toUpperCase()} / CHALLENGE {pad(chIdx + 1)} OF {pad(chs.length)}</span>
-          <span style={{ color: "#fff" }}>{ch.title}</span>
+        <a className="btn btn-ghost btn-sm" href={`#/level/${lv.id}`}><Back /> {t("Lesson")}</a>
+        <div className="stack" style={{ flex: "1 1 260px" }}>
+          <span className="mono">{lv.code.toUpperCase()} / {T_("Apply the level")}{project ? ` · ${project.toUpperCase()}` : ""}</span>
+          <span style={{ color: "#fff" }}>{mission.title}</span>
         </div>
-        <span className="mono" style={{ color: "#fff" }}>{complete}/{items.length} LOCKED</span>
-        <button type="button" className="btn btn-primary btn-sm" disabled={!allDone} onClick={submit}>{t("Submit challenge")}</button>
+        <div className="row" style={{ flex: "0 1 260px", gap: 12 }}>
+          <div className="progress" role="progressbar" aria-label={t("Mission progress")} aria-valuemin={0} aria-valuemax={steps.length} aria-valuenow={doneCount}><i style={{ width: `${(doneCount / steps.length) * 100}%` }} /></div>
+          <span className="mono" style={{ color: "#fff" }}>{doneCount}/{steps.length}</span>
+        </div>
+        <button type="button" className="btn btn-primary btn-sm" disabled={!ready} onClick={wrap}>{t("Wrap mission")}</button>
       </div>
 
-      <main className="wrap stack" style={{ gap: 28, padding: "36px 32px 96px" }}>
-        <div className="split" style={{ gap: 28 }}>
-          <div className="content stack" style={{ gap: 16 }}>
-            <h1 className="h-sub" style={{ fontSize: "clamp(32px, 4vw, 48px)" }}>{ch.title}</h1>
-            {ch.intro ? <p className="lead">{ch.intro}</p> : null}
-            {ch.brief ? <div className="card stack" style={{ gap: 8 }}><span className="sublabel">{t("The brief")}</span><span style={{ color: "#fff" }}>{ch.brief}</span></div> : null}
-            {ch.goal ? <span className="mono">GOAL / {ch.goal}</span> : null}
-          </div>
+      <main className="wrap split" style={{ padding: "36px 32px 96px" }}>
+        <nav className="side stack" aria-label={t("Mission steps")} style={{ gap: 8 }}>
           {has3D() ? (
-            <div className="card stack" style={{ flex: "0 1 200px", padding: 0, overflow: "hidden", alignItems: "center", background: "radial-gradient(ellipse at 50% 40%, #1a1112 0%, #161616 75%)" }}>
-              <SoloDirector avatar={avatarOf(s)} reaction={reaction} height={200} distance={5} />
-              <span className="mono" style={{ padding: "0 12px 14px", textAlign: "center" }}>{allDone ? "READY TO SUBMIT" : `${complete}/${items.length} LOCKED`}</span>
+            <div className="card" style={{ padding: 0, overflow: "hidden", marginBottom: 8, background: "radial-gradient(ellipse at 50% 40%, #1a1112 0%, #161616 75%)" }}>
+              <SoloDirector avatar={avatarOf(s)} reaction={reaction} height={190} distance={5} />
             </div>
           ) : null}
-          {ch.prompt ? <div className="side" style={{ flex: "1 1 360px" }}><CopyBox title={t("Prompt assist")} text={ch.prompt} /></div> : null}
-        </div>
-
-        {cols ? (
-          <>
-            <div role="tablist" aria-label="Items" className="grid-auto" style={{ "--min": "150px", "--gap": "10px" }}>
-              {items.map((it, i) => (
-                <button key={i} type="button" role="tab" aria-selected={i === at} className={`tile ${i === at ? "on" : ""}`} onClick={() => setAt(i)} style={{ padding: 0, overflow: "hidden" }}>
-                  <div style={{ position: "relative", aspectRatio: "16 / 10", background: "#000", display: "flex", alignItems: "center", justifyContent: "center", borderBottom: "1px solid var(--border-hairline)" }}>
-                    <span aria-hidden="true" style={{ position: "absolute", inset: 12, border: "1px dashed var(--border-hairline)", borderRadius: 6 }} />
-                    <span className="mono" style={{ position: "relative", color: full(i) ? "#fff" : "var(--text-faint)", padding: "0 12px", textAlign: "center" }}>{(val(i, cols[0]) || "EMPTY").toString().slice(0, 28).toUpperCase()}</span>
-                  </div>
-                  <div className="row" style={{ justifyContent: "space-between", padding: "10px 14px", gap: 8 }}>
-                    <span className="label">{it.label}</span>
-                    <span style={{ fontSize: 11, letterSpacing: ".16em", color: full(i) ? "var(--status-success)" : filled(i) ? "var(--status-warning)" : "var(--text-muted)" }}>
-                      {full(i) ? "LOCKED" : filled(i) ? "DRAFT" : "TO DO"}
-                    </span>
-                  </div>
-                </button>
-              ))}
-            </div>
-            <section aria-label={`${items[at].label} editor`} className="card card-xl stack" style={{ gap: 20 }}>
-              <div className="row" style={{ justifyContent: "space-between", gap: 12 }}>
-                <h2 className="h-sub" style={{ fontSize: 40 }}>{items[at].label}</h2>
-                <span className="mono">{filled(at)}/{cols.length} FIELDS</span>
-              </div>
-              <div className="grid-auto" style={{ "--min": "260px", "--gap": "16px" }}>
-                {cols.map((c) => {
-                  const id = `f-${chIdx}-${at}-${c}`.replace(/\W+/g, "-");
-                  const long = /visual|prompt|description/i.test(c);
-                  return (
-                    <div key={c} className="stack" style={{ gap: 8, gridColumn: long ? "1 / -1" : undefined }}>
-                      <label htmlFor={id} className="label">{c}</label>
-                      {long
-                        ? <textarea id={id} className="field" rows={3} value={val(at, c)} onChange={(e) => setVal(at, c, e.target.value)} />
-                        : <input id={id} className="field" type="text" value={val(at, c)} onChange={(e) => setVal(at, c, e.target.value)} />}
-                    </div>
-                  );
-                })}
-              </div>
-              <AttachMedia refKey={key} level={lv.id} item={at} media={media} />
-              <div className="row" style={{ justifyContent: "flex-end", paddingTop: 8, borderTop: "1px solid var(--border-hairline)" }}>
-                <button type="button" className="btn btn-primary" onClick={() => setAt((at + 1) % items.length)}>{t("Next")} <Arrow /></button>
-              </div>
-            </section>
-          </>
-        ) : (
-          <div className="stack" style={{ gap: 12 }}>
-            {items.map((it, i) => {
-              const id = `t-${chIdx}-${i}`;
-              return (
-                <div key={i} className={`card stack ${full(i) ? "" : ""}`} style={{ gap: 10, padding: 22, borderColor: full(i) ? "rgba(52,199,123,.4)" : undefined }}>
-                  <label htmlFor={id} className="row" style={{ gap: 12, flexWrap: "nowrap" }}>
-                    <span className="icon-tile" style={full(i) ? { background: "var(--status-success-solid)" } : null}>{full(i) ? <Check /> : pad(i + 1)}</span>
-                    <span style={{ color: "#fff" }}>{it.label}</span>
-                  </label>
-                  <textarea id={id} className="field" rows={2} placeholder={t("Paste your output, prompt or a link to your result")} value={val(i, "text")} onChange={(e) => setVal(i, "text", e.target.value)} />
-                  <AttachMedia refKey={key} level={lv.id} item={i} media={media} />
-                </div>
-              );
-            })}
+          <div className="card stack" style={{ gap: 6, padding: 16, marginBottom: 8 }}>
+            <span className="sublabel">{t("Deliverable")}</span>
+            <span style={{ fontSize: 15, color: "#fff", lineHeight: 1.45 }}>{mission.deliverable}</span>
           </div>
-        )}
+          {[...steps, { id: "review", title: t("Review your work") }].map((x, i) => {
+            const ok = i < reviewIdx ? complete[i] : reviewOk;
+            return (
+              <button key={x.id} type="button" className={`tile ${i === at ? "on" : ""}`} aria-current={i === at ? "step" : undefined} onClick={() => setAt(i)}
+                style={{ flexDirection: "row", alignItems: "center", gap: 14, minHeight: 60, padding: "10px 14px", borderRadius: 12, background: i === at ? "var(--surface-card)" : "transparent" }}>
+                <span className={`icon-tile ${ok || i === at ? "" : "muted"}`} style={ok ? { background: "var(--status-success-solid)" } : null}>{ok ? <Check /> : i < reviewIdx ? pad(i + 1) : "✓"}</span>
+                <span style={{ fontSize: 15, color: "#fff", lineHeight: 1.35 }}>{x.title}</span>
+              </button>
+            );
+          })}
+        </nav>
+
+        <article className="content stack" style={{ gap: 24 }} dir="auto">
+          {st ? (
+            <React.Fragment key={st.id}>
+              <div className="stack reveal" style={{ gap: 10 }}>
+                <span className="mono">{T_("Step")} {pad(at + 1)} / {pad(steps.length)}{complete[at] ? ` · ${T_("Done")}` : ""}</span>
+                <h1 className="h-sub" style={{ fontSize: "clamp(32px, 4vw, 48px)" }}>{st.title}</h1>
+                <div className="card stack" style={{ gap: 6, padding: 20 }}>
+                  <span className="sublabel">{t("Do this")}</span>
+                  <p style={{ margin: 0, color: "#fff" }}>{st.do}</p>
+                </div>
+              </div>
+
+              {st.tools ? (
+                <div className="row" style={{ gap: 8 }}>
+                  {st.tools.filter((id) => PLATFORMS[id]).map((id) => (
+                    PLATFORMS[id].url
+                      ? <a key={id} className="tool-chip" href={PLATFORMS[id].url} target="_blank" rel="noopener" style={{ textDecoration: "none", padding: "6px 12px 6px 6px", fontSize: 14 }}><Glyph id={id} size={26} />{t("Open")} {PLATFORMS[id].name} ↗</a>
+                      : <a key={id} className="tool-chip" href={`#/toolkit/${id}`} style={{ textDecoration: "none", padding: "6px 12px 6px 6px", fontSize: 14 }}><Glyph id={id} size={26} />{PLATFORMS[id].name}</a>
+                  ))}
+                </div>
+              ) : null}
+
+              {st.carry ? <CarryPanel ctx={ctx} path={st.carry} cols={st.carry === "1.script" ? ["Duration", "VO / Text", "Visual Description", "Camera", "Mood"] : []} onExample={useExample} /> : null}
+              {st.output.type === "frames" && !ctx.rows(st.output.from).length ? <CarryPanel ctx={ctx} path={st.output.from} cols={[]} onExample={useExample} /> : null}
+
+              {st.prompt ? <CopyBox title={t("Prompt — filled with your work")} text={st.prompt(ctx)} /> : null}
+
+              {st.example && isEmptyVal((A[lv.id] || {})[st.id]) ? (
+                <button type="button" className="btn btn-ghost btn-sm" style={{ alignSelf: "flex-start" }} onClick={useExample}>{t("Use the MAZAJ example")}</button>
+              ) : null}
+
+              <section aria-label={t("Your output")} className="stack" style={{ gap: 14 }}>
+                <span className="label">{t("Your output")}</span>
+                {st.output.type === "fields" ? <FieldsOut step={st} value={(A[lv.id] || {})[st.id]} set={(v) => setStep(st.id, v)} /> : null}
+                {st.output.type === "table" ? <TableOut step={st} value={(A[lv.id] || {})[st.id]} set={(v) => setStep(st.id, v)} ctx={ctx} /> : null}
+                {st.output.type === "frames" ? <FramesOut lv={lv} step={st} value={(A[lv.id] || {})[st.id]} set={(v) => setStep(st.id, v)} ctx={ctx} mission={mission} media={media} /> : null}
+                {st.output.type === "checks" ? <ChecksOut step={st} value={(A[lv.id] || {})[st.id]} set={(v) => setStep(st.id, v)} /> : null}
+                {st.output.type === "media" || st.output.attach ? <AttachMedia refKey={`apply-${lv.id}-${st.id}`} level={lv.id} item={0} media={media} accept={st.output.accept || "image/*,video/*"} /> : null}
+              </section>
+
+              {st.rules ? (
+                <div className="inset stack" style={{ padding: 20, gap: 10 }}>
+                  <span className="mono">{T_("From the lesson")}</span>
+                  {st.rules.map((r) => <span key={r} className="row" style={{ gap: 12, flexWrap: "nowrap", alignItems: "flex-start", color: "#fff", fontSize: 15 }}><span className="bullet" aria-hidden="true" />{r}</span>)}
+                </div>
+              ) : null}
+            </React.Fragment>
+          ) : (
+            <div className="stack reveal" style={{ gap: 20 }}>
+              <span className="mono">{T_("Review your work")}</span>
+              <h1 className="h-sub" style={{ fontSize: "clamp(32px, 4vw, 48px)" }}>{t("Would a director sign this off?")}</h1>
+              <div className="stack" style={{ gap: 8 }}>
+                {steps.map((x, i) => (
+                  <button key={x.id} type="button" className="row" onClick={() => setAt(i)} style={{ all: "unset", cursor: "pointer", display: "flex", gap: 12, alignItems: "center", color: complete[i] ? "#fff" : "var(--pm-red-300)", fontSize: 15 }}>
+                    <span className="ring-dot" style={{ color: complete[i] ? "var(--status-success)" : "var(--pm-red)" }} aria-hidden="true" />
+                    {x.title} — {complete[i] ? t("done") : t("still to do")}
+                  </button>
+                ))}
+              </div>
+              <span className="label">{t("Check your work against the level")}</span>
+              <div className="stack" style={{ gap: 8 }}>
+                {mission.review.map((r, i) => (
+                  <label key={i} className="check">
+                    <input type="checkbox" checked={!!review[i]} onChange={(e) => setS({ ...s, review: { ...(s.review || {}), [lv.id]: { ...review, [i]: e.target.checked } } })} />
+                    <span>{r}</span>
+                  </label>
+                ))}
+              </div>
+              <div className="row" style={{ gap: 12 }}>
+                <button type="button" className="btn btn-primary" disabled={!ready} onClick={wrap}>{t("Wrap mission")} <Arrow /></button>
+                <a className="btn btn-ghost" href={UPLOAD_URL} target="_blank" rel="noopener">{t("Upload to the class folder")}</a>
+              </div>
+            </div>
+          )}
+
+          <div className="row" style={{ justifyContent: "space-between", gap: 12, paddingTop: 24, borderTop: "1px solid var(--border-hairline)" }}>
+            <button type="button" className="btn btn-ghost" disabled={at === 0} onClick={() => setAt(Math.max(0, at - 1))}>{t("Previous")}</button>
+            {at < reviewIdx ? <button type="button" className="btn btn-primary" onClick={() => setAt(at + 1)}>{at === reviewIdx - 1 ? t("Review your work") : t("Next step")} <Arrow /></button> : null}
+          </div>
+        </article>
       </main>
     </div>
   );
@@ -1461,12 +1723,12 @@ function ReelScreen() {
   const byLevel = LEVELS.map((l) => ({ l, items: media.filter((m) => String(m.level) === String(l.id)) })).filter((g) => g.items.length);
   const extra = media.filter((m) => !LEVELS.some((l) => String(l.id) === String(m.level)));
   if (extra.length) byLevel.push({ l: { id: "lab", code: "Final project", name: "" }, items: extra });
-  const fileName = (m) => (m.name || `director-${m.id}`).replace(/\.[^.]+$/, "") + (m.kind === "video" ? ".mp4" : ".jpg");
+  const fileName = (m) => m.kind === "image" ? (m.name || `director-${m.id}`).replace(/\.[^.]+$/, "") + ".jpg" : (m.name || `director-${m.id}`);
   const download = (m) => {
     const a = document.createElement("a");
-    const url = m.kind === "video" ? URL.createObjectURL(m.data) : m.data;
+    const url = m.kind === "image" ? m.data : URL.createObjectURL(m.data);
     a.href = url; a.download = fileName(m); a.click();
-    if (m.kind === "video") setTimeout(() => URL.revokeObjectURL(url), 2000);
+    if (m.kind !== "image") setTimeout(() => URL.revokeObjectURL(url), 2000);
   };
   return (
     <div className="page">
@@ -1596,7 +1858,7 @@ function WorkshopScreen({ tab, s, setS }) {
   const reset = () => {
     if (!window.confirm(t("Are you sure? This cannot be undone."))) return;
     MediaDB.clear().catch(() => {});
-    setS({ done: {}, answers: {}, chDone: {}, cleared: {}, pos: {}, days: [today()], labs: {}, lang: s.lang });
+    setS({ done: {}, cleared: {}, pos: {}, days: [today()], labs: {}, apply: {}, stepDone: {}, missionDone: {}, review: {}, lang: s.lang });
     go("map");
   };
   return (
@@ -1679,7 +1941,7 @@ function App() {
   const [view, a, b, c] = route;
   let screen;
   const lv = a !== undefined ? LEVELS[levelIndex(a)] : null;
-  if (view === "level" && lv && b === "challenge" && challengesOf(lv)[+c]) screen = <ChallengeScreen key={`${a}-${c}`} lv={lv} chIdx={+c} s={s} setS={setS} />;
+  if (view === "level" && lv && (b === "apply" || b === "challenge") && missionOf(lv)) screen = <MissionScreen key={`${a}-${c || ""}`} lv={lv} stepIdx={b === "apply" && c !== undefined ? +c : undefined} s={s} setS={setS} />;
   else if (view === "level" && lv) screen = <LessonScreen key={a} lv={lv} s={s} setS={setS} />;
   else if (view === "rankup" && lv) screen = <RankUpScreen lv={lv} s={s} />;
   else if (view === "toolkit") screen = <ToolkitScreen key={a || "all"} initial={a} />;

@@ -10,12 +10,23 @@ On Vercel the site root redirects here (`/vercel.json`). Locally, serve the repo
 | --- | --- |
 | Mission Control — character creator, rank track, 3D level map, briefing | `#/map` |
 | Lesson — every section of a level, with a guide, read-aloud and visual examples | `#/level/<id>` |
-| Challenge — fill each deliverable, attach images and clips | `#/level/<id>/challenge/<n>` |
+| Apply the level — the level's hands-on mission, step by step | `#/level/<id>/apply` or `#/level/<id>/apply/<step>` |
 | Rank up — level cleared; after the last level, the certificate | `#/rankup/<id>` |
 | Toolkit — every tool, screenshot slot, example output, 3D set piece | `#/toolkit` or `#/toolkit/<tool-id>` |
 | Final project — the Final Project Sprint lab with format picker and step tracking | `#/labs` |
 | My reel — everything the learner attached, with download and the class upload folder | `#/reel` |
 | Workshop — Instructors, AI Fun, Agenda, Accounts, Feedback, Upload, Certificates, Settings | `#/workshop/<tab>` |
+
+## Apply the level
+
+Each level ends with one hands-on mission instead of a quiz or form. Learners carry **one project of their own** through all six levels — brief → script → storyboard → keyframes → clips → voice → final cut — and each mission works on the previous one's output:
+
+- every step says what to **do**, links the **tool** to do it in, and gives a **prompt already filled with the learner's own work** (their brief, their script rows, their bibles…);
+- the output is real work: answers, tables, prompts per frame, and the images, clips, audio or PDFs they made (all collected in My reel);
+- **From the lesson** reminds them of the rules that apply to that step;
+- the mission ends with a **review against the level's own standards** before it can be wrapped, which clears the level.
+
+Anyone can start from the MAZAJ sample project instead of their own. The missions live in `missions.js` (plain JavaScript — edit without a build).
 
 ## Settings (Workshop → Settings)
 
@@ -26,7 +37,7 @@ On Vercel the site root redirects here (`/vercel.json`). Locally, serve the repo
 
 ## Editing
 
-- **Content** (lessons, challenges, ranks, tools, labs) lives in `../game-data.jsx`, `../data.jsx` and `../labs-data.js`. These are plain JavaScript; edit and deploy — no build needed.
+- **Content** (lessons, ranks, tools, labs) lives in `../game-data.jsx`, `../data.jsx` and `../labs-data.js`; the missions in `missions.js`. These are plain JavaScript; edit and deploy — no build needed.
 - **App code** lives in `app.jsx`, `world3d.js`, `visuals.js`, `i18n.js` (and `../logos.jsx`). After editing, rebuild the bundle that `index.html` loads:
 
   ```sh

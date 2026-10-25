@@ -1,7 +1,7 @@
 // build.mjs — precompile Template Q4-26 into dist/app.min.js.
 // Run `npm install` once, then `npm run build` after editing app.jsx, world3d.js,
 // visuals.js, i18n.js or ../logos.jsx. Content files (../game-data.jsx, ../data.jsx,
-// ../labs-data.js) are plain JavaScript and load directly, so content edits need no build.
+// ../labs-data.js, missions.js) are plain JavaScript and load directly, so content edits need no build.
 import { transform } from "esbuild";
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 
