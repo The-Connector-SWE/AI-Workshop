@@ -1,5 +1,20 @@
 {
   "redirects": [
-    { "source": "/", "destination": "/template-q4-26/", "permanent": false }
+    {
+      "source": "/",
+      "destination": "/template-q4-26/",
+      "permanent": false
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)\\.jsx",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/javascript; charset=utf-8"
+        }
+      ]
+    }
   ]
 }

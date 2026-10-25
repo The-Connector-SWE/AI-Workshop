@@ -1,0 +1,11 @@
+{
+  "name": "directors-game-template-q4-26",
+  "private": true,
+  "description": "Build step for Template Q4-26: precompiles the JSX so the browser no longer runs Babel.",
+  "scripts": {
+    "build": "node build.mjs"
+  },
+  "devDependencies": {
+    "esbuild": "0.25.0"
+  }
+}

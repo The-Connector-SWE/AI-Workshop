@@ -35,16 +35,6 @@
     "Static": { img: 15, origin: "50% 50%", from: "scale(1)", to: "scale(1)", prompt: "Static locked-off shot: Jamila sets the can down at the café table." },
   };
 
-  // Shot Match knowledge check.
-  const QUIZ = [
-    { purpose: "Show the location", scene: "Open on Jamila's bedroom at dawn — we need to know where we are.", answer: "Wide shot", opts: ["Close-up", "Wide shot", "Macro / close-up", "Slow motion"], why: "A wide shot establishes the space before we move closer.", img: 1, pos: "center" },
-    { purpose: "Show her emotion", scene: "Jamila is at the fridge and we need to feel how tired she is.", answer: "Close-up", opts: ["Tracking shot", "Wide shot", "Close-up", "Medium shot"], why: "A close-up puts the face — and the feeling — in the centre of the frame.", img: 7, pos: "center 25%" },
-    { purpose: "Show the action", scene: "Her hand reaches out and opens the fridge door.", answer: "Medium shot", opts: ["Medium shot", "Macro / close-up", "Wide shot", "Close-up"], why: "A medium shot keeps the hand and the fridge readable in one frame.", img: 4, pos: "center" },
-    { purpose: "Make the product beautiful", scene: "Condensation runs down the MAZAJ can on the café table.", answer: "Macro / close-up", opts: ["Tracking shot", "Macro / close-up", "Medium shot", "Wide shot"], why: "Macro detail turns texture and light into product beauty.", img: 13, pos: "center 70%" },
-    { purpose: "Show the transformation", scene: "The first sip — her mood shifts from tired to fresh.", answer: "Slow motion", opts: ["Wide shot", "Medium shot", "Slow motion", "Static shot"], why: "Slowing time gives the change of mood room to land.", img: 11, pos: "center" },
-    { purpose: "Show the lifestyle", scene: "Jamila walks out to the street café, can in hand.", answer: "Tracking shot", opts: ["Close-up", "Macro / close-up", "Static shot", "Tracking shot"], why: "A tracking shot moves with her, so the viewer joins the lifestyle.", img: 14, pos: "center" },
-  ];
-
   // What each tool makes in this course, shown on the Toolkit screen.
   const TOOL_OUTPUT = {
     gemini: { kind: "text", note: "Output: the script table that feeds your storyboard." },
@@ -59,5 +49,5 @@
     "gemini-omni": { kind: "video", frames: [[11, "First sip"]], note: "Output: a clip from one storyboard frame." },
   };
 
-  window.TQ = { F, UNITS, SHOTS, MOVES, QUIZ, TOOL_OUTPUT };
+  window.TQ = { F, UNITS, SHOTS, MOVES, TOOL_OUTPUT };
 })();

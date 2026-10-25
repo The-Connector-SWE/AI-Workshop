@@ -287,7 +287,8 @@
     }
     const tex = new T.CanvasTexture(c);
     tex.encoding = T.sRGBEncoding;
-    const s = new T.Sprite(new T.SpriteMaterial({ map: tex, transparent: true, depthWrite: false }));
+    const s = new T.Sprite(new T.SpriteMaterial({ map: tex, transparent: true, depthWrite: false, depthTest: false }));
+    s.renderOrder = 10;
     s.scale.set(o.w, o.h, 1);
     return s;
   }
@@ -295,12 +296,15 @@
   /* ---------------- level map ---------------- */
 
   function createMap(el, opts) {
-    const o = Object.assign({ levels: [], selected: 0, avatar: null, onSelect: () => {} }, opts);
+    const o = Object.assign({ levels: [], selected: 0, avatar: null, vertical: false, onSelect: () => {} }, opts);
     const S = stage(el, 32);
+    const V = o.vertical; // phones: islands zig-zag down the screen instead of across
     const { scene, camera, renderer } = S;
     scene.fog = new T.Fog(0x0a0a0a, 18, 42);
     const n = o.levels.length;
-    const spots = o.levels.map((_, i) => new T.Vector3((i - (n - 1) / 2) * 3.4, 0, i % 2 ? -1.3 : 1.1));
+    const spots = o.levels.map((_, i) => V
+      ? new T.Vector3(i % 2 ? 0.75 : -0.75, 0, (i - (n - 1) / 2) * 3.1)
+      : new T.Vector3((i - (n - 1) / 2) * 3.4, 0, i % 2 ? -1.3 : 1.1));
 
     const islands = [], rings = [], labels = [];
     o.levels.forEach((lv, i) => {
@@ -312,7 +316,9 @@
       const ring = new T.Mesh(new T.TorusGeometry(1.16, 0.035, 8, 64), new T.MeshStandardMaterial({ color: GREY, emissive: GREY, emissiveIntensity: 0.4 }));
       ring.rotation.x = Math.PI / 2; g.add(ring); rings.push(ring);
       const pr = prop(i); pr.position.set(0.45, 0, -0.35); pr.rotation.y = -0.5; g.add(pr);
-      const label = textSprite([lv.code, lv.name]); label.position.set(0, -1.75, 0.6); g.add(label); labels.push(label);
+      const label = textSprite([lv.code, lv.name], V ? { w: 3.9, h: 0.98 } : null);
+      if (V) label.position.set(i % 2 ? -1.55 : 1.55, -0.3, 0.9); else label.position.set(0, -1.75, 0.6);
+      g.add(label); labels.push(label);
       g.userData.phase = i * 0.9;
       scene.add(g); islands.push(g);
     });
@@ -399,15 +405,23 @@
         hero.userData.setWalking(false);
         hero.rotation.y += (0.35 - hero.rotation.y) * 0.08;
       }
-      const isl = islands[Math.round(hero.position.x / 3.4 + (n - 1) / 2)] || islands[0];
+      let isl = islands[0], best = Infinity;
+      spots.forEach((p, k) => { const d2 = (p.x - hero.position.x) ** 2 + (p.z - hero.position.z) ** 2; if (d2 < best) { best = d2; isl = islands[k]; } });
       hero.position.y = isl.position.y;
       hero.userData.update(dt, time);
       if (tag) tag.position.set(hero.position.x, hero.position.y + 2.25, hero.position.z);
 
-      const d = dist();
-      look.x += (hero.position.x * 0.12 - look.x) * 0.05;
-      camera.position.set(look.x + mouseX * 1.2, d * 0.62 - mouseY * 0.8, d * 0.82);
-      camera.lookAt(look.x, -0.4, 0);
+      if (V) {
+        // whole trail in view: high, steep camera centred on the map
+        const h = 7.6 / Math.tan((camera.fov * Math.PI) / 360) * 1.22;
+        camera.position.set(mouseX * 0.6, h * 0.86, h * 0.5);
+        camera.lookAt(0, -0.4, 0.4);
+      } else {
+        const d = dist();
+        look.x += (hero.position.x * 0.12 - look.x) * 0.05;
+        camera.position.set(look.x + mouseX * 1.2, d * 0.62 - mouseY * 0.8, d * 0.82);
+        camera.lookAt(look.x, -0.4, 0);
+      }
       renderer.render(scene, camera);
     });
 
@@ -439,7 +453,7 @@
     }
     const cast = Cast(scene, o.avatar);
     cast.hero.rotation.y = 0.35;
-    camera.position.set(0, 1.6, o.distance);
+    camera.position.set(0, 1.6, o.distance || 5.6);
     camera.lookAt(0, 0.85, 0);
     if (o.celebrate) setTimeout(() => cast.hero.userData.react("celebrate"), 500);
     if (o.wave) setTimeout(() => cast.hero.userData.react("wave"), 400);
